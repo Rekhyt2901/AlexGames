@@ -1,0 +1,36 @@
+body {
+    width: 100vw;
+    height: 100vh;
+    padding: 0px;
+    margin: 0px;
+}
+
+#navbar {
+    margin: 0px;
+    padding: 0px;
+    height: 10%;
+    text-align: center;
+}
+
+a:visited, a:link {
+    display: inline-block;
+    color: #ffffff;
+    text-decoration: none;
+    width: 19%;
+    height: 100%;
+    font-size: xx-large;
+    padding: 0px;
+    margin: 0px;
+}
+
+a:hover{
+    background-color: #11aa44;
+}
+
+iframe {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    background-color:#ffffff;
+    height: 90%;
+}
