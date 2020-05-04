@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr" style="background-color: #ffffff; color: #1140aa;">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SystemConverter</title>
+    <link rel="stylesheet" href="SystemConverter.css">
+    <script defer src="SystemConverter.js"></script>
+  </head>
+
+  <body>
+    <form id="form" action="">
+      <input type="textfield" name="value" placeholder="Enter Number">
+      <input id="decToRest" checked="checked" name="whatToWhat" type="radio" value="dto">Decimal to other</input>
+      <input id="restToDec" name="whatToWhat" type="radio" value="otd">Others to decimal</input>
+      <button onclick="convertSystems()" id="submit" type="button">Click to Submit</button>
+    </form>
+
+    <ul style="list-style-type: none">
+      <li id="li1"></li>
+      <li id="li2"></li>
+      <li id="li3"></li>
+      <li id="li4"></li>
+    </ul>
+
+
+  </body>

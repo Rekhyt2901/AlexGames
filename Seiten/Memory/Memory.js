@@ -4,67 +4,83 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardArray =  [
         {
             name: 'Auto',
-            img: 'res/Auto.png'
+            img: 'res/Auto.png',
+            found: false
         },
         {
             name: 'Auto',
-            img: 'res/Auto.png'
+            img: 'res/Auto.png',
+            found: false
         },
         {
             name: 'Ball',
-            img: 'res/Ball.png'
+            img: 'res/Ball.png',
+            found: false
         },
         {
             name: 'Ball',
-            img: 'res/Ball.png'
+            img: 'res/Ball.png',
+            found: false
         },
         {
             name: 'Baum',
-            img: 'res/Baum.png'
+            img: 'res/Baum.png',
+            found: false
         },
         {
             name: 'Baum',
-            img: 'res/Baum.png'
+            img: 'res/Baum.png',
+            found: false
         },
         {
             name: 'Burger',
-            img: 'res/Burger.png'
+            img: 'res/Burger.png',
+            found: false
         },
         {
             name: 'Burger',
-            img: 'res/Burger.png'
+            img: 'res/Burger.png',
+            found: false
         },
         {
             name: 'Junge',
-            img: 'res/Junge.png'
+            img: 'res/Junge.png',
+            found: false
         },
         {
             name: 'Junge',
-            img: 'res/Junge.png'
+            img: 'res/Junge.png',
+            found: false
         },
         {
             name: 'Mädchen',
-            img: 'res/Mädchen.png'
+            img: 'res/Mädchen.png',
+            found: false
         },
         {
             name: 'Mädchen',
-            img: 'res/Mädchen.png'
+            img: 'res/Mädchen.png',
+            found: false
         },
         {
             name: 'Uhr',
-            img: 'res/Uhr.png'
+            img: 'res/Uhr.png',
+            found: false
         },
         {
             name: 'Uhr',
-            img: 'res/Uhr.png'
+            img: 'res/Uhr.png',
+            found: false
         },
         {
             name: 'Wolke',
-            img: 'res/Wolke.png'
+            img: 'res/Wolke.png',
+            found: false
         },
         {
             name: 'Wolke',
-            img: 'res/Wolke.png'
+            img: 'res/Wolke.png',
+            found: false
         },
     ]
 
@@ -82,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
             var card = document.createElement('img')
             card.setAttribute('src', 'res/Back.png')
             card.setAttribute('data-id', i)
+            card.setAttribute('found', false)
             card.addEventListener('click', flipCard)
             grid.appendChild(card)
         }
@@ -96,6 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cardsChosen[0] === cardsChosen[1]) {
             cards[optionOneId].setAttribute('src', 'res/White.png')
             cards[optionTwoId].setAttribute('src', 'res/White.png')
+            cards[optionOneId].setAttribute('found', true)
+            cards[optionTwoId].setAttribute('found', true)
             cardsWon.push(cardsChosen)
         } else {
             cards[optionOneId].setAttribute('src', 'res/Back.png')
@@ -113,12 +132,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //flip card
     function flipCard() {
-        let cardId = this.getAttribute('data-id')
-        cardsChosen.push(cardArray[cardId].name)
-        cardsChosenId.push(cardId)
-        this.setAttribute('src', cardArray[cardId].img)
-        if (cardsChosen.length === 2) {
-            setTimeout(checkForMatch, 500)
+        if(!this.found) {
+             let cardId = this.getAttribute('data-id')
+            cardsChosen.push(cardArray[cardId].name)
+            cardsChosenId.push(cardId)
+            this.setAttribute('src', cardArray[cardId].img)
+            if (cardsChosen.length === 2) {
+                setTimeout(checkForMatch, 500)
+            }
         }
     }
 })
