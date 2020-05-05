@@ -58,7 +58,7 @@ function draw() {
         text("Click and use WASD to start", gridHeight * size / 2, gridHeight * size / 2);
     }
     fill("#102060");
-    rect(0, gridHeight * size, gridWidth * size, 2 * size);
+    rect(0, gridHeight * size, document.documentElement.clientWidth, 2 * size);
     updateApple();
     moveSnake();
     for (i = 0; i < gridWidth; i++) {
