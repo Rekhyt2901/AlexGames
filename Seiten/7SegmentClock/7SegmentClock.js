@@ -20,6 +20,7 @@ function setup() {
     stroke(lit);
     strokeWeight(10);
     fill("rgba(40, 40, 0, 0.01)");
+    rotate(90);
     
 }
 
@@ -80,7 +81,6 @@ function draw() {
     if(bottomLeft) line(-10, 110, -10, 210);   // left-bottom
     if(bottomRight) line(110, 110, 110, 210);   // right-bottom
     if(bottommost) line(0, 220, 100, 220);     // bottom
-
 }
 
 function update(int) {

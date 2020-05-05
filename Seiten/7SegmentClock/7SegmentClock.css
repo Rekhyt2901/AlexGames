@@ -1,0 +1,5 @@
+@media (max-width: 1081px) {
+    body {
+        transform: rotate(90deg);
+    }
+}
