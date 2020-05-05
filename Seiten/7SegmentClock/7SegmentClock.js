@@ -15,16 +15,27 @@ let bottomLeft;
 let bottomRight;
 let bottommost;
 
+let size = 100;
+
 function setup() {
-    createCanvas(660, 270);
+    createCanvas(6.6*size, 2.7*size);
     stroke(lit);
-    strokeWeight(10);
+    strokeWeight(0.1*size);
     fill("rgba(40, 40, 0, 0.01)");
-    rotate(90);
-    
 }
 
 function draw() {
+    if (document.body.clientWidth < 660) {
+        document.getElementById("defaultCanvas0").style.transform = "rotate(90deg)";
+        document.body.style.position = "relative";
+        document.body.style.top = "230px";
+        document.body.style.right = "180px";
+    }
+    if (document.body.clientWidth > 660) {
+        document.getElementById("defaultCanvas0").style.transform = "rotate(0deg)";
+        document.body.style.top = "0px";
+        document.body.style.right = "0px";
+    }
     let dateTime = new Date().toLocaleString();         //Date and time
     let time = dateTime.split(" ")[1].split(":");       //[0] = h, [1] = m, [2] = s
 
@@ -35,52 +46,52 @@ function draw() {
     background(100);
     drawUnlits();
 
-    translate(30, 35);
+    translate(0.3*size, 0.35*size);
     update(hours[0]);
     translate(0, 0); // first hour digit
-    if(topmost) line(0, -20, 100, -20);     // top
-    if(topLeft) line(-10, -10, -10, 90);    // left-top 
-    if(topRight) line(110, -10, 110, 90);    // right-top
-    if(middle) line(0, 100, 100, 100);     // middle
-    if(bottomLeft) line(-10, 110, -10, 210);   // left-bottom
-    if(bottomRight) line(110, 110, 110, 210);   // right-bottom
-    if(bottommost) line(0, 220, 100, 220);     // bottom
+    if(topmost) line(0, -0.2*size, size, -0.2*size);     // top
+    if(topLeft) line(-0.1*size, -0.1*size, -0.1*size, 0.9*size);    // left-top 
+    if(topRight) line(1.1*size, -0.1*size, 1.1*size, 0.9*size);    // right-top
+    if(middle) line(0, size, size, size);     // middle
+    if(bottomLeft) line(-0.1*size, 1.1*size, -0.1*size, 2.1*size);   // left-bottom
+    if(bottomRight) line(1.1*size, 1.1*size, 1.1*size, 2.1*size);   // right-bottom
+    if(bottommost) line(0, 2.2*size, size, 2.2*size);     // bottom
 
     update(hours[1]);
-    translate(160, 0); // second hour digit
-    if(topmost) line(0, -20, 100, -20);     // top
-    if(topLeft) line(-10, -10, -10, 90);    // left-top 
-    if(topRight) line(110, -10, 110, 90);    // right-top
-    if(middle) line(0, 100, 100, 100);     // middle
-    if(bottomLeft) line(-10, 110, -10, 210);   // left-bottom
-    if(bottomRight) line(110, 110, 110, 210);   // right-bottom
-    if(bottommost) line(0, 220, 100, 220);     // bottom
+    translate(1.6*size, 0); // second hour digit
+    if(topmost) line(0, -0.2*size, size, -0.2*size);     // top
+    if(topLeft) line(-0.1*size, -0.1*size, -0.1*size, 0.9*size);    // left-top 
+    if(topRight) line(1.1*size, -0.1*size, 1.1*size, 0.9*size);    // right-top
+    if(middle) line(0, size, size, size);     // middle
+    if(bottomLeft) line(-0.1*size, 1.1*size, -0.1*size, 2.1*size);   // left-bottom
+    if(bottomRight) line(1.1*size, 1.1*size, 1.1*size, 2.1*size);   // right-bottom
+    if(bottommost) line(0, 2.2*size, size, 2.2*size);     // bottom
 
-    translate(20, 0);
+    translate(0.2*size, 0);
     if(seconds[1] % 2 === 0) {
-        circle(120, 80, 10);        // top seperator circle
-        circle(120, 120, 10);       // bottom seperator circle
+        circle(1.2*size, 0.8*size, 0.1*size);        // top seperator circle
+        circle(1.2*size, 1.2*size, 0.1*size);       // bottom seperator circle
     }
 
     update(minutes[0]);
-    translate(160, 0); // first minute digit
-    if(topmost) line(0, -20, 100, -20);     // top
-    if(topLeft) line(-10, -10, -10, 90);    // left-top 
-    if(topRight) line(110, -10, 110, 90);    // right-top
-    if(middle) line(0, 100, 100, 100);     // middle
-    if(bottomLeft) line(-10, 110, -10, 210);   // left-bottom
-    if(bottomRight) line(110, 110, 110, 210);   // right-bottom
-    if(bottommost) line(0, 220, 100, 220);     // bottom
+    translate(1.6*size, 0); // first minute digit
+    if(topmost) line(0, -0.2*size, size, -0.2*size);     // top
+    if(topLeft) line(-0.1*size, -0.1*size, -0.1*size, 0.9*size);    // left-top 
+    if(topRight) line(1.1*size, -0.1*size, 1.1*size, 0.9*size);    // right-top
+    if(middle) line(0, size, size, size);     // middle
+    if(bottomLeft) line(-0.1*size, 1.1*size, -0.1*size, 2.1*size);   // left-bottom
+    if(bottomRight) line(1.1*size, 1.1*size, 1.1*size, 2.1*size);   // right-bottom
+    if(bottommost) line(0, 2.2*size, size, 2.2*size);     // bottom
 
     update(minutes[1]);
-    translate(160, 0); // second minute digit
-    if(topmost) line(0, -20, 100, -20);     // top
-    if(topLeft) line(-10, -10, -10, 90);    // left-top 
-    if(topRight) line(110, -10, 110, 90);    // right-top
-    if(middle) line(0, 100, 100, 100);     // middle
-    if(bottomLeft) line(-10, 110, -10, 210);   // left-bottom
-    if(bottomRight) line(110, 110, 110, 210);   // right-bottom
-    if(bottommost) line(0, 220, 100, 220);     // bottom
+    translate(1.6*size, 0); // second minute digit
+    if(topmost) line(0, -0.2*size, size, -0.2*size);     // top
+    if(topLeft) line(-0.1*size, -0.1*size, -0.1*size, 0.9*size);    // left-top 
+    if(topRight) line(1.1*size, -0.1*size, 1.1*size, 0.9*size);    // right-top
+    if(middle) line(0, size, size, size);     // middle
+    if(bottomLeft) line(-0.1*size, 1.1*size, -0.1*size, 2.1*size);   // left-bottom
+    if(bottomRight) line(1.1*size, 1.1*size, 1.1*size, 2.1*size);   // right-bottom
+    if(bottommost) line(0, 2.2*size, size, 2.2*size);     // bottom
 }
 
 function update(int) {
@@ -95,53 +106,53 @@ function update(int) {
 
 function drawUnlits() {
     stroke(unlit);
-    translate(30, 35);
+    translate(0.3*size, 0.35*size);
 
     update(hours[0]);
     translate(0, 0); // first hour digit
-    if(!topmost) line(0, -20, 100, -20);     // top
-    if(!topLeft) line(-10, -10, -10, 90);    // left-top 
-    if(!topRight) line(110, -10, 110, 90);    // right-top
-    if(!middle) line(0, 100, 100, 100);     // middle
-    if(!bottomLeft) line(-10, 110, -10, 210);   // left-bottom
-    if(!bottomRight) line(110, 110, 110, 210);   // right-bottom
-    if(!bottommost) line(0, 220, 100, 220);     // bottom
+    if(!topmost) line(0, -0.2*size, size, -0.2*size);     // top
+    if(!topLeft) line(-0.1*size, -0.1*size, -0.1*size, 0.9*size);    // left-top 
+    if(!topRight) line(1.1*size, -0.1*size, 1.1*size, 0.9*size);    // right-top
+    if(!middle) line(0, size, size, size);     // middle
+    if(!bottomLeft) line(-0.1*size, 1.1*size, -0.1*size, 2.1*size);   // left-bottom
+    if(!bottomRight) line(1.1*size, 1.1*size, 1.1*size, 2.1*size);   // right-bottom
+    if(!bottommost) line(0, 2.2*size, size, 2.2*size);     // bottom
 
     update(hours[1]);
-    translate(160, 0); // second hour digit
-    if(!topmost) line(0, -20, 100, -20);     // top
-    if(!topLeft) line(-10, -10, -10, 90);    // left-top 
-    if(!topRight) line(110, -10, 110, 90);    // right-top
-    if(!middle) line(0, 100, 100, 100);     // middle
-    if(!bottomLeft) line(-10, 110, -10, 210);   // left-bottom
-    if(!bottomRight) line(110, 110, 110, 210);   // right-bottom
-    if(!bottommost) line(0, 220, 100, 220);     // bottom
+    translate(1.6*size, 0); // second hour digit
+    if(!topmost) line(0, -0.2*size, size, -0.2*size);     // top
+    if(!topLeft) line(-0.1*size, -0.1*size, -0.1*size, 0.9*size);    // left-top 
+    if(!topRight) line(1.1*size, -0.1*size, 1.1*size, 0.9*size);    // right-top
+    if(!middle) line(0, size, size, size);     // middle
+    if(!bottomLeft) line(-0.1*size, 1.1*size, -0.1*size, 2.1*size);   // left-bottom
+    if(!bottomRight) line(1.1*size, 1.1*size, 1.1*size, 2.1*size);   // right-bottom
+    if(!bottommost) line(0, 2.2*size, size, 2.2*size);     // bottom
 
-    translate(20, 0);
+    translate(0.2*size, 0);
     if(!seconds[1] % 2 === 0) {
-        circle(120, 80, 10);        // top seperator circle
-        circle(120, 120, 10);       // bottom seperator circle
+        circle(1.2*size, 80, 0.1*size);        // top seperator circle
+        circle(1.2*size, 1.2*size, 0.1*size);       // bottom seperator circle
     }
 
     update(minutes[0]);
-    translate(160, 0); // first minute digit
-    if(!topmost) line(0, -20, 100, -20);     // top
-    if(!topLeft) line(-10, -10, -10, 90);    // left-top 
-    if(!topRight) line(110, -10, 110, 90);    // right-top
-    if(!middle) line(0, 100, 100, 100);     // middle
-    if(!bottomLeft) line(-10, 110, -10, 210);   // left-bottom
-    if(!bottomRight) line(110, 110, 110, 210);   // right-bottom
-    if(!bottommost) line(0, 220, 100, 220);     // bottom
+    translate(1.6*size, 0); // first minute digit
+    if(!topmost) line(0, -0.2*size, size, -0.2*size);     // top
+    if(!topLeft) line(-0.1*size, -0.1*size, -0.1*size, 0.9*size);    // left-top 
+    if(!topRight) line(1.1*size, -0.1*size, 1.1*size, 0.9*size);    // right-top
+    if(!middle) line(0, size, size, size);     // middle
+    if(!bottomLeft) line(-0.1*size, 1.1*size, -0.1*size, 2.1*size);   // left-bottom
+    if(!bottomRight) line(1.1*size, 1.1*size, 1.1*size, 2.1*size);   // right-bottom
+    if(!bottommost) line(0, 2.2*size, size, 2.2*size);     // bottom
 
     update(minutes[1]);
-    translate(160, 0); // second minute digit
-    if(!topmost) line(0, -20, 100, -20);     // top
-    if(!topLeft) line(-10, -10, -10, 90);    // left-top 
-    if(!topRight) line(110, -10, 110, 90);    // right-top
-    if(!middle) line(0, 100, 100, 100);     // middle
-    if(!bottomLeft) line(-10, 110, -10, 210);   // left-bottom
-    if(!bottomRight) line(110, 110, 110, 210);   // right-bottom
-    if(!bottommost) line(0, 220, 100, 220);     // bottom
+    translate(1.6*size, 0); // second minute digit
+    if(!topmost) line(0, -0.2*size, size, -0.2*size);     // top
+    if(!topLeft) line(-0.1*size, -0.1*size, -0.1*size, 0.9*size);    // left-top 
+    if(!topRight) line(1.1*size, -0.1*size, 1.1*size, 0.9*size);    // right-top
+    if(!middle) line(0, size, size, size);     // middle
+    if(!bottomLeft) line(-0.1*size, 1.1*size, -0.1*size, 2.1*size);   // left-bottom
+    if(!bottomRight) line(1.1*size, 1.1*size, 1.1*size, 2.1*size);   // right-bottom
+    if(!bottommost) line(0, 2.2*size, size, 2.2*size);     // bottom
 
     stroke(lit);
     resetMatrix();
