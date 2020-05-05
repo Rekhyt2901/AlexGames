@@ -34,7 +34,7 @@ class Cell {
 }
 
 function setup() {
-    createCanvas(document.documentElement.clientWidth, gridHeight * size + size);
+    createCanvas(gridWidth*size, gridHeight * size + size);
     background(10);
     for (i = 0; i < gridWidth; i++) {
         grid[i] = [];
