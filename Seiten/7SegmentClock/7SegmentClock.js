@@ -28,7 +28,7 @@ function draw() {
     if (document.body.clientWidth < 660) {
         document.getElementById("defaultCanvas0").style.transform = "rotate(90deg)";
         document.body.style.position = "relative";
-        document.body.style.top = "230px";
+        document.body.style.top = "210px";
         document.body.style.right = "180px";
     }
     if (document.body.clientWidth > 660) {
