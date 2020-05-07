@@ -1,9 +1,15 @@
-let size = 100;
+let size = 128;
 let clientWidth = document.documentElement.clientWidth;
 let clientHeight = document.documentElement.clientHeight;
-let gridWidth = (clientWidth - clientWidth%size) / size;
-let gridHeight = (clientHeight - clientHeight%size) / size;
+let gridWidth = (clientWidth - clientWidth % size) / size;
+let gridHeight = (clientHeight - clientHeight % size) / size;
 let grid = [];
+
+let numberOfMines = 10;
+let mineArray = [];
+
+let randomX;
+let randomY;
 
 let unopened;
 let marked;
@@ -25,7 +31,9 @@ class Cell {
     constructor(x, y) {
         this.x = x;
         this.y = y;
+        this.hasMine = false;
         this.image;
+        this.surroundingMines = 0;
     }
 }
 
@@ -50,32 +58,114 @@ function preload() {
 function setup() {
     createCanvas(clientWidth, clientHeight);
     background(100);
-    for(i = 0; i < gridWidth; i++) {
+    for (i = 0; i < gridWidth; i++) { //makes the 2d grid array
         grid[i] = [];
         for (j = 0; j < gridHeight; j++) {
             grid[i][j] = new Cell(i, j);
-            grid[i][j].img = unopened;  
+            grid[i][j].img = unopened;
+        }
+    }
+    for (i = 0; i < numberOfMines; i++) { // makes the mines
+        setRandoms();
+        if (!mineArray.includes(grid[randomX][randomY])) {
+            grid[randomX][randomY].img = mine;
+            grid[randomX][randomY].hasMine = true;
+            mineArray.push(grid[randomX][randomY]);
+        } else {
+            i--;
+        }
+    }
+    for (i = 0; i < gridWidth; i++) { //sets the surroundMines value of all cells
+        for (j = 0; j < gridHeight; j++) {
+            checkForMines(grid[i][j]);
         }
     }
 }
 
 function draw() {
-    image(unopened, 0, 0, 128, 128)
-    //background(100);
-    //fillCells();
-    //fillAccess();
+    background(100);
+    fillCells();
+    fillAccess();
 }
 
 function fillCells() {
-    for(i = 0; i < gridWidth; i++) {
+    for (i = 0; i < gridWidth; i++) {
         for (j = 0; j < gridHeight; j++) {
-            image(grid[i][j].img, i*size, j*size);
+            image(grid[i][j].img, i * size, j * size);
         }
     }
 }
 
 function fillAccess() {
+    strokeWeight(0);
     fill("#00ff00");
-    rect(gridWidth*size, 0, clientWidth - gridWidth*size, gridHeight*size);
-    rect(0, gridHeight*size, gridWidth*size, clientHeight - gridHeight*size);
+    rect(gridWidth * size, 0, clientWidth - gridWidth * size, gridHeight * size);
+    rect(0, gridHeight * size, clientWidth, clientHeight - gridHeight * size);
+}
+
+function mouseClicked() {
+    if (!grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].hasMine) {
+        setEmptyImage(grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size]);
+    } else {
+        youLost();
+    }
+}
+
+function setRandoms() {
+    randomX = int(random(gridWidth));
+    randomY = int(random(gridHeight));
+}
+
+function checkForMines(cell) {
+    if (!grid[cell.x][cell.y].hasMine) {
+        if (cell.x < gridWidth-1 && cell.y < gridHeight-1 && grid[cell.x + 1][cell.y + 1].hasMine) grid[cell.x][cell.y].surroundingMines++;
+        if (cell.x < gridWidth-1 && grid[cell.x + 1][cell.y].hasMine) grid[cell.x][cell.y].surroundingMines++;
+        if (cell.x < gridWidth-1 && cell.y > 0 && grid[cell.x + 1][cell.y - 1].hasMine) grid[cell.x][cell.y].surroundingMines++;
+        if (cell.y < gridHeight-1 && grid[cell.x][cell.y + 1].hasMine) grid[cell.x][cell.y].surroundingMines++;
+        if (cell.y > 0 && grid[cell.x][cell.y - 1].hasMine) grid[cell.x][cell.y].surroundingMines++;
+        if (cell.x > 0 && cell.y < gridHeight-1 &&grid[cell.x - 1][cell.y + 1].hasMine) grid[cell.x][cell.y].surroundingMines++;
+        if (cell.x > 0 && grid[cell.x - 1][cell.y].hasMine) grid[cell.x][cell.y].surroundingMines++;
+        if (cell.x > 0 && cell.y > 0 && grid[cell.x - 1][cell.y - 1].hasMine) grid[cell.x][cell.y].surroundingMines++;
+    }
+}
+
+function setEmptyImage(cell) {
+    switch (cell.surroundingMines) {
+        case 0:
+            cell.img = empty;
+            expand();
+            break;
+        case 1:
+            cell.img = empty1;
+            break;
+        case 2:
+            cell.img = empty2;
+            break;
+        case 3:
+            cell.img = empty3;
+            break;
+        case 4:
+            cell.img = empty4;
+            break;
+        case 5:
+            cell.img = empty5;
+            break;
+        case 6:
+            cell.img = empty6;
+            break;
+        case 7:
+            cell.img = empty7;
+            break;
+        case 8:
+            cell.img = empty8;
+            break;
+    }
+}
+
+function expand() {
+    
+}
+
+function youLost() {
+    alert("you lost!");
 }
