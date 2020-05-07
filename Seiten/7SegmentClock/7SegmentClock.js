@@ -43,7 +43,7 @@ function draw() {
     minutes = [time[1].charAt(0), time[1].charAt(1)];
     seconds = [time[2].charAt(0), time[2].charAt(1)];
 
-    background(100);
+    background(10);
     drawUnlits();
 
     translate(0.3*size, 0.35*size);
