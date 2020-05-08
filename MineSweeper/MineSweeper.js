@@ -5,8 +5,11 @@ let gridWidth = (clientWidth - clientWidth % size) / size;
 let gridHeight = (clientHeight - clientHeight % size) / size;
 let grid = [];
 
-let numberOfMines = 10;
+let numberOfMines = gridWidth * gridHeight * 0.15;
 let mineArray = [];
+let expandArray = [];
+let markedArray = [];
+let won = true;
 
 let randomX;
 let randomY;
@@ -32,13 +35,14 @@ class Cell {
         this.x = x;
         this.y = y;
         this.hasMine = false;
-        this.image;
+        this.img;
         this.surroundingMines = 0;
+        this.alreadyPushed = false;
+        this.marked = false;
     }
 }
 
 function preload() {
-    print("preloading");
     unopened = loadImage("res/Unopened.png");
     marked = loadImage("res/Marked.png");
     markedWrong = loadImage("res/MarkedWrong.png");
@@ -68,7 +72,7 @@ function setup() {
     for (i = 0; i < numberOfMines; i++) { // makes the mines
         setRandoms();
         if (!mineArray.includes(grid[randomX][randomY])) {
-            grid[randomX][randomY].img = mine;
+            grid[randomX][randomY].img = unopened;
             grid[randomX][randomY].hasMine = true;
             mineArray.push(grid[randomX][randomY]);
         } else {
@@ -98,16 +102,43 @@ function fillCells() {
 
 function fillAccess() {
     strokeWeight(0);
-    fill("#00ff00");
+    fill("#444444");
     rect(gridWidth * size, 0, clientWidth - gridWidth * size, gridHeight * size);
     rect(0, gridHeight * size, clientWidth, clientHeight - gridHeight * size);
 }
 
 function mouseClicked() {
-    if (!grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].hasMine) {
-        setEmptyImage(grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size]);
-    } else {
-        youLost();
+    if (mouseButton === LEFT && (mouseX - mouseX % size) / size < gridWidth && (mouseY - mouseY % size) / size < gridHeight) {
+        if (!grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].hasMine) {
+            setEmptyImage(grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size]);
+            if (grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].surroundingMines === 0) {
+                expand(grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size]);
+            }
+        } else {
+            youLost(grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size]);
+        }
+        checkIfWon(true);
+    }
+}
+
+function keyPressed() {
+    if (keyCode === 87 || keyCode === 65 || keyCode === 83 || keyCode === 68 || keyCode === 77 || keyCode === 70) {
+        if (grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].img === unopened || grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].img === marked) {
+            grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].marked = (grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].marked) ? false : true;
+            if (grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].marked) {
+                markedArray.push(grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size]);
+                grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].img = marked;
+            } else {
+                grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].img = unopened;
+                for (i = 0; i < markedArray.length; i++) {
+                    if (grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size] === markedArray[i]) {
+                        markedArray.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+        }
+        checkIfWon(false);
     }
 }
 
@@ -118,12 +149,12 @@ function setRandoms() {
 
 function checkForMines(cell) {
     if (!grid[cell.x][cell.y].hasMine) {
-        if (cell.x < gridWidth-1 && cell.y < gridHeight-1 && grid[cell.x + 1][cell.y + 1].hasMine) grid[cell.x][cell.y].surroundingMines++;
-        if (cell.x < gridWidth-1 && grid[cell.x + 1][cell.y].hasMine) grid[cell.x][cell.y].surroundingMines++;
-        if (cell.x < gridWidth-1 && cell.y > 0 && grid[cell.x + 1][cell.y - 1].hasMine) grid[cell.x][cell.y].surroundingMines++;
-        if (cell.y < gridHeight-1 && grid[cell.x][cell.y + 1].hasMine) grid[cell.x][cell.y].surroundingMines++;
+        if (cell.x < gridWidth - 1 && cell.y < gridHeight - 1 && grid[cell.x + 1][cell.y + 1].hasMine) grid[cell.x][cell.y].surroundingMines++;
+        if (cell.x < gridWidth - 1 && grid[cell.x + 1][cell.y].hasMine) grid[cell.x][cell.y].surroundingMines++;
+        if (cell.x < gridWidth - 1 && cell.y > 0 && grid[cell.x + 1][cell.y - 1].hasMine) grid[cell.x][cell.y].surroundingMines++;
+        if (cell.y < gridHeight - 1 && grid[cell.x][cell.y + 1].hasMine) grid[cell.x][cell.y].surroundingMines++;
         if (cell.y > 0 && grid[cell.x][cell.y - 1].hasMine) grid[cell.x][cell.y].surroundingMines++;
-        if (cell.x > 0 && cell.y < gridHeight-1 &&grid[cell.x - 1][cell.y + 1].hasMine) grid[cell.x][cell.y].surroundingMines++;
+        if (cell.x > 0 && cell.y < gridHeight - 1 && grid[cell.x - 1][cell.y + 1].hasMine) grid[cell.x][cell.y].surroundingMines++;
         if (cell.x > 0 && grid[cell.x - 1][cell.y].hasMine) grid[cell.x][cell.y].surroundingMines++;
         if (cell.x > 0 && cell.y > 0 && grid[cell.x - 1][cell.y - 1].hasMine) grid[cell.x][cell.y].surroundingMines++;
     }
@@ -133,7 +164,6 @@ function setEmptyImage(cell) {
     switch (cell.surroundingMines) {
         case 0:
             cell.img = empty;
-            expand();
             break;
         case 1:
             cell.img = empty1;
@@ -162,10 +192,73 @@ function setEmptyImage(cell) {
     }
 }
 
-function expand() {
-    
+function expand(cell) {
+    let i = 0;
+    resetAlreadyPushed();
+    expandArray.push(grid[cell.x][cell.y]);
+    grid[cell.x][cell.y].alreadyPushed = true;
+    while (i < expandArray.length) {
+        addNeighbours(grid[expandArray[i].x][expandArray[i].y]);
+        i++;
+    }
+    for (j = 0; j < expandArray.length; j++) {
+        setEmptyImage(grid[expandArray[j].x][expandArray[j].y]);
+    }
 }
 
-function youLost() {
-    alert("you lost!");
+function addNeighbours(cell) {
+    if (cell.surroundingMines === 0) {
+        if (cell.x < gridWidth - 1 && !grid[cell.x + 1][cell.y].alreadyPushed) {
+            expandArray.push(grid[cell.x + 1][cell.y]);
+            grid[cell.x + 1][cell.y].alreadyPushed = true;
+        }
+        if (cell.y < gridHeight - 1 && !grid[cell.x][cell.y + 1].alreadyPushed) {
+            expandArray.push(grid[cell.x][cell.y + 1]);
+            grid[cell.x][cell.y + 1].alreadyPushed = true;
+        }
+        if (cell.x > 0 && !grid[cell.x - 1][cell.y].alreadyPushed) {
+            expandArray.push(grid[cell.x - 1][cell.y]);
+            grid[cell.x - 1][cell.y].alreadyPushed = true;
+        }
+        if (cell.y > 0 && !grid[cell.x][cell.y - 1].alreadyPushed) {
+            expandArray.push(grid[cell.x][cell.y - 1]);
+            grid[cell.x][cell.y - 1].alreadyPushed = true;
+        }
+    }
+}
+
+function resetAlreadyPushed() {
+    for (i = 0; i < gridWidth; i++) {
+        for (j = 0; j < gridHeight; j++) {
+            grid[i][j].alreadyPushed = false;
+        }
+    }
+}
+
+function checkIfWon(accessedFromClick) {
+    won = true;
+    for (i = 0; i < gridWidth; i++) {
+        for (j = 0; j < gridHeight; j++) {
+            if (accessedFromClick && grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].hasMine) won = false;
+            if (grid[i][j].img === unopened) won = false;
+            if (!grid[i][j].hasMine && grid[i][j].img === marked) won = false;
+        }
+    }
+    if (won) {
+        print("you won!");
+        fillCells();
+        noLoop();
+    }
+}
+
+function youLost(cell) {
+    for (i = 0; i < mineArray.length; i++) {
+        grid[mineArray[i].x][mineArray[i].y].img = mine;
+    }
+    for (i = 0; i < markedArray.length; i++) {
+        if (!markedArray[i].hasMine && markedArray[i].img === marked) grid[markedArray[i].x][markedArray[i].y].img = markedWrong;
+    }
+    grid[cell.x][cell.y].img = clickedMine;
+    fillCells();
+    noLoop();
 }
