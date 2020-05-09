@@ -1,6 +1,6 @@
 let numberOfElements = 100;
-let amountOfSwitches = 0;
 let amountOfComparisons = 0;
+let amountOfSwitches = 0;
 
 let sortArray = [];
 
@@ -15,6 +15,7 @@ let color2 = "#ffff00";
 let change = true;
 
 let randomizeButton;
+let inverseButton;
 let sortSelection;
 let sortInsertion;
 let sortBubble;
@@ -41,6 +42,11 @@ function setup() {
     randomizeButton.position(0, buttonOffsetY);
     randomizeButton.mousePressed(randomize);
 
+    inverseButton = createButton("Inverse");
+    inverseButton.position(0, buttonOffsetY + randomizeButton.height);
+    inverseButton.mousePressed(inverse);
+    inverseButton.size(randomizeButton.width, randomizeButton.height);
+
     sortSelection = createButton("Sort with Selection Sort");
     sortSelection.position(randomizeButton.width, buttonOffsetY);
     sortSelection.mousePressed(selectionSort);
@@ -53,13 +59,15 @@ function setup() {
     sortBubble.position(randomizeButton.width + sortSelection.width + sortInsertion.width, buttonOffsetY);
     sortBubble.mousePressed(bubbleSort);
 
-    waitTimeInput = createInput(200);
-    waitTimeInput.position(randomizeButton.width + sortSelection.width + sortInsertion.width + sortBubble.width, buttonOffsetY);
+    waitTimeInput = createInput("200");
+    waitTimeInput.position(randomizeButton.width, buttonOffsetY + randomizeButton.height);
     waitTimeInput.input(updateWaitTime);
+    waitTimeInput.size((sortSelection.width + sortInsertion.width)*0.975, randomizeButton.height*0.7);
 
-    submitButton = createButton("Submit");
-    submitButton.position(randomizeButton.width + sortSelection.width + sortInsertion.width + sortBubble.width + waitTimeInput.width, buttonOffsetY);
+    submitButton = createButton("Submit Speed");
+    submitButton.position(randomizeButton.width + waitTimeInput.width, buttonOffsetY + randomizeButton.height);
     submitButton.mousePressed(updateWaitTime);
+    submitButton.size(sortBubble.width, randomizeButton.height);
 }
 
 function draw() {
@@ -83,57 +91,85 @@ function draw() {
 }
 
 function randomize() {
-    for (let i = sortArray.length - 1; i > 0; i--) {
+    for (i = sortArray.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         [sortArray[i], sortArray[j]] = [sortArray[j], sortArray[i]];
     }
 }
 
+function inverse() {
+    for (i = 0; i < sortArray.length; i++) {
+        sortArray[i] = numberOfElements - i;
+    }
+}
+
 async function selectionSort() {
+    amountOfComparisons = 0;
+    amountOfSwitches = 0;
     for (nextUnsortedIndex = 0; nextUnsortedIndex < sortArray.length - 1; nextUnsortedIndex++) {
         highlighted2 = nextUnsortedIndex;
         await timer(waitTime);
         let smallestIndex = nextUnsortedIndex;
         for (i = nextUnsortedIndex; i < sortArray.length; i++) {
+            amountOfComparisons++;
             if (sortArray[i] < sortArray[smallestIndex]) {
                 smallestIndex = i;
                 highlighted1 = i;
             }
         }
+        amountOfSwitches++;
         [sortArray[smallestIndex], sortArray[nextUnsortedIndex]] = [sortArray[nextUnsortedIndex], sortArray[smallestIndex]];
     }
+    print("Selection Sort");
+    print("amount of Comparisons: " + amountOfComparisons);
+    print("amount of switches: " + amountOfSwitches);
     highlighted1 = undefined;
     highlighted2 = undefined;
 }
 
 async function insertionSort() {
+    amountOfComparisons = 0;
+    amountOfSwitches = 0;
     for (currentIndex = 1; currentIndex < sortArray.length; currentIndex++) {
         highlighted2 = currentIndex;
         await timer(waitTime);
         let currentlySorting = sortArray[currentIndex];
         let j = currentIndex;
         while (j > 0 && sortArray[j - 1] > currentlySorting) {
+            amountOfComparisons++;
+            amountOfComparisons++;
             highlighted1 = j;
             sortArray[j] = sortArray[j - 1];
+            amountOfSwitches++;
             j--;
         }
         sortArray[j] = currentlySorting;
     }
+    print("Insertion Sort");
+    print("amount of Comparisons: " + amountOfComparisons);
+    print("amount of switches: " + amountOfSwitches);
     highlighted1 = undefined;
     highlighted2 = undefined;
 }
 
 async function bubbleSort() {
+    amountOfComparisons = 0;
+    amountOfSwitches = 0;
     for (lastUnsorted = sortArray.length - 1; lastUnsorted > 0; lastUnsorted--) {
         await timer(waitTime);
         for (i = 0; i < lastUnsorted; i++) {
+            amountOfComparisons++;
             if (sortArray[i] > sortArray[i + 1]) {
                 highlighted2 = i;
-                highlighted1 = i+1;
+                highlighted1 = i + 1;
                 [sortArray[i], sortArray[i + 1]] = [sortArray[i + 1], sortArray[i]];
+                amountOfSwitches++;
             }
         }
     }
+    print("Bubble Sort");
+    print("amount of Comparisons: " + amountOfComparisons);
+    print("amount of switches: " + amountOfSwitches);
     highlighted1 = undefined;
     highlighted2 = undefined;
 }
