@@ -11,6 +11,10 @@ let expandArray = [];
 let markedArray = [];
 let won = true;
 
+let start = true;
+let timerStarted = false;
+let timer = 0;
+
 let randomX;
 let randomY;
 
@@ -90,6 +94,9 @@ function draw() {
     background(100);
     fillCells();
     fillAccess();
+    displayText();
+    displayTimer();
+    displayBottomText();
 }
 
 function fillCells() {
@@ -107,7 +114,37 @@ function fillAccess() {
     rect(0, gridHeight * size, clientWidth, clientHeight - gridHeight * size);
 }
 
+function displayText() {
+    if (start) {
+        textSize(clientHeight*0.13);
+        textAlign(LEFT, TOP);
+        fill("#444444");
+        rect(10, 5, (gridWidth - 1) * size, clientHeight*0.13 * 2.9)
+        fill("#000000");
+        text("Open Cell with LMB", size * 0.2, 0 + size*0.1);
+        text("Mark Mine with M/F/A/D", size * 0.2, clientHeight*0.13  + size*0.1);
+        text("Press R to Restart", size * 0.2, clientHeight*0.13 * 2  + size*0.1);
+    }
+}
+
+function displayTimer() {
+    if (timerStarted) {
+        timer++;
+        if (timer % 60 === 0) print(timer / 60);
+    }
+}
+
+function displayBottomText() {
+    textSize(clientHeight*0.05);
+    textAlign(LEFT, TOP);
+    fill("#000000");
+    text(gridWidth + "x" + gridHeight + " Mine Field (" + int(numberOfMines) + "Mines)", 0, gridHeight*size + size*0.05);
+    text("Resize Window and Press R for Different Sizes!", 0, gridHeight*size + size*0.05 + clientHeight*0.05);
+}
+
 function mouseClicked() {
+    start = false;
+    timerStarted = true;
     if (mouseButton === LEFT && (mouseX - mouseX % size) / size < gridWidth && (mouseY - mouseY % size) / size < gridHeight) {
         if (!grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].hasMine) {
             setEmptyImage(grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size]);
@@ -122,6 +159,8 @@ function mouseClicked() {
 }
 
 function keyPressed() {
+    start = false;
+    timerStarted = true;
     if (keyCode === 87 || keyCode === 65 || keyCode === 83 || keyCode === 68 || keyCode === 77 || keyCode === 70) {
         if (grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].img === unopened || grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].img === marked) {
             grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].marked = (grid[(mouseX - mouseX % size) / size][(mouseY - mouseY % size) / size].marked) ? false : true;
@@ -139,6 +178,9 @@ function keyPressed() {
             }
         }
         checkIfWon(false);
+    }
+    if (keyCode === 82) {
+        window.location.reload(false);
     }
 }
 
@@ -244,14 +286,31 @@ function checkIfWon(accessedFromClick) {
             if (!grid[i][j].hasMine && grid[i][j].img === marked) won = false;
         }
     }
-    if (won) {
-        alert("you won!");
-        fillCells();
-        noLoop();
-    }
+    if (won) youWon();
+
+}
+
+function youWon() {
+    timerStarted = false;
+    fillCells();
+    noLoop();
+    displayWinText();
+}
+
+async function displayWinText() {
+    await delay(50);
+    textSize(clientHeight*0.13);
+    textAlign(CENTER, CENTER);
+    fill("#ff5555");
+    circle(gridWidth * size / 2, gridHeight * size / 2, gridHeight * size);
+    fill("#ffffff");
+    text("You Won!", gridWidth * size / 2, gridHeight * size / 2 - clientHeight * 0.2);
+    text("Grid Size:" + gridWidth + "x" + gridHeight, gridWidth * size / 2, gridHeight * size / 2);
+    text("Time: " + parseFloat((timer/60).toFixed(2)), gridWidth * size / 2, gridHeight * size / 2 + clientHeight * 0.2);
 }
 
 function youLost(cell) {
+    timerStarted = false;
     for (i = 0; i < mineArray.length; i++) {
         grid[mineArray[i].x][mineArray[i].y].img = mine;
     }
@@ -261,4 +320,21 @@ function youLost(cell) {
     grid[cell.x][cell.y].img = clickedMine;
     fillCells();
     noLoop();
+    displayLossText();  
+}
+
+async function displayLossText() {
+    await delay(50);
+    textSize(clientHeight*0.13);
+    textAlign(CENTER, CENTER);
+    fill("#ff5555");
+    circle(gridWidth * size / 2, gridHeight * size / 2, gridHeight * size);
+    fill("#ffffff");
+    text("You Lost!", gridWidth * size / 2, gridHeight * size / 2 - clientHeight * 0.2);
+    text("Be Smarter!", gridWidth * size / 2, gridHeight * size / 2);
+    text("Press R!", gridWidth * size / 2, gridHeight * size / 2 + clientHeight * 0.2);
+}
+
+function delay(ms) {
+    return new Promise(res => setTimeout(res, ms));
 }
