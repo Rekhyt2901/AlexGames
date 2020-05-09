@@ -245,7 +245,7 @@ function checkIfWon(accessedFromClick) {
         }
     }
     if (won) {
-        print("you won!");
+        alert("you won!");
         fillCells();
         noLoop();
     }
