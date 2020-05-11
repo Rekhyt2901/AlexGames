@@ -14,23 +14,14 @@ body {
 
 a:visited, a:link {
     display: inline-block;
-    color: #ffffff;
     text-decoration: none;
-    width: 19%;
+    background-color:#00ffff;
+    width: 15%;
     height: 100%;
-    font-size: xx-large;
     padding: 0px;
     margin: 0px;
 }
 
 a:hover{
-    background-color: #11aa44;
-}
-
-iframe {
-    width: 100%;
-    margin: 0px;
-    padding: 0px;
-    background-color:#ffffff;
-    height: 100%;
+    background-color: #00ff00;
 }
