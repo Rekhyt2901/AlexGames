@@ -9,88 +9,91 @@ While there are walls in the list:
     Remove the wall from the list.
 */
 
-
-
-class cell {
-    constructor(x, y) {
+class Cell {
+    constructor(x, y, path) {
         this.x = x;
         this.y = y;
-        this.pathed = false;
-        this.directionToPath = "start";
+        this.path = path;
     }
 }
 
-let labWidth = 10;
-let labHeight = 10;
-let cellSize = 50;
-let Labyrinth = [];
-let current;
-let stack = [];
+let labWidth = 100;
+let labHeight = 50;
+let size = 10;
 
+let lab = [];
+
+let randomX;
+let randomY;
+
+let stack = [];
+let current;
 
 function setup() {
-    createCanvas(labWidth * cellSize, labHeight * cellSize);
-    background(100);
-    fill("#00ff00");
-
+    randomX = int(random(labWidth));
+    randomY = int(random(labHeight));
+    createCanvas(labWidth*size, labHeight*size);
     for (i = 0; i < labWidth; i++) {
-        Labyrinth[i] = [];
+        lab[i] = [];
         for (j = 0; j < labHeight; j++) {
-            Labyrinth[i][j] = new cell(i, j);
+            lab[i][j] = new Cell(i, j, false);
         }
     }
-    //let randomX = int(random(labWidth));
-    //let randomY = int(random(labHeight));
-    let randomX = 5;
-    let randomY = 5;
-    Labyrinth[randomX][randomY].pathed = true;
-    current = Labyrinth[randomX][randomY];
-    addWallsToStack(current);
+    lab[randomX][randomY].path = true;
+    stack.push(lab[randomX][randomY]);
 }
 
 function draw() {
-    randomWall();
+    if (stack.length > 0) {
+        currentIndex = int(random(stack.length));
+        current = stack[currentIndex];
+        if (current.x + 2 < labWidth - 1 && !lab[current.x + 2][current.y].path
+            && !lab[current.x + 1][current.y + 1].path
+            && !lab[current.x + 1][current.y - 1].path
+            && !lab[current.x + 2][current.y + 1].path
+            && !lab[current.x + 2][current.y - 1].path) {
+            lab[current.x + 1][current.y].path = true;
+            stack.push(lab[current.x + 1][current.y]);
+        }
+        if (current.x - 2 > 0 && !lab[current.x - 2][current.y].path
+            && !lab[current.x - 1][current.y + 1].path
+            && !lab[current.x - 1][current.y - 1].path
+            && !lab[current.x - 2][current.y + 1].path
+            && !lab[current.x - 2][current.y - 1].path) {
+            lab[current.x - 1][current.y].path = true;
+            stack.push(lab[current.x - 1][current.y]);
+        }
+        if (current.y + 2 < labHeight - 1 && !lab[current.x][current.y + 2].path
+            && !lab[current.x + 1][current.y + 1].path
+            && !lab[current.x - 1][current.y + 1].path
+            && !lab[current.x + 1][current.y + 2].path
+            && !lab[current.x - 1][current.y + 2].path) {
+            lab[current.x][current.y + 1].path = true;
+            stack.push(lab[current.x][current.y + 1]);
+        }
+        if (current.y - 2 > 0 && !lab[current.x][current.y - 2].path
+            && !lab[current.x + 1][current.y - 1].path
+            && !lab[current.x - 1][current.y - 1].path
+            && !lab[current.x + 1][current.y - 2].path
+            && !lab[current.x - 1][current.y - 2].path) {
+            lab[current.x][current.y - 1].path = true;
+            stack.push(lab[current.x][current.y - 1]);
+        }
+        stack.splice(currentIndex, 1);
+    }
+    displayLab();
+}
 
+function displayLab() {
     for (i = 0; i < labWidth; i++) {
         for (j = 0; j < labHeight; j++) {
-            if (!Labyrinth[i][j].pathed) rect(Labyrinth[i][j].x * cellSize, Labyrinth[i][j].y * cellSize, cellSize, cellSize);
+            if (lab[i][j].path) {
+                fill("#ffffff");
+                rect(i * size, j * size, size, size);
+            } else {
+                fill("#000000");
+                rect(i * size, j * size, size, size);
+            }
         }
-    }
-}
-
-function randomWall() {
-    print("doing randomWall of cell:" + cell);
-    randomIndex = int(random(stack.length));
-    print ("randomIndex: " + randomIndex);
-    current = stack[randomIndex];
-    print ("stack at randomIndex : " + stack[randomIndex]);
-    if (current.directionToPath === "right" && !Labyrinth[current.x - 1][current.y].pathed
-        || current.directionToPath === "left" && !Labyrinth[current.x + 1][current.y].pathed
-        || current.directionToPath === "top" && !Labyrinth[current.x][current.y + 1].pathed
-        || current.directionToPath === "bottom" && !Labyrinth[current.x][current.y - 1].pathed) {
-        current.pathed = true;
-        addWallsToStack(current);
-    }
-    stack.splice(randomIndex, 1);
-
-}
-
-function addWallsToStack(cell) {
-    print("adding Walls of Cell: " + cell);
-    if (!Labyrinth[cell.x + 1][cell.y].pathed) {
-        Labyrinth[cell.x + 1][cell.y].directionToPath = "left";
-        stack.push(Labyrinth[cell.x + 1][cell.y]);
-    }
-    if (!Labyrinth[cell.x - 1][cell.y].pathed) {
-        Labyrinth[cell.x - 1][cell.y].directionToPath = "right";
-        stack.push(Labyrinth[cell.x - 1][cell.y]);
-    }
-    if (!Labyrinth[cell.x][cell.y + 1].pathed) {
-        Labyrinth[cell.x][cell.y + 1].directionToPath = "top";
-        stack.push(Labyrinth[cell.x][cell.y + 1]);
-    }
-    if (!Labyrinth[cell.x][cell.y - 1].pathed) {
-        Labyrinth[cell.x][cell.y - 1].directionToPath = "bottom";
-        stack.push(Labyrinth[cell.x][cell.y - 1]);
     }
 }
