@@ -114,10 +114,12 @@ async function selectionSort() {
             amountOfComparisons++;
             if (sortArray[i] < sortArray[smallestIndex]) {
                 smallestIndex = i;
-                highlighted1 = i;
             }
         }
+        highlighted1 = smallestIndex;
         amountOfSwitches++;
+        await timer(waitTime*2);
+        highlighted1 = undefined;
         [sortArray[smallestIndex], sortArray[nextUnsortedIndex]] = [sortArray[nextUnsortedIndex], sortArray[smallestIndex]];
     }
     print("Selection Sort");
