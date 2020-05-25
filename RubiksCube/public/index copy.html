@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr" style="background-color: #000011; color: #ffffff;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3dModels</title>
+    <script src="./threejs-loader/three.js"></script>
+    <script src="./threejs-loader/OBJLoader.js"></script>
+    <script src="./threejs-loader/MTLLoader.js"></script>
+    <script src="./threejs-loader/OrbitControls.js"></script>
+</head>
+
+<body style="margin: 0px; overflow-x: hidden; overflow-y: hidden;">
+    <script>
+
+        const scene = new THREE.Scene();
+        const light = new THREE.AmbientLight(0xffffff);
+        scene.add(light);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0xddffdd, 1);
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.minDistance = 7;
+        controls.target.set(1, 1, 1);
+
+        const objLoader = new THREE.OBJLoader();
+        const mtlLoader = new THREE.MTLLoader();
+
+        function loadObject(fileName, x, y, z) {
+            mtlLoader.load("blender-files/" + fileName + ".mtl", (materials) => {
+                materials.preload();
+                objLoader.setMaterials(materials);
+                objLoader.load("blender-files/" + fileName + ".obj", (object) => {
+                    object.scale.set(40, 40, 40);
+                    object.position.set(x, y, z);
+                    scene.add(object);
+                })
+            })
+        }
+
+        loadObject("CornerBOW", 0, 0, 2);
+        loadObject("CornerGRY", 2, 2, 0);
+        render();
+
+        function render() {
+            controls.update();
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
