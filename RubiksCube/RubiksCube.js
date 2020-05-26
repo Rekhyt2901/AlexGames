@@ -169,12 +169,12 @@ const xAxis = new THREE.Vector3(1, 0, 0); //Red, Orange
 
         function chooseEvent(event, x, y, z) {
                 shift = event.origDomEvent.shiftKey;
-                if (x === 1 && y === 0 && z === 1) turnW(x, y, z, shift);
-                if (x === 1 && y === 2 && z === 1) turnY(x, y, z, shift);
-                if (x === 1 && y === 1 && z === 2) turnB(x, y, z, shift);
-                if (x === 1 && y === 1 && z === 0) turnG(x, y, z, shift);
-                if (x === 2 && y === 1 && z === 1) turnR(x, y, z, shift);
-                if (x === 0 && y === 1 && z === 1) turnO(x, y, z, shift);
+                if (x === 1 && y === 0 && z === 1) turnW(shift);
+                if (x === 1 && y === 2 && z === 1) turnY(shift);
+                if (x === 1 && y === 1 && z === 2) turnB(shift);
+                if (x === 1 && y === 1 && z === 0) turnG(shift);
+                if (x === 2 && y === 1 && z === 1) turnR(shift);
+                if (x === 0 && y === 1 && z === 1) turnO(shift);
         }
 
         function getIntersecting(rotationPoint, pt2x, pt2y, pt2z) {
@@ -187,7 +187,10 @@ const xAxis = new THREE.Vector3(1, 0, 0); //Red, Orange
             return intersectingObjects[2].object.parent.parent;
         }
 
-        function turnW(x, y, z, shift) {
+        function turnW(shift) {
+            let x = 1;
+            let y = 0;
+            let z = 1;
             whiteGroup = new THREE.Object3D();
 
             whiteGroup.attach(getIntersecting(rotationPointW, x + 1, y, z));
@@ -206,7 +209,10 @@ const xAxis = new THREE.Vector3(1, 0, 0); //Red, Orange
             scene.add(whiteGroup);
         }
 
-        function turnY(x, y, z, shift) {
+        function turnY(shift) {
+            let x = 1;
+            let y = 2;
+            let z = 1;
             yellowGroup = new THREE.Object3D();
 
             yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z));
@@ -225,7 +231,10 @@ const xAxis = new THREE.Vector3(1, 0, 0); //Red, Orange
             scene.add(yellowGroup);
         }
 
-        function turnB(x, y, z, shift) {
+        function turnB(shift) {
+            let x = 1;
+            let y = 1;
+            let z = 2;
             blueGroup = new THREE.Object3D();
 
             blueGroup.attach(getIntersecting(rotationPointB, x + 1, y, z));
@@ -244,7 +253,10 @@ const xAxis = new THREE.Vector3(1, 0, 0); //Red, Orange
             scene.add(blueGroup);
         }
 
-        function turnG(x, y, z, shift) {
+        function turnG(shift) {
+            let x = 1;
+            let y = 1;
+            let z = 0;
             greenGroup = new THREE.Object3D();
 
             greenGroup.attach(getIntersecting(rotationPointG, x + 1, y, z));
@@ -263,7 +275,10 @@ const xAxis = new THREE.Vector3(1, 0, 0); //Red, Orange
             scene.add(greenGroup);
         }
 
-        function turnR(x, y, z, shift) {
+        function turnR(shift) {
+            let x = 2;
+            let y = 1;
+            let z = 1;
             redGroup = new THREE.Object3D();
 
             redGroup.attach(getIntersecting(rotationPointR, x, y, z+1));
@@ -282,7 +297,10 @@ const xAxis = new THREE.Vector3(1, 0, 0); //Red, Orange
             scene.add(redGroup);
         }
 
-        function turnO(x, y, z, shift) {
+        function turnO(shift) {
+            let x = 0;
+            let y = 1;
+            let z = 1;
             orangeGroup = new THREE.Object3D();
 
             orangeGroup.attach(getIntersecting(rotationPointO, x, y, z+1));
