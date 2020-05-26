@@ -1,0 +1,67 @@
+/* greenGroup = new THREE.Object3D();
+
+            greenGroup.add(cubiesArray[x][y][z]);
+            greenGroup.add(cubiesArray[x - 1][y][z]);
+            greenGroup.add(cubiesArray[x + 1][y][z]);
+
+            greenGroup.add(cubiesArray[x][y - 1][z]);
+            greenGroup.add(cubiesArray[x - 1][y - 1][z]);
+            greenGroup.add(cubiesArray[x + 1][y - 1][z]);
+
+            greenGroup.add(cubiesArray[x][y + 1][z]);
+            greenGroup.add(cubiesArray[x - 1][y + 1][z]);
+            greenGroup.add(cubiesArray[x + 1][y + 1][z]);
+
+            greenGroup.rotateAroundWorldAxis(rotationPointG, zAxis, counterG * Math.PI / 2);
+            counterG++;
+            if (counterG > 4) counterG = 1;
+
+            scene.add(greenGroup);
+
+            var cubiesArrayCopy = cubiesArray;
+            cubiesArray[x - 1][y][z] = greenGroup.children[6];
+            cubiesArray[x + 1][y][z] = greenGroup.children[3];
+
+            cubiesArray[x][y - 1][z] = greenGroup.children[1];
+            cubiesArray[x - 1][y - 1][z] = greenGroup.children[7];
+            cubiesArray[x + 1][y - 1][z] = greenGroup.children[4];
+
+            cubiesArray[x][y + 1][z] = greenGroup.children[2];
+            cubiesArray[x - 1][y + 1][z] = greenGroup.children[8];
+            cubiesArray[x + 1][y + 1][z] = greenGroup.children[5]; */
+
+
+
+
+
+
+
+
+            whiteGroup.add(cubiesArray[x][y][z]);
+            whiteGroup.add(cubiesArray[x - 1][y][z]);
+            whiteGroup.add(cubiesArray[x + 1][y][z]);
+
+            whiteGroup.add(cubiesArray[x][y][z - 1]);
+            whiteGroup.add(cubiesArray[x - 1][y][z - 1]);
+            whiteGroup.add(cubiesArray[x + 1][y][z - 1]);
+
+            whiteGroup.add(cubiesArray[x][y][z + 1]);
+            whiteGroup.add(cubiesArray[x - 1][y][z + 1]);
+            whiteGroup.add(cubiesArray[x + 1][y][z + 1]);
+
+            whiteGroup.rotateAroundWorldAxis(rotationPointW, yAxis, counterW * Math.PI / 2);
+            counterW++;
+            if (counterW > 4) counterW = 1;
+
+            scene.add(whiteGroup);
+
+            cubiesArray[x - 1][y][z] = whiteGroup.children[3];
+            cubiesArray[x + 1][y][z] = whiteGroup.children[6];
+
+            cubiesArray[x][y][z - 1] = whiteGroup.children[2];
+            cubiesArray[x - 1][y][z - 1] = whiteGroup.children[5];
+            cubiesArray[x + 1][y][z - 1] = whiteGroup.children[8];
+
+            cubiesArray[x][y][z + 1] = whiteGroup.children[1];
+            cubiesArray[x - 1][y][z + 1] = whiteGroup.children[4];
+            cubiesArray[x + 1][y][z + 1] = whiteGroup.children[7];
