@@ -12,14 +12,17 @@ const rotationPointG = new THREE.Vector3(0, 0, -1);
 const rotationPointR = new THREE.Vector3(1, 0, 0);
 const rotationPointO = new THREE.Vector3(-1, 0, 0);
 
-let dir = new THREE.Vector3();
-
 let whiteGroup = new THREE.Object3D();
 let yellowGroup = new THREE.Object3D();
 let blueGroup = new THREE.Object3D();
 let greenGroup = new THREE.Object3D();
 let redGroup = new THREE.Object3D();
 let orangeGroup = new THREE.Object3D();
+
+let dir = new THREE.Vector3();
+const step = 1 / 20;
+let angleStep = Math.PI / 40;
+let t = 0;
 
 //Builds 3d Array;
 let cubiesArray = [];
@@ -58,7 +61,7 @@ const raycaster = new THREE.Raycaster();
 //Loading Manager
 const manager = new THREE.LoadingManager();
 manager.onLoad = function () {
-    console.log('Loading complete!');
+    //console.log('Loading complete!');
     addListeners();
     render();
 };
@@ -206,12 +209,35 @@ function getIntersecting(rotationPoint, pt2x, pt2y, pt2z) {
     return intersectingObjects[2].object.parent.parent;
 }
 
+
+function turnY(shift) {
+    let x = 1;
+    let y = 2;
+    let z = 1;
+    yellowGroup = new THREE.Object3D();
+    scene.add(yellowGroup);
+
+    yellowGroup.attach(cubiesArray[x][y][z]);
+    yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z));
+    yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z));
+    yellowGroup.attach(getIntersecting(rotationPointY, x, y, z + 1));
+    yellowGroup.attach(getIntersecting(rotationPointY, x, y, z - 1));
+    yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z + 1));
+    yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z - 1));
+    yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z + 1));
+    yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z - 1));
+    
+    animateGroup(t, !shift, yellowGroup, "y");
+}
+
 function turnW(shift) {
     let x = 1;
     let y = 0;
     let z = 1;
     whiteGroup = new THREE.Object3D();
+    scene.add(whiteGroup);
 
+    whiteGroup.attach(cubiesArray[x][y][z]);
     whiteGroup.attach(getIntersecting(rotationPointW, x + 1, y, z));
     whiteGroup.attach(getIntersecting(rotationPointW, x - 1, y, z));
     whiteGroup.attach(getIntersecting(rotationPointW, x, y, z + 1));
@@ -221,33 +247,7 @@ function turnW(shift) {
     whiteGroup.attach(getIntersecting(rotationPointW, x - 1, y, z + 1));
     whiteGroup.attach(getIntersecting(rotationPointW, x - 1, y, z - 1));
 
-    let rot = Math.PI / 2
-    if (shift) rot = -Math.PI / 2
-    whiteGroup.rotation.y += rot;
-
-    scene.add(whiteGroup);
-}
-
-function turnY(shift) {
-    let x = 1;
-    let y = 2;
-    let z = 1;
-    yellowGroup = new THREE.Object3D();
-
-    yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z));
-    yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z));
-    yellowGroup.attach(getIntersecting(rotationPointY, x, y, z + 1));
-    yellowGroup.attach(getIntersecting(rotationPointY, x, y, z - 1));
-    yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z + 1));
-    yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z - 1));
-    yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z + 1));
-    yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z - 1));
-
-    let rot = -Math.PI / 2
-    if (shift) rot = Math.PI / 2
-    yellowGroup.rotation.y += rot;
-
-    scene.add(yellowGroup);
+    animateGroup(t, shift, whiteGroup, "y");
 }
 
 function turnB(shift) {
@@ -255,7 +255,9 @@ function turnB(shift) {
     let y = 1;
     let z = 2;
     blueGroup = new THREE.Object3D();
+    scene.add(blueGroup);
 
+    blueGroup.attach(cubiesArray[x][y][z]);
     blueGroup.attach(getIntersecting(rotationPointB, x + 1, y, z));
     blueGroup.attach(getIntersecting(rotationPointB, x - 1, y, z));
     blueGroup.attach(getIntersecting(rotationPointB, x, y + 1, z));
@@ -265,11 +267,7 @@ function turnB(shift) {
     blueGroup.attach(getIntersecting(rotationPointB, x - 1, y + 1, z));
     blueGroup.attach(getIntersecting(rotationPointB, x - 1, y - 1, z));
 
-    let rot = -Math.PI / 2
-    if (shift) rot = Math.PI / 2
-    blueGroup.rotation.z += rot;
-
-    scene.add(blueGroup);
+    animateGroup(t, !shift, blueGroup, "z");
 }
 
 function turnG(shift) {
@@ -277,7 +275,9 @@ function turnG(shift) {
     let y = 1;
     let z = 0;
     greenGroup = new THREE.Object3D();
+    scene.add(greenGroup);
 
+    greenGroup.attach(cubiesArray[x][y][z]);
     greenGroup.attach(getIntersecting(rotationPointG, x + 1, y, z));
     greenGroup.attach(getIntersecting(rotationPointG, x - 1, y, z));
     greenGroup.attach(getIntersecting(rotationPointG, x, y + 1, z));
@@ -287,11 +287,7 @@ function turnG(shift) {
     greenGroup.attach(getIntersecting(rotationPointG, x - 1, y + 1, z));
     greenGroup.attach(getIntersecting(rotationPointG, x - 1, y - 1, z));
 
-    let rot = Math.PI / 2
-    if (shift) rot = -Math.PI / 2
-    greenGroup.rotation.z += rot;
-
-    scene.add(greenGroup);
+    animateGroup(t, shift, greenGroup, "z");
 }
 
 function turnR(shift) {
@@ -299,7 +295,9 @@ function turnR(shift) {
     let y = 1;
     let z = 1;
     redGroup = new THREE.Object3D();
+    scene.add(redGroup);
 
+    redGroup.attach(cubiesArray[x][y][z]);
     redGroup.attach(getIntersecting(rotationPointR, x, y, z + 1));
     redGroup.attach(getIntersecting(rotationPointR, x, y, z - 1));
     redGroup.attach(getIntersecting(rotationPointR, x, y + 1, z));
@@ -309,11 +307,7 @@ function turnR(shift) {
     redGroup.attach(getIntersecting(rotationPointR, x, y + 1, z - 1));
     redGroup.attach(getIntersecting(rotationPointR, x, y - 1, z - 1));
 
-    let rot = -Math.PI / 2
-    if (shift) rot = Math.PI / 2
-    redGroup.rotation.x += rot;
-
-    scene.add(redGroup);
+    animateGroup(t, !shift, redGroup, "x");
 }
 
 function turnO(shift) {
@@ -321,7 +315,9 @@ function turnO(shift) {
     let y = 1;
     let z = 1;
     orangeGroup = new THREE.Object3D();
+    scene.add(orangeGroup);
 
+    orangeGroup.attach(cubiesArray[x][y][z]);
     orangeGroup.attach(getIntersecting(rotationPointO, x, y, z + 1));
     orangeGroup.attach(getIntersecting(rotationPointO, x, y, z - 1));
     orangeGroup.attach(getIntersecting(rotationPointO, x, y + 1, z));
@@ -331,9 +327,19 @@ function turnO(shift) {
     orangeGroup.attach(getIntersecting(rotationPointO, x, y + 1, z - 1));
     orangeGroup.attach(getIntersecting(rotationPointO, x, y - 1, z - 1));
 
-    let rot = Math.PI / 2
-    if (shift) rot = -Math.PI / 2
-    orangeGroup.rotation.x += rot;
+    animateGroup(t, shift, orangeGroup, "x");
+}
 
-    scene.add(orangeGroup);
+function animateGroup(t, inverse, group, axis) {
+    if (t >= 1) {
+        t = 0;
+        return;
+    }
+    angleStep = Math.PI / 40;
+    if (inverse) angleStep = -Math.PI / 40;
+    t += step;
+    if(axis === "x") group.rotation.x += angleStep;
+    if(axis === "y") group.rotation.y += angleStep;
+    if(axis === "z") group.rotation.z += angleStep;
+    requestAnimationFrame(() => animateGroup(t, inverse, group, axis));
 }
