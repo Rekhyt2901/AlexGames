@@ -4,14 +4,38 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3dModels</title>
-    <script src="./libs/three.js"></script>
-    <script src="./libs/OrbitControls.js"></script>
-    <script src="./libs/GLTFLoader.js"></script>
-    <script src="./libs/threexdomevents.js"></script>
-    <script src="libs/LoadingManager.js"></script>
-</head>
+    <title>Rubik's Cube</title>
+    <script defer src="RubiksCube.js"></script>
+    <script src="/libs/three.js"></script>
+    <script src="/libs/OrbitControls.js"></script>
+    <script src="/libs/GLTFLoader.js"></script>
+    <script src="/libs/threexdomevents.js"></script>
+    <script src="/libs/LoadingManager.js"></script>
+    <style>
+        #sidebar {
+            width: 20%;
+            height: 100%;
+            position: fixed;
+            left: 80%;
+        }
 
+        button {
+            position: relative;
+            width: 90%;
+            height: 5%;
+            margin: 5%;
+            font-size: 5rem;
+        }
+    </style>
+</head>
 <body style="margin: 0px; overflow-x: hidden; overflow-y: hidden;">
-    <script src="RubiksCube.js"></script>
+    <div id="sidebar">
+        <button id="turnYellow">Turn Yellow</button>
+        <button id="turnWhite">Turn White</button>
+        <button id="turnBlue">Turn Blue</button>
+        <button id="turnGreen">Turn Green</button>
+        <button id="turnRed">Turn Red</button>
+        <button id="turnOrange">Turn Orange</button>
+        <button id="solve">Solve Cube</button>
+    </div>
 </body>

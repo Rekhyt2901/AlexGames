@@ -5,7 +5,7 @@ let gridWidth = (clientWidth - clientWidth % size) / size;
 let gridHeight = (clientHeight - clientHeight % size) / size;
 let grid = [];
 
-let numberOfMines = gridWidth * gridHeight * 0.15;
+let numberOfMines = gridWidth * gridHeight * 0.1;
 let mineArray = [];
 let expandArray = [];
 let markedArray = [];
@@ -116,14 +116,14 @@ function fillAccess() {
 
 function displayText() {
     if (start) {
-        textSize(clientHeight*0.13);
+        textSize(clientHeight * 0.13);
         textAlign(LEFT, TOP);
         fill("#444444");
-        rect(10, 5, (gridWidth - 1) * size, clientHeight*0.13 * 2.9)
+        rect(10, 5, (gridWidth - 1) * size, clientHeight * 0.13 * 2.9)
         fill("#000000");
-        text("Open Cell with LMB", size * 0.2, 0 + size*0.1);
-        text("Mark Mine with M/F/A/D", size * 0.2, clientHeight*0.13  + size*0.1);
-        text("Press R to Restart", size * 0.2, clientHeight*0.13 * 2  + size*0.1);
+        text("Open Cell with LMB", size * 0.2, 0 + size * 0.1);
+        text("Mark Mine with M/F/A/D", size * 0.2, clientHeight * 0.13 + size * 0.1);
+        text("Press R to Restart", size * 0.2, clientHeight * 0.13 * 2 + size * 0.1);
     }
 }
 
@@ -135,11 +135,11 @@ function displayTimer() {
 }
 
 function displayBottomText() {
-    textSize(clientHeight*0.05);
+    textSize(clientHeight * 0.05);
     textAlign(LEFT, TOP);
     fill("#000000");
-    text(gridWidth + "x" + gridHeight + " Mine Field (" + int(numberOfMines) + "Mines)", 0, gridHeight*size + size*0.05);
-    text("Resize Window and Press R for Different Sizes!", 0, gridHeight*size + size*0.05 + clientHeight*0.05);
+    text(gridWidth + "x" + gridHeight + " Mine Field (" + int(numberOfMines) + "Mines)", 0, gridHeight * size + size * 0.05);
+    text("Resize Window and Press R for Different Sizes!", 0, gridHeight * size + size * 0.05 + clientHeight * 0.05);
 }
 
 function mouseClicked() {
@@ -266,6 +266,23 @@ function addNeighbours(cell) {
             expandArray.push(grid[cell.x][cell.y - 1]);
             grid[cell.x][cell.y - 1].alreadyPushed = true;
         }
+        //Diagonalen
+        if (cell.x < gridWidth - 1 && cell.y < gridHeight - 1 && !grid[cell.x + 1][cell.y + 1].alreadyPushed) {
+            expandArray.push(grid[cell.x + 1][cell.y + 1]);
+            grid[cell.x + 1][cell.y + 1].alreadyPushed = true;
+        }
+        if (cell.x < gridWidth - 1 && cell.y > 0 && !grid[cell.x + 1][cell.y - 1].alreadyPushed) {
+            expandArray.push(grid[cell.x + 1][cell.y - 1]);
+            grid[cell.x + 1][cell.y - 1].alreadyPushed = true;
+        }
+        if (cell.x > 0 && cell.y < gridHeight - 1 && !grid[cell.x - 1][cell.y + 1].alreadyPushed) {
+            expandArray.push(grid[cell.x - 1][cell.y + 1]);
+            grid[cell.x - 1][cell.y + 1].alreadyPushed = true;
+        }
+        if (cell.x > 0 && cell.y > 0 && !grid[cell.x - 1][cell.y - 1].alreadyPushed) {
+            expandArray.push(grid[cell.x - 1][cell.y - 1]);
+            grid[cell.x - 1][cell.y - 1].alreadyPushed = true;
+        }
     }
 }
 
@@ -299,14 +316,14 @@ function youWon() {
 
 async function displayWinText() {
     await delay(50);
-    textSize(clientHeight*0.13);
+    textSize(clientHeight * 0.13);
     textAlign(CENTER, CENTER);
     fill("#ff5555");
     circle(gridWidth * size / 2, gridHeight * size / 2, gridHeight * size);
     fill("#ffffff");
     text("You Won!", gridWidth * size / 2, gridHeight * size / 2 - clientHeight * 0.2);
     text("Grid Size:" + gridWidth + "x" + gridHeight, gridWidth * size / 2, gridHeight * size / 2);
-    text("Time: " + parseFloat((timer/60).toFixed(2)), gridWidth * size / 2, gridHeight * size / 2 + clientHeight * 0.2);
+    text("Time: " + parseFloat((timer / 60).toFixed(2)), gridWidth * size / 2, gridHeight * size / 2 + clientHeight * 0.2);
 }
 
 function youLost(cell) {
@@ -320,12 +337,12 @@ function youLost(cell) {
     grid[cell.x][cell.y].img = clickedMine;
     fillCells();
     noLoop();
-    displayLossText();  
+    displayLossText();
 }
 
 async function displayLossText() {
     await delay(50);
-    textSize(clientHeight*0.13);
+    textSize(clientHeight * 0.13);
     textAlign(CENTER, CENTER);
     fill("#ff5555");
     circle(gridWidth * size / 2, gridHeight * size / 2, gridHeight * size);

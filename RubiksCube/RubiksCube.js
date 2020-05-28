@@ -24,6 +24,9 @@ const step = 1 / 20;
 let angleStep = Math.PI / 40;
 let t = 0;
 
+let lastTimeExecuted = Date.now();
+let intervall = 350;
+
 //Builds 3d Array;
 let cubiesArray = [];
 for (i = 0; i < 3; i++) {
@@ -41,17 +44,18 @@ const light = new THREE.AmbientLight(0xffffff, 2);
 scene.add(light);
 
 //Camera
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth * 0.8 / window.innerHeight, 0.1, 1000);
 window.addEventListener("resize", onWindowResize, false);
+camera.position.set(0, 1.5, 5);
 function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = window.innerWidth * 0.8 / window.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth * 0.8, window.innerHeight);
 }
 
 //Renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(window.innerWidth * 0.8, window.innerHeight);
 renderer.setClearColor(0xddffdd, 1);
 document.body.appendChild(renderer.domElement);
 
@@ -63,6 +67,7 @@ const manager = new THREE.LoadingManager();
 manager.onLoad = function () {
     //console.log('Loading complete!');
     addListeners();
+    addHTMLButtons();
     render();
 };
 manager.onError = function (url) {
@@ -74,7 +79,7 @@ const glTFLoader = new THREE.GLTFLoader(manager);
 
 //Font Loader
 const fontLoader = new THREE.FontLoader();
-const font = fontLoader.load("font.json", function (font) {
+const font = fontLoader.load("/IndexAssets/font.json", function (font) {
     let textGeometry = new THREE.TextGeometry("Left Click (+shift) on Centers to turn sides!", {
         font: font,
         size: 1,
@@ -87,7 +92,7 @@ const font = fontLoader.load("font.json", function (font) {
         bevelSegments: 0
     });
     let text = new THREE.Mesh(textGeometry, new THREE.MeshPhongMaterial({ color: 0x0000, specular: 0xffffff }));
-    text.position.set(-12.8, 4, -20);
+    text.position.set(-11.25, 4, -20);
     scene.add(text);
 });
 
@@ -211,123 +216,141 @@ function getIntersecting(rotationPoint, pt2x, pt2y, pt2z) {
 
 
 function turnY(shift) {
-    let x = 1;
-    let y = 2;
-    let z = 1;
-    yellowGroup = new THREE.Object3D();
-    scene.add(yellowGroup);
+    if (Date.now() - lastTimeExecuted > intervall) {
+        let x = 1;
+        let y = 2;
+        let z = 1;
+        yellowGroup = new THREE.Object3D();
+        scene.add(yellowGroup);
 
-    yellowGroup.attach(cubiesArray[x][y][z]);
-    yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z));
-    yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z));
-    yellowGroup.attach(getIntersecting(rotationPointY, x, y, z + 1));
-    yellowGroup.attach(getIntersecting(rotationPointY, x, y, z - 1));
-    yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z + 1));
-    yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z - 1));
-    yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z + 1));
-    yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z - 1));
-    
-    animateGroup(t, !shift, yellowGroup, "y");
+        yellowGroup.attach(cubiesArray[x][y][z]);
+        yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z));
+        yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z));
+        yellowGroup.attach(getIntersecting(rotationPointY, x, y, z + 1));
+        yellowGroup.attach(getIntersecting(rotationPointY, x, y, z - 1));
+        yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z + 1));
+        yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z - 1));
+        yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z + 1));
+        yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z - 1));
+
+        animateGroup(t, !shift, yellowGroup, "y");
+        lastTimeExecuted = Date.now();
+    }
 }
 
 function turnW(shift) {
-    let x = 1;
-    let y = 0;
-    let z = 1;
-    whiteGroup = new THREE.Object3D();
-    scene.add(whiteGroup);
+    if (Date.now() - lastTimeExecuted > intervall) {
+        let x = 1;
+        let y = 0;
+        let z = 1;
+        whiteGroup = new THREE.Object3D();
+        scene.add(whiteGroup);
 
-    whiteGroup.attach(cubiesArray[x][y][z]);
-    whiteGroup.attach(getIntersecting(rotationPointW, x + 1, y, z));
-    whiteGroup.attach(getIntersecting(rotationPointW, x - 1, y, z));
-    whiteGroup.attach(getIntersecting(rotationPointW, x, y, z + 1));
-    whiteGroup.attach(getIntersecting(rotationPointW, x, y, z - 1));
-    whiteGroup.attach(getIntersecting(rotationPointW, x + 1, y, z + 1));
-    whiteGroup.attach(getIntersecting(rotationPointW, x + 1, y, z - 1));
-    whiteGroup.attach(getIntersecting(rotationPointW, x - 1, y, z + 1));
-    whiteGroup.attach(getIntersecting(rotationPointW, x - 1, y, z - 1));
+        whiteGroup.attach(cubiesArray[x][y][z]);
+        whiteGroup.attach(getIntersecting(rotationPointW, x + 1, y, z));
+        whiteGroup.attach(getIntersecting(rotationPointW, x - 1, y, z));
+        whiteGroup.attach(getIntersecting(rotationPointW, x, y, z + 1));
+        whiteGroup.attach(getIntersecting(rotationPointW, x, y, z - 1));
+        whiteGroup.attach(getIntersecting(rotationPointW, x + 1, y, z + 1));
+        whiteGroup.attach(getIntersecting(rotationPointW, x + 1, y, z - 1));
+        whiteGroup.attach(getIntersecting(rotationPointW, x - 1, y, z + 1));
+        whiteGroup.attach(getIntersecting(rotationPointW, x - 1, y, z - 1));
 
-    animateGroup(t, shift, whiteGroup, "y");
+        animateGroup(t, shift, whiteGroup, "y");
+        lastTimeExecuted = Date.now();
+    }
 }
 
 function turnB(shift) {
-    let x = 1;
-    let y = 1;
-    let z = 2;
-    blueGroup = new THREE.Object3D();
-    scene.add(blueGroup);
+    if (Date.now() - lastTimeExecuted > intervall) {
+        let x = 1;
+        let y = 1;
+        let z = 2;
+        blueGroup = new THREE.Object3D();
+        scene.add(blueGroup);
 
-    blueGroup.attach(cubiesArray[x][y][z]);
-    blueGroup.attach(getIntersecting(rotationPointB, x + 1, y, z));
-    blueGroup.attach(getIntersecting(rotationPointB, x - 1, y, z));
-    blueGroup.attach(getIntersecting(rotationPointB, x, y + 1, z));
-    blueGroup.attach(getIntersecting(rotationPointB, x, y - 1, z));
-    blueGroup.attach(getIntersecting(rotationPointB, x + 1, y + 1, z));
-    blueGroup.attach(getIntersecting(rotationPointB, x + 1, y - 1, z));
-    blueGroup.attach(getIntersecting(rotationPointB, x - 1, y + 1, z));
-    blueGroup.attach(getIntersecting(rotationPointB, x - 1, y - 1, z));
+        blueGroup.attach(cubiesArray[x][y][z]);
+        blueGroup.attach(getIntersecting(rotationPointB, x + 1, y, z));
+        blueGroup.attach(getIntersecting(rotationPointB, x - 1, y, z));
+        blueGroup.attach(getIntersecting(rotationPointB, x, y + 1, z));
+        blueGroup.attach(getIntersecting(rotationPointB, x, y - 1, z));
+        blueGroup.attach(getIntersecting(rotationPointB, x + 1, y + 1, z));
+        blueGroup.attach(getIntersecting(rotationPointB, x + 1, y - 1, z));
+        blueGroup.attach(getIntersecting(rotationPointB, x - 1, y + 1, z));
+        blueGroup.attach(getIntersecting(rotationPointB, x - 1, y - 1, z));
 
-    animateGroup(t, !shift, blueGroup, "z");
+        animateGroup(t, !shift, blueGroup, "z");
+        lastTimeExecuted = Date.now();
+    }
 }
 
 function turnG(shift) {
-    let x = 1;
-    let y = 1;
-    let z = 0;
-    greenGroup = new THREE.Object3D();
-    scene.add(greenGroup);
+    if (Date.now() - lastTimeExecuted > intervall) {
+        let x = 1;
+        let y = 1;
+        let z = 0;
+        greenGroup = new THREE.Object3D();
+        scene.add(greenGroup);
 
-    greenGroup.attach(cubiesArray[x][y][z]);
-    greenGroup.attach(getIntersecting(rotationPointG, x + 1, y, z));
-    greenGroup.attach(getIntersecting(rotationPointG, x - 1, y, z));
-    greenGroup.attach(getIntersecting(rotationPointG, x, y + 1, z));
-    greenGroup.attach(getIntersecting(rotationPointG, x, y - 1, z));
-    greenGroup.attach(getIntersecting(rotationPointG, x + 1, y + 1, z));
-    greenGroup.attach(getIntersecting(rotationPointG, x + 1, y - 1, z));
-    greenGroup.attach(getIntersecting(rotationPointG, x - 1, y + 1, z));
-    greenGroup.attach(getIntersecting(rotationPointG, x - 1, y - 1, z));
+        greenGroup.attach(cubiesArray[x][y][z]);
+        greenGroup.attach(getIntersecting(rotationPointG, x + 1, y, z));
+        greenGroup.attach(getIntersecting(rotationPointG, x - 1, y, z));
+        greenGroup.attach(getIntersecting(rotationPointG, x, y + 1, z));
+        greenGroup.attach(getIntersecting(rotationPointG, x, y - 1, z));
+        greenGroup.attach(getIntersecting(rotationPointG, x + 1, y + 1, z));
+        greenGroup.attach(getIntersecting(rotationPointG, x + 1, y - 1, z));
+        greenGroup.attach(getIntersecting(rotationPointG, x - 1, y + 1, z));
+        greenGroup.attach(getIntersecting(rotationPointG, x - 1, y - 1, z));
 
-    animateGroup(t, shift, greenGroup, "z");
+        animateGroup(t, shift, greenGroup, "z");
+        lastTimeExecuted = Date.now();
+    }
 }
 
 function turnR(shift) {
-    let x = 2;
-    let y = 1;
-    let z = 1;
-    redGroup = new THREE.Object3D();
-    scene.add(redGroup);
+    if (Date.now() - lastTimeExecuted > intervall) {
+        let x = 2;
+        let y = 1;
+        let z = 1;
+        redGroup = new THREE.Object3D();
+        scene.add(redGroup);
 
-    redGroup.attach(cubiesArray[x][y][z]);
-    redGroup.attach(getIntersecting(rotationPointR, x, y, z + 1));
-    redGroup.attach(getIntersecting(rotationPointR, x, y, z - 1));
-    redGroup.attach(getIntersecting(rotationPointR, x, y + 1, z));
-    redGroup.attach(getIntersecting(rotationPointR, x, y - 1, z));
-    redGroup.attach(getIntersecting(rotationPointR, x, y + 1, z + 1));
-    redGroup.attach(getIntersecting(rotationPointR, x, y - 1, z + 1));
-    redGroup.attach(getIntersecting(rotationPointR, x, y + 1, z - 1));
-    redGroup.attach(getIntersecting(rotationPointR, x, y - 1, z - 1));
+        redGroup.attach(cubiesArray[x][y][z]);
+        redGroup.attach(getIntersecting(rotationPointR, x, y, z + 1));
+        redGroup.attach(getIntersecting(rotationPointR, x, y, z - 1));
+        redGroup.attach(getIntersecting(rotationPointR, x, y + 1, z));
+        redGroup.attach(getIntersecting(rotationPointR, x, y - 1, z));
+        redGroup.attach(getIntersecting(rotationPointR, x, y + 1, z + 1));
+        redGroup.attach(getIntersecting(rotationPointR, x, y - 1, z + 1));
+        redGroup.attach(getIntersecting(rotationPointR, x, y + 1, z - 1));
+        redGroup.attach(getIntersecting(rotationPointR, x, y - 1, z - 1));
 
-    animateGroup(t, !shift, redGroup, "x");
+        animateGroup(t, !shift, redGroup, "x");
+        lastTimeExecuted = Date.now();
+    }
 }
 
 function turnO(shift) {
-    let x = 0;
-    let y = 1;
-    let z = 1;
-    orangeGroup = new THREE.Object3D();
-    scene.add(orangeGroup);
+    if (Date.now() - lastTimeExecuted > intervall) {
+        let x = 0;
+        let y = 1;
+        let z = 1;
+        orangeGroup = new THREE.Object3D();
+        scene.add(orangeGroup);
 
-    orangeGroup.attach(cubiesArray[x][y][z]);
-    orangeGroup.attach(getIntersecting(rotationPointO, x, y, z + 1));
-    orangeGroup.attach(getIntersecting(rotationPointO, x, y, z - 1));
-    orangeGroup.attach(getIntersecting(rotationPointO, x, y + 1, z));
-    orangeGroup.attach(getIntersecting(rotationPointO, x, y - 1, z));
-    orangeGroup.attach(getIntersecting(rotationPointO, x, y + 1, z + 1));
-    orangeGroup.attach(getIntersecting(rotationPointO, x, y - 1, z + 1));
-    orangeGroup.attach(getIntersecting(rotationPointO, x, y + 1, z - 1));
-    orangeGroup.attach(getIntersecting(rotationPointO, x, y - 1, z - 1));
+        orangeGroup.attach(cubiesArray[x][y][z]);
+        orangeGroup.attach(getIntersecting(rotationPointO, x, y, z + 1));
+        orangeGroup.attach(getIntersecting(rotationPointO, x, y, z - 1));
+        orangeGroup.attach(getIntersecting(rotationPointO, x, y + 1, z));
+        orangeGroup.attach(getIntersecting(rotationPointO, x, y - 1, z));
+        orangeGroup.attach(getIntersecting(rotationPointO, x, y + 1, z + 1));
+        orangeGroup.attach(getIntersecting(rotationPointO, x, y - 1, z + 1));
+        orangeGroup.attach(getIntersecting(rotationPointO, x, y + 1, z - 1));
+        orangeGroup.attach(getIntersecting(rotationPointO, x, y - 1, z - 1));
 
-    animateGroup(t, shift, orangeGroup, "x");
+        animateGroup(t, shift, orangeGroup, "x");
+        lastTimeExecuted = Date.now();
+    }
 }
 
 function animateGroup(t, inverse, group, axis) {
@@ -338,8 +361,24 @@ function animateGroup(t, inverse, group, axis) {
     angleStep = Math.PI / 40;
     if (inverse) angleStep = -Math.PI / 40;
     t += step;
-    if(axis === "x") group.rotation.x += angleStep;
-    if(axis === "y") group.rotation.y += angleStep;
-    if(axis === "z") group.rotation.z += angleStep;
+    if (axis === "x") group.rotation.x += angleStep;
+    if (axis === "y") group.rotation.y += angleStep;
+    if (axis === "z") group.rotation.z += angleStep;
     requestAnimationFrame(() => animateGroup(t, inverse, group, axis));
+}
+
+function addHTMLButtons() {
+    document.getElementById("turnYellow").onclick = function () { turnY(false); };
+    document.getElementById("turnWhite").onclick = function () { turnW(false); };
+    document.getElementById("turnBlue").onclick = function () { turnB(false); };
+    document.getElementById("turnGreen").onclick = function () { turnG(false); };
+    document.getElementById("turnRed").onclick = function () { turnR(false); };
+    document.getElementById("turnOrange").onclick = function () { turnO(false); };
+    document.getElementById("solve").onclick = function () { solve() };
+}
+
+
+
+function solve() {
+    alert("Geht leider noch nicht :(");
 }
