@@ -1,5 +1,4 @@
 let shelf;
-let test;
 //Scene and Light
 const scene = new THREE.Scene();
 //const light = new THREE.AmbientLight(0xffffff, 0.1);
