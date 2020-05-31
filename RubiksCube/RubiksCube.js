@@ -82,7 +82,7 @@ const glTFLoader = new THREE.GLTFLoader(manager);
 
 //Font Loader
 const fontLoader = new THREE.FontLoader();
-const font = fontLoader.load("/IndexAssets/font.json", function (font) {
+const font = fontLoader.load("https://rekhyt2901.github.io/AlexGames/IndexAssets/font.json", function (font) {
     let textGeometry = new THREE.TextGeometry("Left Click (+shift) on Centers to turn sides!", {
         font: font,
         size: 1,
