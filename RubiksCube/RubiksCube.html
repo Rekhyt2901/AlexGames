@@ -11,11 +11,11 @@
     <script src="/libs/GLTFLoader.js"></script>
     <script src="/libs/threexdomevents.js"></script>
     <script src="/libs/LoadingManager.js"></script>-->
-    <script src="https://rekhyt2901.github.io/AlexGames/libs/three.js"></script>
-    <script src="https://rekhyt2901.github.io/AlexGames/libs/OrbitControls.js"></script>
-    <script src="https://rekhyt2901.github.io/AlexGames/libs/GLTFLoader.js"></script>
-    <script src="https://rekhyt2901.github.io/AlexGames/libs/threexdomevents.js"></script>
-    <script src="https://rekhyt2901.github.io/AlexGames/libs/LoadingManager.js"></script>
+    <script src="/libs/three.js"></script>
+    <script src="/libs/OrbitControls.js"></script>
+    <script src="/libs/GLTFLoader.js"></script>
+    <script src="/libs/threexdomevents.js"></script>
+    <script src="/libs/LoadingManager.js"></script>
     <style>
         #sidebar {
             width: 20%;
@@ -24,23 +24,53 @@
             left: 80%;
         }
 
-        button {
+        .simpleButton {
             position: relative;
             width: 90%;
             height: 5%;
             margin: 5%;
-            font-size: 150%;
+            font-size: 120%;
+            display: none;
+        }
+
+        .algButton {
+            position: relative;
+            width: 90%;
+            height: 5%;
+            margin: 5%;
+            font-size: 120%;
+        }
+
+        .scrambleButton {
+            position: relative;
+            width: 90%;
+            height: 5%;
+            margin: 5%;
+            font-size: 120%;
         }
     </style>
 </head>
 <body style="margin: 0px; overflow-x: hidden; overflow-y: hidden;">
     <div id="sidebar">
-        <button id="turnYellow">Turn Yellow</button>
-        <button id="turnWhite">Turn White</button>
-        <button id="turnBlue">Turn Blue</button>
-        <button id="turnGreen">Turn Green</button>
-        <button id="turnRed">Turn Red</button>
-        <button id="turnOrange">Turn Orange</button>
-        <button id="solve">Solve Cube</button>
+        <button class="simpleButton" id="turnUp">Turn U</button>
+        <button class="simpleButton" id="turnDown">Turn D</button>
+        <button class="simpleButton" id="turnFront">Turn F</button>
+        <button class="simpleButton" id="turnBack">Turn B</button>
+        <button class="simpleButton" id="turnRight">Turn R</button>
+        <button class="simpleButton" id="turnLeft">Turn L</button>
+
+        <h2>Simple OLL</h2>
+        <button class="algButton" id="dotCornerLine">Dot-Corner-Line</button>
+        <button class="algButton" id="rightSune">Right Sune</button>
+        <button class="algButton" id="leftSune">Left Sune</button>
+
+        <h2>Simple PLL</h2>
+        <button class="algButton" id="edgeSwitchRight">Edge Switch Right</button>
+        <button class="algButton" id="edgeSwitchLeft">Edge Switch Left</button>
+        <button class="algButton" id="cornerSwitchRight">Corner Switch Right</button>
+        <button class="algButton" id="cornerSwitchLeft">Corner Switch Left</button>
+
+        <h2>Scramble</h2>
+        <button class="scrambleButton" id="scramble">Scramble</button>
     </div>
 </body>

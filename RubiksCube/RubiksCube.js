@@ -27,6 +27,9 @@ let t = 0;
 let lastTimeExecuted = Date.now();
 let intervall = 350;
 
+let horizontalCamAngle;
+let verticalCamAngle;
+
 //Builds 3d Array;
 let cubiesArray = [];
 for (i = 0; i < 3; i++) {
@@ -79,7 +82,7 @@ const glTFLoader = new THREE.GLTFLoader(manager);
 
 //Font Loader
 const fontLoader = new THREE.FontLoader();
-const font = fontLoader.load("https://rekhyt2901.github.io/AlexGames/IndexAssets/font.json", function (font) {
+const font = fontLoader.load("/IndexAssets/font.json", function (font) {
     let textGeometry = new THREE.TextGeometry("Left Click (+shift) on Centers to turn sides!", {
         font: font,
         size: 1,
@@ -367,18 +370,265 @@ function animateGroup(t, inverse, group, axis) {
     requestAnimationFrame(() => animateGroup(t, inverse, group, axis));
 }
 
+
+//Vertical < 45 = Yellow;
+//Vertical > 135 = White;
+//Vertcial > 45 && < 135 = Red/Green/Blue/Orange
+
+//Horz zwischen -45 und 45 = Blau
+//Horz zwischen 45 und 135 = Rot
+//Horz zwischen 135 und 180 && -180 und -135 = Grün
+//Horz zwischen -45 und -135 = Orange 
+function up(inverse) {
+    updateCameraAngles();
+    turnY(inverse);
+}
+
+function down(inverse) {
+    updateCameraAngles();
+    turnW(inverse);
+}
+
+function front(inverse) {
+    updateCameraAngles();
+    if (-45 <= horizontalCamAngle && horizontalCamAngle < 45) turnB(inverse);
+    if (45 <= horizontalCamAngle && horizontalCamAngle < 135) turnR(inverse);
+    if (135 <= horizontalCamAngle && horizontalCamAngle < 180 || -180 <= horizontalCamAngle && horizontalCamAngle < -135) turnG(inverse)
+    if (-135 <= horizontalCamAngle && horizontalCamAngle < -45) turnO(inverse);
+}
+
+function back(inverse) {
+    updateCameraAngles();
+    if (-45 <= horizontalCamAngle && horizontalCamAngle < 45) turnG(inverse);
+    if (45 <= horizontalCamAngle && horizontalCamAngle < 135) turnO(inverse);
+    if (135 <= horizontalCamAngle && horizontalCamAngle < 180 || -180 <= horizontalCamAngle && horizontalCamAngle < -135) turnB(inverse)
+    if (-135 <= horizontalCamAngle && horizontalCamAngle < -45) turnR(inverse);
+}
+
+function right(inverse) {
+    updateCameraAngles();
+    if (-45 <= horizontalCamAngle && horizontalCamAngle < 45) turnR(inverse);
+    if (45 <= horizontalCamAngle && horizontalCamAngle < 135) turnG(inverse);
+    if (135 <= horizontalCamAngle && horizontalCamAngle < 180 || -180 <= horizontalCamAngle && horizontalCamAngle < -135) turnO(inverse)
+    if (-135 <= horizontalCamAngle && horizontalCamAngle < -45) turnB(inverse);
+}
+
+function left(inverse) {
+    updateCameraAngles();
+    if (-45 <= horizontalCamAngle && horizontalCamAngle < 45) turnO(inverse);
+    if (45 <= horizontalCamAngle && horizontalCamAngle < 135) turnB(inverse);
+    if (135 <= horizontalCamAngle && horizontalCamAngle < 180 || -180 <= horizontalCamAngle && horizontalCamAngle < -135) turnR(inverse)
+    if (-135 <= horizontalCamAngle && horizontalCamAngle < -45) turnG(inverse);
+}
+
+function updateCameraAngles() {
+    horizontalCamAngle = controls.getAzimuthalAngle() * (180 / Math.PI);
+    verticalCamAngle = controls.getPolarAngle() * (180 / Math.PI);
+}
+
 function addHTMLButtons() {
-    document.getElementById("turnYellow").onclick = function () { turnY(false); };
-    document.getElementById("turnWhite").onclick = function () { turnW(false); };
-    document.getElementById("turnBlue").onclick = function () { turnB(false); };
-    document.getElementById("turnGreen").onclick = function () { turnG(false); };
-    document.getElementById("turnRed").onclick = function () { turnR(false); };
-    document.getElementById("turnOrange").onclick = function () { turnO(false); };
-    document.getElementById("solve").onclick = function () { solve() };
+    document.getElementById("turnUp").onclick = function () { up(false); };
+    document.getElementById("turnDown").onclick = function () { down(false); };
+    document.getElementById("turnFront").onclick = function () { front(false); };
+    document.getElementById("turnBack").onclick = function () { back(false); };
+    document.getElementById("turnRight").onclick = function () { right(false); };
+    document.getElementById("turnLeft").onclick = function () { left(false); };
+    document.getElementById("dotCornerLine").onclick = function () { dotCornerLine(); };
+    document.getElementById("rightSune").onclick = function () { rightSune(); };
+    document.getElementById("leftSune").onclick = function () { leftSune(); };
+    document.getElementById("edgeSwitchRight").onclick = function () { edgeSwitchRight() };
+    document.getElementById("edgeSwitchLeft").onclick = function () { edgeSwitchLeft() };
+    document.getElementById("cornerSwitchRight").onclick = function () { cornerSwitchRight() };
+    document.getElementById("cornerSwitchLeft").onclick = function () { cornerSwitchLeft() };
+    document.getElementById("scramble").onclick = function () { scramble() };
 }
 
 
+async function dotCornerLine() {
+    await delay(intervall + 1);
+    front(false);
+    await delay(intervall + 1);
+    right(false);
+    await delay(intervall + 1);
+    up(false);
+    await delay(intervall + 1);
+    right(true);
+    await delay(intervall + 1);
+    up(true);
+    await delay(intervall + 1);
+    front(true);
+}
 
-function solve() {
-    alert("Geht leider noch nicht :(");
+async function rightSune() {
+    await delay(intervall + 1);
+    right(false);
+    await delay(intervall + 1);
+    up(false);
+    await delay(intervall + 1);
+    right(true);
+    await delay(intervall + 1);
+    up(false);
+    await delay(intervall + 1);
+    right(false);
+    await delay(intervall + 1);
+    up(true);
+    await delay(intervall + 1);
+    up(true);
+    await delay(intervall + 1);
+    right(true);
+
+}
+
+async function leftSune() {
+    await delay(intervall + 1);
+    left(true);
+    await delay(intervall + 1);
+    up(true);
+    await delay(intervall + 1);
+    left(false);
+    await delay(intervall + 1);
+    up(true);
+    await delay(intervall + 1);
+    left(true);
+    await delay(intervall + 1);
+    up(false);
+    await delay(intervall + 1);
+    up(false);
+    await delay(intervall + 1);
+    left(false);
+}
+
+async function edgeSwitchRight() {
+    await delay(intervall + 1);
+    right(true);
+    await delay(intervall + 1);
+    up(false);
+    await delay(intervall + 1);
+    right(true);
+    await delay(intervall + 1);
+    up(true);
+    await delay(intervall + 1);
+    right(true);
+    await delay(intervall + 1);
+    up(true);
+    await delay(intervall + 1);
+    right(true);
+    await delay(intervall + 1);
+    up(false);
+    await delay(intervall + 1);
+    right(false);
+    await delay(intervall + 1);
+    up(false);
+    await delay(intervall + 1);
+    right(false);
+    await delay(intervall + 1);
+    right(false);
+}
+
+async function edgeSwitchLeft() {
+    await delay(intervall + 1);
+    left(false);
+    await delay(intervall + 1);
+    up(true);
+    await delay(intervall + 1);
+    left(false);
+    await delay(intervall + 1);
+    up(false);
+    await delay(intervall + 1);
+    left(false);
+    await delay(intervall + 1);
+    up(false);
+    await delay(intervall + 1);
+    left(false);
+    await delay(intervall + 1);
+    up(true);
+    await delay(intervall + 1);
+    left(true);
+    await delay(intervall + 1);
+    up(true);
+    await delay(intervall + 1);
+    left(true);
+    await delay(intervall + 1);
+    left(true);
+}
+
+async function cornerSwitchRight() {
+    await delay(intervall + 1);
+    right(false);
+    await delay(intervall + 1);
+    back(true);
+    await delay(intervall + 1);
+    right(false);
+    await delay(intervall + 1);
+    front(false);
+    await delay(intervall + 1);
+    front(false);
+    await delay(intervall + 1);
+    right(true);
+    await delay(intervall + 1);
+    back(false);
+    await delay(intervall + 1);
+    right(false);
+    await delay(intervall + 1);
+    front(false);
+    await delay(intervall + 1);
+    front(false);
+    await delay(intervall + 1);
+    right(false);
+    await delay(intervall + 1);
+    right(false);
+}
+
+async function cornerSwitchLeft() {
+    await delay(intervall + 1);
+    left(true);
+    await delay(intervall + 1);
+    back(false);
+    await delay(intervall + 1);
+    left(true);
+    await delay(intervall + 1);
+    front(true);
+    await delay(intervall + 1);
+    front(true);
+    await delay(intervall + 1);
+    left(false);
+    await delay(intervall + 1);
+    back(true);
+    await delay(intervall + 1);
+    left(true);
+    await delay(intervall + 1);
+    front(true);
+    await delay(intervall + 1);
+    front(true);
+    await delay(intervall + 1);
+    left(true);
+    await delay(intervall + 1);
+    left(true);
+}
+
+async function scramble() {
+    let lastTurnedSide = 0;
+    let random;
+    let randomBoolean;
+    for (i = 0; i < 20; i++) {
+        random = Math.random() * 6;
+        random -= random % 1;
+        if(random === lastTurnedSide) {
+            i++;
+            continue;
+        }
+        randomBoolean = Math.random() >= 0.5;
+        await delay(intervall + 1);
+        if (random === 0) turnY(randomBoolean);
+        if (random === 1) turnW(randomBoolean);
+        if (random === 2) turnB(randomBoolean);
+        if (random === 3) turnG(randomBoolean);
+        if (random === 4) turnR(randomBoolean);
+        if (random === 5) turnO(randomBoolean);
+        lastTurnedSide = random;
+    }
+}
+
+function delay(ms) {
+    return new Promise(res => setTimeout(res, ms));
 }
