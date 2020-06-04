@@ -12,6 +12,14 @@ const rotationPointG = new THREE.Vector3(0, 0, -1);
 const rotationPointR = new THREE.Vector3(1, 0, 0);
 const rotationPointO = new THREE.Vector3(-1, 0, 0);
 
+const pointAboveYellow = new THREE.Vector3(0, 3, 0);
+const pointFrontYellow = new THREE.Vector3(0, 1, -3);
+const pointLeftYellow = new THREE.Vector3(-3, 1, 0);
+const pointBackYellow = new THREE.Vector3(0, 1, 3);
+const pointRightYellow = new THREE.Vector3(3, 1, 0);
+
+let OLLId = "";
+
 let whiteGroup = new THREE.Object3D();
 let yellowGroup = new THREE.Object3D();
 let blueGroup = new THREE.Object3D();
@@ -29,6 +37,160 @@ let intervall = 350;
 
 let horizontalCamAngle;
 let verticalCamAngle;
+
+//PLL Algorithms
+let Ua = "RuRURURuruRR";
+let Ub = "RRURUrururUr";
+let Z = "RRLLDRRLLURLFFRRLLBBRLUU";
+let H = "RRLLDRRLLUURRLLDRRLL";
+let Aa = "RbRFFrBRFFRR";
+let Ab = "lBlffLblffll";
+let E = "RbrFRBrfRBrFRbrf";
+let Ra = "RuruRURDruRdrUUru";
+let Rb = "rUURUUrFRUrurfRRu";
+let Ja = "rUlUURurUURLu";
+let Jb = "RUrfRUrurFRRuru";
+let T = "RUrurFRRuruRUrf";
+let F = "rufRUrurFRRuruRUrUR";
+let V = "rUrubrBBubUbRBR";
+let Y = "FRuruRUrfRUrurFRf";
+let Na = "RUrURUrfRUrurFRRurUURur";
+let Nb = "rURurfuFRUrFrfRuR";
+let Ga = "RRUrUruRuRRDurURdU";
+let Gb = "fuFRRDbUBuBdRR";
+let Gc = "RRuRuRUrURRdURurDu";
+let Gd = "dRUruDRRuRurUrURRU";
+
+//OLL Algorithms
+let OCLL1 = "RUUruRUruRur";
+let OCLL2 = "RUURRuRRuRRUUR";
+let OCLL3 = "RRDrUURdrUUr";
+let OCLL4 = "LFrflFRf";
+let OCLL5 = "rFRbrfRB";
+let OCLL6 = "RUUruRur";
+let OCLL7 = "RUrURUUr";
+let T1 = "RUrurFRf";
+let T2 = "FRUruf";
+let S1 = "lBBRBrBL";
+let S2 = "lFFrfRfL";
+let C1 = "RURRurFRURuf";
+let C2 = "rurFRfUR";
+let W1 = "RUrfRUrurFRurFRf"; //y2
+let W2 = "RUrURururFRf";
+let E1 = "LFrflRURur";
+let E2 = "RUruLrFRfL";
+let P1 = "ruFURurfR";
+let P2 = "RUburURBr";
+let P3 = "rufUFR"; //y
+let P4 = "FURurf"; //y2
+let I1 = "FURurURurf"; //y2
+let I2 = "ruRurUfUFB";
+let I3 = "rFRURuRRfRRurURUr"; //y
+let I4 = "lbLurURurURlBL";
+let F1 = "RUrurFRRUruf";
+let F2 = "RUrUrFRfRUUr";
+let F3 = "RUURRFRfRUUr";
+let F4 = "FRuruRUrf";
+let K1 = "LfluLFlbUB";
+let K2 = "rFRUrfRFuf";
+let K3 = "lbLruRUlBl";
+let K4 = "LFlRUruLfl";
+let A1 = "RUruRurfuFRUr"; //y
+let A2 = "FURUUruRUUruf"; //y'
+let A3 = "RUrURUUrFRUruf";
+let A4 = "ruRurUURFRUruf";
+let L1 = "FRUruRUruf";
+let L2 = "fluLUluLUF";
+let L3 = "LfLLBLLFLLbL";
+let L4 = "lBLLfLLbLLFl";
+let L5 = "lbRbrBRbrBBL";
+let L6 = "LFrFRfrFRFFl";
+let B1 = "LFrFRFFl";
+let B2 = "lbRbrBBL";
+let B3 = "lRRBrBRBBrBLr";
+let B4 = "LrrfRfrFFRflR";
+let B5 = "LfluLUFul";
+let B6 = "rFRUrufUR";
+let O1 = "RUURRFRfUUrFRf";
+let O2 = "FRUrufBULulb";
+let O3 = "BULulbuFRUruf";
+let O4 = "bULulbUFRUruf";
+let O5 = "RUrUrFRfUUrFRf";
+let O6 = "LFrFRFFllbRbrBBL";
+let O7 = "lRFRFrfLrrFRf";
+let O8 = "lRBRBrbLLRRFRfl";
+
+let OLLMap = {};
+OLLMap["00001111"] = OCLL1;
+OLLMap["00002112"] = OCLL2;
+OLLMap["00000011"] = OCLL3;
+OLLMap["00001001"] = OCLL4;
+OLLMap["00000201"] = OCLL5;
+OLLMap["00002021"] = OCLL6;
+OLLMap["00001210"] = OCLL7;
+
+OLLMap["10101001"] = T1;
+OLLMap["10102002"] = T2;
+
+OLLMap["10011202"] = S1;
+OLLMap["00112021"] = S2;
+
+OLLMap["10102200"] = C1;
+OLLMap["01010220"] = C2;
+
+OLLMap["11000201"] = W1;
+OLLMap["01101020"] = W2;
+
+OLLMap["01100000"] = E1;
+OLLMap["10100000"] = E2;
+
+OLLMap["00111001"] = P1;
+OLLMap["10011001"] = P2;
+OLLMap["11000220"] = P3;
+OLLMap["10012002"] = P4;
+
+OLLMap["10102112"] = I1;
+OLLMap["01011221"] = I2;
+OLLMap["01012222"] = I3;
+OLLMap["10102222"] = I4;
+
+OLLMap["01102101"] = F1;
+OLLMap["11001012"] = F2;
+OLLMap["10010201"] = F3;
+OLLMap["01100201"] = F4;
+
+OLLMap["10101210"] = K1;
+OLLMap["10102101"] = K2;
+OLLMap["10101202"] = K3;
+OLLMap["10102021"] = K4;
+
+OLLMap["11000022"] = A1;
+OLLMap["00110110"] = A2;
+OLLMap["01101100"] = A3;
+OLLMap["11000011"] = A4;
+
+OLLMap["00111221"] = L1;
+OLLMap["01102112"] = L2;
+OLLMap["00112112"] = L3;
+OLLMap["10012112"] = L4;
+OLLMap["10012222"] = L5;
+OLLMap["00112222"] = L6;
+
+OLLMap["01101210"] = B1;
+OLLMap["11000121"] = B2;
+OLLMap["10011210"] = B3;
+OLLMap["00110121"] = B4;
+OLLMap["10101020"] = B5;
+OLLMap["10100102"] = B6;
+
+OLLMap["11112222"] = O1;
+OLLMap["11112112"] = O2;
+OLLMap["11111202"] = O3;
+OLLMap["11112021"] = O4;
+OLLMap["11110102"] = O5;
+OLLMap["11110011"] = O6;
+OLLMap["11110022"] = O7;
+OLLMap["11110000"] = O8;
 
 //Builds 3d Array;
 let cubiesArray = [];
@@ -82,7 +244,7 @@ const glTFLoader = new THREE.GLTFLoader(manager);
 
 //Font Loader
 const fontLoader = new THREE.FontLoader();
-const font = fontLoader.load("https://rekhyt2901.github.io/AlexGames/IndexAssets/font.json", function (font) {
+const font = fontLoader.load("../IndexAssets/font.json", function (font) {
     let textGeometry = new THREE.TextGeometry("Left Click (+shift) on Centers to turn sides!", {
         font: font,
         size: 1,
@@ -217,6 +379,55 @@ function getIntersecting(rotationPoint, pt2x, pt2y, pt2z) {
     return intersectingObjects[2].object.parent.parent;
 }
 
+function getYellowEdge(startPoint, targetX, targetY, targetZ) {
+    let direction = dir.subVectors(new THREE.Vector3(targetX, targetY, targetZ), startPoint).normalize();
+    raycaster.set(startPoint, direction);
+    let foundColor = raycaster.intersectObjects(normalArray, true)[0].object.material.color;
+    if (foundColor.r === 1 && foundColor.g === 1 && foundColor.b === 0) {
+        OLLId += "0";
+    } else {
+        OLLId += "1";
+    }
+    //scene.add(new THREE.ArrowHelper(raycaster.ray.direction, raycaster.ray.origin, 300, 0xff0000));
+}
+
+function getYellowCorner(startPoint, targetX, targetY, targetZ) {
+    let direction = dir.subVectors(new THREE.Vector3(targetX, targetY, targetZ), startPoint).normalize();
+    raycaster.set(startPoint, direction);
+    let foundColor = raycaster.intersectObjects(normalArray, true)[0].object.material.color;
+    //scene.add(new THREE.ArrowHelper(raycaster.ray.direction, raycaster.ray.origin, 300, 0xff0000));
+
+    if (foundColor.r === 1 && foundColor.g === 1 && foundColor.b === 0) {
+        OLLId += "0";
+    } else {
+        startPoint = new THREE.Vector3(targetX * 2, targetY, targetZ * 2);
+        direction = dir.subVectors(new THREE.Vector3(0, targetY, targetZ), startPoint).normalize();
+        raycaster.set(startPoint, direction);
+        //scene.add(new THREE.ArrowHelper(raycaster.ray.direction, raycaster.ray.origin, 300, 0xff0000));
+
+        foundColor = raycaster.intersectObjects(normalArray, true)[0].object.material.color;
+        if (foundColor.r === 1 && foundColor.g === 1 && foundColor.b === 0) {
+            OLLId += "1";
+        } else {
+            OLLId += "2";
+        }
+
+    }
+}
+
+function buildOLLId() {
+    OLLId = "";
+
+    getYellowEdge(pointAboveYellow, 0, 1, -1); //Green Edge
+    getYellowEdge(pointAboveYellow, 1, 1, 0); //Red Edge
+    getYellowEdge(pointAboveYellow, 0, 1, 1); //Blue Edge
+    getYellowEdge(pointAboveYellow, -1, 1, 0); //Orange Edge
+
+    getYellowCorner(pointAboveYellow, -1, 1, -1); //Green-Orange Corner //Green
+    getYellowCorner(pointAboveYellow, 1, 1, -1); //Green-Red Corner //Green
+    getYellowCorner(pointAboveYellow, 1, 1, 1); //Blue-Red Corner //Blue
+    getYellowCorner(pointAboveYellow, -1, 1, 1); //Blue-Orange Corner //Blue
+}
 
 function turnY(shift) {
     if (Date.now() - lastTimeExecuted > intervall) {
@@ -441,169 +652,88 @@ function addHTMLButtons() {
     document.getElementById("cornerSwitchRight").onclick = function () { cornerSwitchRight() };
     document.getElementById("cornerSwitchLeft").onclick = function () { cornerSwitchLeft() };
     document.getElementById("scramble").onclick = function () { scramble() };
+    document.getElementById("solveOLL").onclick = function () { solveOLL() };
 }
 
+// uU, dD, fF, bB, rR, lL
+//uppercase = clockwise
+//lowercase = counter clockwise
+async function executeAlgorithm(algorithm, absolute) {
+    algorithm = [...algorithm];
+    for (i = 0; i < algorithm.length; i++) {
+        let side = algorithm[i];
+        await delay(intervall + 1);
+        if (!absolute) {
+            if (side === "U") up(false);
+            if (side === "D") down(false);
+            if (side === "F") front(false);
+            if (side === "B") back(false);
+            if (side === "R") right(false);
+            if (side === "L") left(false);
+
+            if (side === "u") up(true);
+            if (side === "d") down(true);
+            if (side === "f") front(true);
+            if (side === "b") back(true);
+            if (side === "r") right(true);
+            if (side === "l") left(true);
+        } else {
+            if (side === "U") turnY(false);
+            if (side === "D") turnW(false);
+            if (side === "F") turnB(false);
+            if (side === "B") turnG(false);
+            if (side === "R") turnR(false);
+            if (side === "L") turnO(false);
+
+            if (side === "u") turnY(true);
+            if (side === "d") turnW(true);
+            if (side === "f") turnB(true);
+            if (side === "b") turnG(true);
+            if (side === "r") turnR(true);
+            if (side === "l") turnO(true);
+        }
+    }
+}
+
+async function solveOLL() {
+    for (i = 0; i < 4; i++) {
+        buildOLLId();
+        if (OLLMap[OLLId] != null) {
+            executeAlgorithm(OLLMap[OLLId], true);
+            return;
+        }
+        up();
+        await delay(intervall + 1);
+    }
+    console.log("Not a Valid OLL Case.");
+}
 
 async function dotCornerLine() {
-    await delay(intervall + 1);
-    front(false);
-    await delay(intervall + 1);
-    right(false);
-    await delay(intervall + 1);
-    up(false);
-    await delay(intervall + 1);
-    right(true);
-    await delay(intervall + 1);
-    up(true);
-    await delay(intervall + 1);
-    front(true);
+    executeAlgorithm("FRUruf", false);
 }
 
 async function rightSune() {
-    await delay(intervall + 1);
-    right(false);
-    await delay(intervall + 1);
-    up(false);
-    await delay(intervall + 1);
-    right(true);
-    await delay(intervall + 1);
-    up(false);
-    await delay(intervall + 1);
-    right(false);
-    await delay(intervall + 1);
-    up(true);
-    await delay(intervall + 1);
-    up(true);
-    await delay(intervall + 1);
-    right(true);
-
+    executeAlgorithm("RUrURuur", false);
 }
 
 async function leftSune() {
-    await delay(intervall + 1);
-    left(true);
-    await delay(intervall + 1);
-    up(true);
-    await delay(intervall + 1);
-    left(false);
-    await delay(intervall + 1);
-    up(true);
-    await delay(intervall + 1);
-    left(true);
-    await delay(intervall + 1);
-    up(false);
-    await delay(intervall + 1);
-    up(false);
-    await delay(intervall + 1);
-    left(false);
+    executeAlgorithm("luLulUUL", false);
 }
 
 async function edgeSwitchRight() {
-    await delay(intervall + 1);
-    right(true);
-    await delay(intervall + 1);
-    up(false);
-    await delay(intervall + 1);
-    right(true);
-    await delay(intervall + 1);
-    up(true);
-    await delay(intervall + 1);
-    right(true);
-    await delay(intervall + 1);
-    up(true);
-    await delay(intervall + 1);
-    right(true);
-    await delay(intervall + 1);
-    up(false);
-    await delay(intervall + 1);
-    right(false);
-    await delay(intervall + 1);
-    up(false);
-    await delay(intervall + 1);
-    right(false);
-    await delay(intervall + 1);
-    right(false);
+    executeAlgorithm("rUrururURURR", false);
 }
 
 async function edgeSwitchLeft() {
-    await delay(intervall + 1);
-    left(false);
-    await delay(intervall + 1);
-    up(true);
-    await delay(intervall + 1);
-    left(false);
-    await delay(intervall + 1);
-    up(false);
-    await delay(intervall + 1);
-    left(false);
-    await delay(intervall + 1);
-    up(false);
-    await delay(intervall + 1);
-    left(false);
-    await delay(intervall + 1);
-    up(true);
-    await delay(intervall + 1);
-    left(true);
-    await delay(intervall + 1);
-    up(true);
-    await delay(intervall + 1);
-    left(true);
-    await delay(intervall + 1);
-    left(true);
+    executeAlgorithm("LuLULULulull", false);
 }
 
 async function cornerSwitchRight() {
-    await delay(intervall + 1);
-    right(false);
-    await delay(intervall + 1);
-    back(true);
-    await delay(intervall + 1);
-    right(false);
-    await delay(intervall + 1);
-    front(false);
-    await delay(intervall + 1);
-    front(false);
-    await delay(intervall + 1);
-    right(true);
-    await delay(intervall + 1);
-    back(false);
-    await delay(intervall + 1);
-    right(false);
-    await delay(intervall + 1);
-    front(false);
-    await delay(intervall + 1);
-    front(false);
-    await delay(intervall + 1);
-    right(false);
-    await delay(intervall + 1);
-    right(false);
+    executeAlgorithm("RbRFFrBRFFRR", false);
 }
 
 async function cornerSwitchLeft() {
-    await delay(intervall + 1);
-    left(true);
-    await delay(intervall + 1);
-    back(false);
-    await delay(intervall + 1);
-    left(true);
-    await delay(intervall + 1);
-    front(true);
-    await delay(intervall + 1);
-    front(true);
-    await delay(intervall + 1);
-    left(false);
-    await delay(intervall + 1);
-    back(true);
-    await delay(intervall + 1);
-    left(true);
-    await delay(intervall + 1);
-    front(true);
-    await delay(intervall + 1);
-    front(true);
-    await delay(intervall + 1);
-    left(true);
-    await delay(intervall + 1);
-    left(true);
+    executeAlgorithm("lBlffLblffll", false);
 }
 
 async function scramble() {
@@ -613,7 +743,7 @@ async function scramble() {
     for (i = 0; i < 20; i++) {
         random = Math.random() * 6;
         random -= random % 1;
-        if(random === lastTurnedSide) {
+        if (random === lastTurnedSide) {
             i++;
             continue;
         }
