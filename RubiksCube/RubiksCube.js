@@ -19,6 +19,7 @@ const pointBackYellow = new THREE.Vector3(0, 1, 3);
 const pointRightYellow = new THREE.Vector3(3, 1, 0);
 
 let OLLId = "";
+let pllColor;
 
 let whiteGroup = new THREE.Object3D();
 let yellowGroup = new THREE.Object3D();
@@ -33,7 +34,7 @@ let angleStep = Math.PI / 40;
 let t = 0;
 
 let lastTimeExecuted = Date.now();
-let intervall = 350;
+let intervall = 375;
 
 let horizontalCamAngle;
 let verticalCamAngle;
@@ -60,6 +61,11 @@ let Ga = "RRUrUruRuRRDurURdU";
 let Gb = "fuFRRDbUBuBdRR";
 let Gc = "RRuRuRUrURRdURurDu";
 let Gd = "dRUruDRRuRurUrURRU";
+
+let absoluteEdgeSwitchGreen = "lUlululULULL";
+let absoluteEdgeSwitchBlue = "rUrururURURR";
+let absoluteEdgeSwitchRed = "bUbububUBUBB";
+let absoluteEdgeSwitchOrange = "fUfufufUFUFF";
 
 //OLL Algorithms
 let OCLL1 = "RUUruRUruRur";
@@ -653,6 +659,7 @@ function addHTMLButtons() {
     document.getElementById("cornerSwitchLeft").onclick = function () { cornerSwitchLeft() };
     document.getElementById("scramble").onclick = function () { scramble() };
     document.getElementById("solveOLL").onclick = function () { solveOLL() };
+    document.getElementById("solvePLL").onclick = function () { solvePLL() };
 }
 
 // uU, dD, fF, bB, rR, lL
@@ -698,6 +705,10 @@ async function executeAlgorithm(algorithm, absolute) {
 async function solveOLL() {
     for (i = 0; i < 4; i++) {
         buildOLLId();
+        if (OLLId === "00000000") {
+            console.log("OLL Already Solved");
+            return;
+        }
         if (OLLMap[OLLId] != null) {
             executeAlgorithm(OLLMap[OLLId], true);
             return;
@@ -708,31 +719,140 @@ async function solveOLL() {
     console.log("Not a Valid OLL Case.");
 }
 
-async function dotCornerLine() {
+function solvePLL() {
+    solvePLLEdges();
+    solvePLLCorners();
+}
+
+function solvePLLCorners() {
+
+}
+
+async function solvePLLEdges() {
+    let furtherTurning = true;
+    for (i = 0; i < 4; i++) {
+        if (getRightEdges() === 4) {
+            furtherTurning = false;
+        } else if (getRightEdges() === 1) {
+            furtherTurning = false;
+        } else {
+            up();
+            await delay(intervall + 1);
+        }
+    }
+    if (furtherTurning) {
+        edgeSwitchRight();
+        await delay(intervall * 13 + 12);
+        let tmp = getRightEdges();
+        if (getRightEdges != 1) {
+            while (tmp != 1) {
+                up();
+                await delay(intervall + 1);
+                tmp = getRightEdges();
+            }
+        }
+    }
+
+    pllColor1 = getPLLEdgeColor(pointFrontYellow, 0, 1, 0); //Green Edge
+    pllColor2 = getPLLEdgeColor(pointBackYellow, 0, 1, 2); //Blue Edge
+    pllColor3 = getPLLEdgeColor(pointRightYellow, 2, 1, 0); //Red Edge
+    pllColor4 = getPLLEdgeColor(pointLeftYellow, 0, 1, 0); //Orange Edge
+
+    console.log("Checking for Color");
+    if (pllColor1.r === 0 && pllColor1.g === 1 && pllColor1.b === 0) {
+        console.log("Green true");
+        executeAlgorithm(absoluteEdgeSwitchGreen, true);
+        await delay(intervall * 13 + 12);
+        if (getRightEdges() === 4) {
+            return;
+        } else {
+            executeAlgorithm(absoluteEdgeSwitchGreen, true);
+            await delay(intervall * 13 + 12);
+        }
+    } else if (pllColor2.r === 0 && pllColor2.g === 0 && pllColor2.b === 1) {
+        console.log("Blue true");
+        executeAlgorithm(absoluteEdgeSwitchBlue, true);
+        await delay(intervall * 13 + 12);
+        if (getRightEdges() === 4) {
+            return;
+        } else {
+            executeAlgorithm(absoluteEdgeSwitchBlue, true);
+            await delay(intervall * 13 + 12);
+        }
+    } else if (pllColor3.r === 1 && pllColor3.g === 0 && pllColor3.b === 0) {
+        console.log("Red true");
+        executeAlgorithm(absoluteEdgeSwitchRed, true);
+        await delay(intervall * 13 + 12);
+        if (getRightEdges() === 4) {
+            return;
+        } else {
+            executeAlgorithm(absoluteEdgeSwitchRed, true);
+            await delay(intervall * 13 + 12);
+        }
+    } else if (pllColor4.r === 1 && pllColor4.g === 0.25 && pllColor4.b === 0) {
+        console.log("Orange true");
+        executeAlgorithm(absoluteEdgeSwitchOrange, true);
+        await delay(intervall * 13 + 12);
+        if (getRightEdges() === 4) {
+            return;
+        } else {
+            executeAlgorithm(absoluteEdgeSwitchOrange, true);
+            await delay(intervall * 13 + 12);
+        }
+    }
+}
+
+function getRightEdges() {
+    let amountOfRightEdges = 0;
+
+    pllColor = getPLLEdgeColor(pointFrontYellow, 0, 1, 0); //Green Edge
+    if (pllColor.r === 0 && pllColor.g === 1 && pllColor.b === 0) amountOfRightEdges++;
+
+    pllColor = getPLLEdgeColor(pointBackYellow, 0, 1, 2); //Blue Edge
+    if (pllColor.r === 0 && pllColor.g === 0 && pllColor.b === 1) amountOfRightEdges++;
+
+    pllColor = getPLLEdgeColor(pointRightYellow, 2, 1, 0); //Red Edge
+    if (pllColor.r === 1 && pllColor.g === 0 && pllColor.b === 0) amountOfRightEdges++;
+
+    pllColor = getPLLEdgeColor(pointLeftYellow, 0, 1, 0); //Orange Edge
+    if (pllColor.r === 1 && pllColor.g === 0.25 && pllColor.b === 0) amountOfRightEdges++;
+
+    return amountOfRightEdges;
+}
+
+function getPLLEdgeColor(startPoint, targetX, targetY, targetZ) {
+    let direction = dir.subVectors(new THREE.Vector3(targetX, targetY, targetZ), startPoint).normalize();
+    raycaster.set(startPoint, direction);
+    let foundColor = raycaster.intersectObjects(normalArray, true)[0].object.material.color;
+    //scene.add(new THREE.ArrowHelper(raycaster.ray.direction, raycaster.ray.origin, 300, 0xff0000));
+    return foundColor;
+}
+
+function dotCornerLine() {
     executeAlgorithm("FRUruf", false);
 }
 
-async function rightSune() {
+function rightSune() {
     executeAlgorithm("RUrURuur", false);
 }
 
-async function leftSune() {
+function leftSune() {
     executeAlgorithm("luLulUUL", false);
 }
 
-async function edgeSwitchRight() {
+function edgeSwitchRight() {
     executeAlgorithm("rUrururURURR", false);
 }
 
-async function edgeSwitchLeft() {
+function edgeSwitchLeft() {
     executeAlgorithm("LuLULULulull", false);
 }
 
-async function cornerSwitchRight() {
+function cornerSwitchRight() {
     executeAlgorithm("RbRFFrBRFFRR", false);
 }
 
-async function cornerSwitchLeft() {
+function cornerSwitchLeft() {
     executeAlgorithm("lBlffLblffll", false);
 }
 
