@@ -20,7 +20,8 @@ const pointRightYellow = new THREE.Vector3(3, 1, 0);
 
 let OLLId = "";
 let pllColor;
-let PLLId = "";
+let PLLCornersId = "";
+let PLLEdgesId = "";
 
 let whiteGroup = new THREE.Object3D();
 let yellowGroup = new THREE.Object3D();
@@ -41,8 +42,8 @@ let horizontalCamAngle;
 let verticalCamAngle;
 
 //PLL Algorithms
-let Ua = "RuRURURuruRR";
-let Ub = "RRURUrururUr";
+let Ua = "rUrururURURR";
+let Ub = "LuLULULulull";
 let Z = "RRLLDRRLLURLFFRRLLBBRLUU";
 let H = "RRLLDRRLLUURRLLDRRLL";
 let Aa = "RbRFFrBRFFRR";
@@ -68,21 +69,39 @@ let absoluteEdgeSwitchBlue = "rUrururURURR";
 let absoluteEdgeSwitchRed = "bUbububUBUBB";
 let absoluteEdgeSwitchOrange = "fUfufufUFUFF";
 
-let PLLMap = {};
-PLLMap["2013"] = "U" + Aa + "u"; //Blau-Orange ist richtig
-PLLMap["1203"] = "UU" + Ab + "UU";
+let PLLCornersMap = {};
+PLLCornersMap["2013"] = "U" + Aa + "u"; //Blau-Orange ist richtig
+PLLCornersMap["1203"] = "UU" + Ab + "UU";
 
-PLLMap["1320"] = "u" + Ab + "U"; //Blau-Rot ist richtig
-PLLMap["3021"] = "UU" + Aa + "UU";
+PLLCornersMap["1320"] = "u" + Ab + "U"; //Blau-Rot ist richtig
+PLLCornersMap["3021"] = "UU" + Aa + "UU";
 
-PLLMap["2130"] = Ab; //Grün-Rot ist richtig
-PLLMap["3102"] = "u" + Aa + "U";
+PLLCornersMap["2130"] = Ab; //Grün-Rot ist richtig
+PLLCornersMap["3102"] = "u" + Aa + "U";
 
-PLLMap["0231"] = "U" + Ab + "u"; //Grün Orange ist richtig
-PLLMap["0312"] = Aa;
+PLLCornersMap["0231"] = "U" + Ab + "u"; //Grün Orange ist richtig
+PLLCornersMap["0312"] = Aa;
 
-PLLMap["1032"] = "U" + E + "u"; //Anderer Algorithmus Cases
-PLLMap["3210"] = E;
+PLLCornersMap["1032"] = "U" + E + "u"; //Anderer Algorithmus Cases
+PLLCornersMap["3210"] = E;
+
+let PLLEdgesMap = {};
+PLLEdgesMap["0312"] = "UU" + Ub + "UU";
+PLLEdgesMap["0231"] = "UU" + Ua + "UU";
+
+PLLEdgesMap["3102"] = "U" + Ub + "u";
+PLLEdgesMap["2130"] = "U" + Ua + "u";
+
+PLLEdgesMap["3021"] = Ub;
+PLLEdgesMap["1320"] = Ua;
+
+PLLEdgesMap["2013"] = "u" + Ub + "U";
+PLLEdgesMap["1203"] = "u" + Ua + "U";
+
+PLLEdgesMap["1032"] = "U" + Z + "u";
+PLLEdgesMap["3210"] = Z;
+
+PLLEdgesMap["2301"] = H;
 
 //OLL Algorithms
 let OCLL1 = "RUUruRUruRur";
@@ -676,7 +695,7 @@ function addHTMLButtons() {
     document.getElementById("cornerSwitchLeft").onclick = function () { cornerSwitchLeft() };
     document.getElementById("scramble").onclick = function () { scramble() };
     document.getElementById("solveOLL").onclick = function () { solveOLL() };
-    document.getElementById("solvePLL").onclick = function () { solvePLL() };
+    document.getElementById("solvePLLEdges").onclick = function () { solvePLLEdges() };
     document.getElementById("solvePLLCorners").onclick = function () { solvePLLCorners() };
 }
 
@@ -739,38 +758,38 @@ async function solveOLL() {
 
 function solvePLL() {
     solvePLLEdges();
-    //solvePLLCorners();
+    solvePLLCorners();
 }
 
 async function solvePLLCorners() {
-    buildPLLId();
-    if (PLLId === "0123") {
+    buildPLLCornersId();
+    if (PLLCornersId === "0123") {
         console.log("PLL Already Solved");
         return;
     }
-    if (PLLMap[PLLId] != undefined) {
-        executeAlgorithm(PLLMap[PLLId], true);
+    if (PLLCornersMap[PLLCornersId] != undefined) {
+        executeAlgorithm(PLLCornersMap[PLLCornersId], true);
         return;
     }
     console.log("Not a Valid PLL Corners Case.");
 }
 
-function buildPLLId() {
+function buildPLLCornersId() {
     // greenOrange = 0, greenRed = 1, blueRed = 2, blueOrange = 3
-    PLLId = "";
+    PLLCornersId = "";
 
-    let greenOrange = getPLLCorner(pointFrontYellow, -1, 1, -1) + getPLLCorner(pointLeftYellow, -1, 1, -1);
-    let greenRed = getPLLCorner(pointFrontYellow, 1, 1, -1) + getPLLCorner(pointRightYellow, 1, 1, -1);
-    let blueRed = getPLLCorner(pointBackYellow, 1, 1, 1) + getPLLCorner(pointRightYellow, 1, 1, 1);
-    let blueOrange = getPLLCorner(pointBackYellow, -1, 1, 1) + getPLLCorner(pointLeftYellow, -1, 1, 1);
+    let greenOrange = getPLLColor(pointFrontYellow, -1, 1, -1) + getPLLColor(pointLeftYellow, -1, 1, -1);
+    let greenRed = getPLLColor(pointFrontYellow, 1, 1, -1) + getPLLColor(pointRightYellow, 1, 1, -1);
+    let blueRed = getPLLColor(pointBackYellow, 1, 1, 1) + getPLLColor(pointRightYellow, 1, 1, 1);
+    let blueOrange = getPLLColor(pointBackYellow, -1, 1, 1) + getPLLColor(pointLeftYellow, -1, 1, 1);
 
-    addToPLLId(greenOrange);
-    addToPLLId(greenRed);
-    addToPLLId(blueRed);
-    addToPLLId(blueOrange);
+    addToPLLCornersId(greenOrange);
+    addToPLLCornersId(greenRed);
+    addToPLLCornersId(blueRed);
+    addToPLLCornersId(blueOrange);
 }
 
-function getPLLCorner(startPoint, targetX, targetY, targetZ) {
+function getPLLColor(startPoint, targetX, targetY, targetZ) {
     let direction = dir.subVectors(new THREE.Vector3(targetX, targetY, targetZ), startPoint).normalize();
     raycaster.set(startPoint, direction);
     let foundColor = raycaster.intersectObjects(normalArray, true)[0].object.material.color;
@@ -790,103 +809,49 @@ function getPLLCorner(startPoint, targetX, targetY, targetZ) {
     }
 }
 
-function addToPLLId(colorCombo) {
-    if (colorCombo === "greenorange" || colorCombo === "orangegreen") PLLId += 0;
-    if (colorCombo === "greenred" || colorCombo === "redgreen") PLLId += 1;
-    if (colorCombo === "bluered" || colorCombo === "redblue") PLLId += 2;
-    if (colorCombo === "blueorange" || colorCombo === "orangeblue") PLLId += 3;
+function addToPLLCornersId(colorCombo) {
+    if (colorCombo === "greenorange" || colorCombo === "orangegreen") PLLCornersId += 0;
+    if (colorCombo === "greenred" || colorCombo === "redgreen") PLLCornersId += 1;
+    if (colorCombo === "bluered" || colorCombo === "redblue") PLLCornersId += 2;
+    if (colorCombo === "blueorange" || colorCombo === "orangeblue") PLLCornersId += 3;
 }
 
 async function solvePLLEdges() {
-    let furtherTurning = true;
-    for (i = 0; i < 4; i++) {
-        if (getRightEdges() === 4) {
-            furtherTurning = false;
-        } else if (getRightEdges() === 1) {
-            furtherTurning = false;
-        } else {
-            up();
-            await delay(intervall + 1);
+    for(i = 0; i < 4; i++) {
+        buildPLLEdgesId();
+        console.log("Id: " + PLLEdgesId);
+        if(PLLEdgesId === "0123") {
+            console.log("PLL Edges already solved");
+            return;
         }
-    }
-    if (furtherTurning) {
-        edgeSwitchRight();
-        await delay(intervall * 13 + 12);
-        let tmp = getRightEdges();
-        if (getRightEdges != 1) {
-            while (tmp != 1) {
-                up();
-                await delay(intervall + 1);
-                tmp = getRightEdges();
-            }
+        if(PLLEdgesMap[PLLEdgesId] != undefined) {
+            executeAlgorithm(PLLEdgesMap[PLLEdgesId], true);
+            return;
         }
-    }
-
-    pllColor1 = getPLLEdgeColor(pointFrontYellow, 0, 1, 0); //Green Edge
-    pllColor2 = getPLLEdgeColor(pointBackYellow, 0, 1, 2); //Blue Edge
-    pllColor3 = getPLLEdgeColor(pointRightYellow, 2, 1, 0); //Red Edge
-    pllColor4 = getPLLEdgeColor(pointLeftYellow, 0, 1, 0); //Orange Edge
-
-    if (pllColor1.r === 0 && pllColor1.g === 1 && pllColor1.b === 0) {
-        executeAlgorithm(absoluteEdgeSwitchGreen, true);
-        await delay(intervall * 13 + 12);
-        if (getRightEdges() === 4) {
-        } else {
-            executeAlgorithm(absoluteEdgeSwitchGreen, true);
-            await delay(intervall * 13 + 12);
-        }
-    } else if (pllColor2.r === 0 && pllColor2.g === 0 && pllColor2.b === 1) {
-        executeAlgorithm(absoluteEdgeSwitchBlue, true);
-        await delay(intervall * 13 + 12);
-        if (getRightEdges() === 4) {
-        } else {
-            executeAlgorithm(absoluteEdgeSwitchBlue, true);
-            await delay(intervall * 13 + 12);
-        }
-    } else if (pllColor3.r === 1 && pllColor3.g === 0 && pllColor3.b === 0) {
-        executeAlgorithm(absoluteEdgeSwitchRed, true);
-        await delay(intervall * 13 + 12);
-        if (getRightEdges() === 4) {
-        } else {
-            executeAlgorithm(absoluteEdgeSwitchRed, true);
-            await delay(intervall * 13 + 12);
-        }
-    } else if (pllColor4.r === 1 && pllColor4.g === 0.25 && pllColor4.b === 0) {
-        executeAlgorithm(absoluteEdgeSwitchOrange, true);
-        await delay(intervall * 13 + 12);
-        if (getRightEdges() === 4) {
-        } else {
-            executeAlgorithm(absoluteEdgeSwitchOrange, true);
-            await delay(intervall * 13 + 12);
-        }
+        up();
+        await delay(intervall + 1);
     }
     //solvePLLCorners();
 }
 
-function getRightEdges() {
-    let amountOfRightEdges = 0;
+function buildPLLEdgesId() {
+    PLLEdgesId = "";
+    let color1 = getPLLColor(pointFrontYellow, 0, 1, -1); //Green
+    let color2 = getPLLColor(pointRightYellow, -1, 1, 0); //Red
+    let color3 = getPLLColor(pointBackYellow, 0, 1, 1); //Blue
+    let color4 = getPLLColor(pointLeftYellow, 1, 1, 0); //Orange
 
-    pllColor = getPLLEdgeColor(pointFrontYellow, 0, 1, 0); //Green Edge
-    if (pllColor.r === 0 && pllColor.g === 1 && pllColor.b === 0) amountOfRightEdges++;
-
-    pllColor = getPLLEdgeColor(pointBackYellow, 0, 1, 2); //Blue Edge
-    if (pllColor.r === 0 && pllColor.g === 0 && pllColor.b === 1) amountOfRightEdges++;
-
-    pllColor = getPLLEdgeColor(pointRightYellow, 2, 1, 0); //Red Edge
-    if (pllColor.r === 1 && pllColor.g === 0 && pllColor.b === 0) amountOfRightEdges++;
-
-    pllColor = getPLLEdgeColor(pointLeftYellow, 0, 1, 0); //Orange Edge
-    if (pllColor.r === 1 && pllColor.g === 0.25 && pllColor.b === 0) amountOfRightEdges++;
-
-    return amountOfRightEdges;
+    addColorToPLLEdgesId(color1);
+    addColorToPLLEdgesId(color2);
+    addColorToPLLEdgesId(color3);
+    addColorToPLLEdgesId(color4);
 }
 
-function getPLLEdgeColor(startPoint, targetX, targetY, targetZ) {
-    let direction = dir.subVectors(new THREE.Vector3(targetX, targetY, targetZ), startPoint).normalize();
-    raycaster.set(startPoint, direction);
-    let foundColor = raycaster.intersectObjects(normalArray, true)[0].object.material.color;
-    //scene.add(new THREE.ArrowHelper(raycaster.ray.direction, raycaster.ray.origin, 300, 0xff0000));
-    return foundColor;
+function addColorToPLLEdgesId(color) {
+    if(color === "green") PLLEdgesId += 0;
+    if(color === "red") PLLEdgesId += 1;
+    if(color === "blue") PLLEdgesId += 2;
+    if(color === "orange") PLLEdgesId += 3;
 }
 
 function dotCornerLine() {
