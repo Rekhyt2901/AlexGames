@@ -24,16 +24,11 @@
             left: 80%;
         }
 
-        .simpleButton {
-            position: relative;
-            width: 90%;
-            height: 4%;
-            margin: 5%;
-            font-size: 120%;
+        .hiddenButton {
             display: none;
         }
 
-        .algButton {
+        .solveButton {
             position: relative;
             width: 90%;
             height: 4%;
@@ -44,29 +39,31 @@
 </head>
 <body style="margin: 0px; overflow-x: hidden; overflow-y: hidden;">
     <div id="sidebar">
-        <button class="simpleButton" id="turnUp">Turn U</button>
-        <button class="simpleButton" id="turnDown">Turn D</button>
-        <button class="simpleButton" id="turnFront">Turn F</button>
-        <button class="simpleButton" id="turnBack">Turn B</button>
-        <button class="simpleButton" id="turnRight">Turn R</button>
-        <button class="simpleButton" id="turnLeft">Turn L</button>
+        <button class="hiddenButton" id="turnUp">Turn U</button>
+        <button class="hiddenButton" id="turnDown">Turn D</button>
+        <button class="hiddenButton" id="turnFront">Turn F</button>
+        <button class="hiddenButton" id="turnBack">Turn B</button>
+        <button class="hiddenButton" id="turnRight">Turn R</button>
+        <button class="hiddenButton" id="turnLeft">Turn L</button>
 
-        <h2>Simple OLL</h2>
-        <button class="algButton" id="dotCornerLine">Dot-Corner-Line</button>
-        <button class="algButton" id="rightSune">Right Sune</button>
-        <button class="algButton" id="leftSune">Left Sune</button>
+        <!--<h2>Simple OLL</h2>-->
+        <button class="hiddenButton" id="dotCornerLine">Dot-Corner-Line</button>
+        <button class="hiddenButton" id="rightSune">Right Sune</button>
+        <button class="hiddenButton" id="leftSune">Left Sune</button>
 
-        <h2>Simple PLL</h2>
-        <button class="algButton" id="edgeSwitchRight">Edge Switch Right</button>
-        <button class="algButton" id="edgeSwitchLeft">Edge Switch Left</button>
-        <button class="algButton" id="cornerSwitchRight">Corner Switch Right</button>
-        <button class="algButton" id="cornerSwitchLeft">Corner Switch Left</button>
+        <!--<h2>Simple PLL</h2>-->
+        <button class="hiddenButton" id="edgeSwitchRight">Edge Switch Right</button>
+        <button class="hiddenButton" id="edgeSwitchLeft">Edge Switch Left</button>
+        <button class="hiddenButton" id="cornerSwitchRight">Corner Switch Right</button>
+        <button class="hiddenButton" id="cornerSwitchLeft">Corner Switch Left</button>
 
-        <h2>Scramble</h2>
-        <button class="algButton" id="scramble">Scramble</button>
-
-        <button class="algButton" id="solveOLL">SolveOLL</button>
-        <button class="algButton" id="solvePLLEdges">SolvePLLEdges</button>
-        <button class="algButton" id="solvePLLCorners">SolvePLLCorners</button>
+        <h2>Automation</h2>
+        <button class="solveButton" id="scramble">Scramble</button>
+        <button class="solveButton" id="solveCross">SolveCross</button>
+        <button class="solveButton" id="solveOLL">SolveOLL</button>
+        <button class="solveButton" id="solvePLLEdges">SolvePLLEdges</button>
+        <button class="solveButton" id="solvePLLCorners">SolvePLLCorners</button>
+        <button class="solveButton" id="solvePLL">SolvePLL</button>
+        <button class="solveButton" id="solveLL">SolveLL</button>
     </div>
 </body>

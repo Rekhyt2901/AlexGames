@@ -18,6 +18,13 @@ const pointLeftYellow = new THREE.Vector3(-3, 1, 0);
 const pointBackYellow = new THREE.Vector3(0, 1, 3);
 const pointRightYellow = new THREE.Vector3(3, 1, 0);
 
+const pointAbove = new THREE.Vector3(0, 3, 0);
+const pointFront = new THREE.Vector3(0, 0, -3);
+const pointLeft = new THREE.Vector3(-3, 0, 0);
+const pointBack = new THREE.Vector3(0, 0, 3);
+const pointRight = new THREE.Vector3(3, 0, 0);
+const pointBelow = new THREE.Vector3(0, -3, 0);
+
 let OLLId = "";
 let pllColor;
 let PLLCornersId = "";
@@ -36,10 +43,36 @@ let angleStep = Math.PI / 40;
 let t = 0;
 
 let lastTimeExecuted = Date.now();
-let intervall = 375;
+let intervall = 400;
 
 let horizontalCamAngle;
 let verticalCamAngle;
+
+//Cross Algs
+let CrossG1 = "BUL";
+let CrossG2 = "UL";
+let CrossG3 = "DlFLU";
+let CrossG4 = "urUU";
+
+let CrossB1 = "FuRUU";
+let CrossB2 = "uRUU";
+let CrossB3 = "fuRUU";
+let CrossB4 = "Ul";
+
+let CrossR1 = "rfU";
+let CrossR2 = "RRfRRU";
+let CrossR3 = "RfrU";
+let CrossR4 = "fU";
+
+let CrossO1 = "LFU";
+let CrossO2 = "FU";
+let CrossO3 = "lFLU";
+let CrossO4 = "LLFLLU";
+
+let CrossW1 = "FFU";
+let CrossW2 = "dFFU";
+let CrossW3 = "DDFFU";
+let CrossW4 = "DFFU";
 
 //PLL Algorithms
 let Ua = "rUrururURURR";
@@ -694,8 +727,11 @@ function addHTMLButtons() {
     document.getElementById("cornerSwitchRight").onclick = function () { cornerSwitchRight() };
     document.getElementById("cornerSwitchLeft").onclick = function () { cornerSwitchLeft() };
     document.getElementById("scramble").onclick = function () { scramble() };
-    document.getElementById("solveOLL").onclick = function () { solveOLL() };
-    document.getElementById("solvePLLEdges").onclick = function () { solvePLLEdges() };
+    document.getElementById("solveCross").onclick = function () { solveCross() };
+    document.getElementById("solveLL").onclick = function () { solveOLL(true) };
+    document.getElementById("solveOLL").onclick = function () { solveOLL(false) };
+    document.getElementById("solvePLL").onclick = function () { solvePLLEdges(true, false) };
+    document.getElementById("solvePLLEdges").onclick = function () { solvePLLEdges(false, false) };
     document.getElementById("solvePLLCorners").onclick = function () { solvePLLCorners() };
 }
 
@@ -739,30 +775,68 @@ async function executeAlgorithm(algorithm, absolute) {
     }
 }
 
-async function solveOLL() {
+async function solveCross() {
+    for (j = 0; j < 4; j++) {
+        //Green Side
+        if (getCubieColor(pointFront, 0, 1, -1) === "white") { executeAlgorithm(CrossG1, true); await delay(intervall) }  //Top
+        else if (getCubieColor(pointFront, -1, 0, -1) === "white") { executeAlgorithm(CrossG2, true); }  //Right
+        else if (getCubieColor(pointFront, 0, -1, -1) === "white") { executeAlgorithm(CrossG3, true); await delay(intervall) }  //Bottom
+        else if (getCubieColor(pointFront, 1, 0, -1) === "white") { executeAlgorithm(CrossG4, true); }  //Left
+
+        //Blue Side
+        else if (getCubieColor(pointBack, 0, 1, 1) === "white") { executeAlgorithm(CrossB1, true); await delay(intervall) }  //Top
+        else if (getCubieColor(pointBack, 1, 0, 1) === "white") { executeAlgorithm(CrossB2, true); }  //Right
+        else if (getCubieColor(pointBack, 0, -1, 1) === "white") { executeAlgorithm(CrossB3, true); await delay(intervall) }  //Bottom
+        else if (getCubieColor(pointBack, -1, 0, 1) === "white") { executeAlgorithm(CrossB4, true); }  //Left
+
+        //Red Side
+        else if (getCubieColor(pointRight, 1, 1, 0) === "white") { executeAlgorithm(CrossR1, true); }  //Top
+        else if (getCubieColor(pointRight, 1, 0, -1) === "white") { executeAlgorithm(CrossR2, true); await delay(intervall * 2) }  //Right
+        else if (getCubieColor(pointRight, 1, -1, 0) === "white") { executeAlgorithm(CrossR3, true); }  //Bottom
+        else if (getCubieColor(pointRight, 1, 0, 1) === "white") { executeAlgorithm(CrossR4, true); }  //Left
+
+        //Orange Side
+        else if (getCubieColor(pointLeft, -1, 1, 0) === "white") { executeAlgorithm(CrossO1, true); }  //Top
+        else if (getCubieColor(pointLeft, -1, 0, 1) === "white") { executeAlgorithm(CrossO2, true); }  //Right
+        else if (getCubieColor(pointLeft, -1, -1, 0) === "white") { executeAlgorithm(CrossO3, true); }  //Bottom
+        else if (getCubieColor(pointLeft, -1, 0, -1) === "white") { executeAlgorithm(CrossO4, true); await delay(intervall * 2) }  //Left
+
+        //White Side
+        else if (getCubieColor(pointBelow, 0, -1, 1) === "white") { executeAlgorithm(CrossW1, true); }  //Top
+        else if (getCubieColor(pointBelow, 1, -1, 0) === "white") { executeAlgorithm(CrossW2, true); } //Right
+        else if (getCubieColor(pointBelow, 0, -1, -1) === "white") { executeAlgorithm(CrossW3, true); await delay(intervall) } //Bottom
+        else if (getCubieColor(pointBelow, -1, -1, 0) === "white") { executeAlgorithm(CrossW4, true); } //Left
+        await delay(intervall * 5);
+    }
+    solvePLLEdges(false, true);
+}
+
+async function solveOLL(PLL) {
     for (i = 0; i < 4; i++) {
         buildOLLId();
         if (OLLId === "00000000") {
             console.log("OLL Already Solved");
+            if(PLL) solvePLLEdges(true, false);
             return;
         }
         if (OLLMap[OLLId] != null) {
+            console.log("OLLId: " + OLLId);
             executeAlgorithm(OLLMap[OLLId], true);
+            if(PLL) {
+                await delay((intervall+40) *OLLMap[OLLId].length);
+                solvePLLEdges(true, false);
+            }
             return;
         }
         up();
         await delay(intervall + 1);
     }
-    console.log("Not a Valid OLL Case.");
-}
-
-function solvePLL() {
-    solvePLLEdges();
-    solvePLLCorners();
+    console.log("Not a Valid OLL case.");
 }
 
 async function solvePLLCorners() {
     buildPLLCornersId();
+    console.log("PLLCornersId: " + PLLCornersId);
     if (PLLCornersId === "0123") {
         console.log("PLL Already Solved");
         return;
@@ -771,17 +845,17 @@ async function solvePLLCorners() {
         executeAlgorithm(PLLCornersMap[PLLCornersId], true);
         return;
     }
-    console.log("Not a Valid PLL Corners Case.");
+    console.log("Not a Valid PLL Corners case.");
 }
 
 function buildPLLCornersId() {
     // greenOrange = 0, greenRed = 1, blueRed = 2, blueOrange = 3
     PLLCornersId = "";
 
-    let greenOrange = getPLLColor(pointFrontYellow, -1, 1, -1) + getPLLColor(pointLeftYellow, -1, 1, -1);
-    let greenRed = getPLLColor(pointFrontYellow, 1, 1, -1) + getPLLColor(pointRightYellow, 1, 1, -1);
-    let blueRed = getPLLColor(pointBackYellow, 1, 1, 1) + getPLLColor(pointRightYellow, 1, 1, 1);
-    let blueOrange = getPLLColor(pointBackYellow, -1, 1, 1) + getPLLColor(pointLeftYellow, -1, 1, 1);
+    let greenOrange = getCubieColor(pointFrontYellow, -1, 1, -1) + getCubieColor(pointLeftYellow, -1, 1, -1);
+    let greenRed = getCubieColor(pointFrontYellow, 1, 1, -1) + getCubieColor(pointRightYellow, 1, 1, -1);
+    let blueRed = getCubieColor(pointBackYellow, 1, 1, 1) + getCubieColor(pointRightYellow, 1, 1, 1);
+    let blueOrange = getCubieColor(pointBackYellow, -1, 1, 1) + getCubieColor(pointLeftYellow, -1, 1, 1);
 
     addToPLLCornersId(greenOrange);
     addToPLLCornersId(greenRed);
@@ -789,11 +863,12 @@ function buildPLLCornersId() {
     addToPLLCornersId(blueOrange);
 }
 
-function getPLLColor(startPoint, targetX, targetY, targetZ) {
+function getCubieColor(startPoint, targetX, targetY, targetZ) {
     let direction = dir.subVectors(new THREE.Vector3(targetX, targetY, targetZ), startPoint).normalize();
     raycaster.set(startPoint, direction);
     let foundColor = raycaster.intersectObjects(normalArray, true)[0].object.material.color;
-    //scene.add(new THREE.ArrowHelper(raycaster.ray.direction, raycaster.ray.origin, 300, 0xff0000));
+    //scene.add(new THREE.ArrowHelper(raycaster.ray.direction, raycaster.ray.origin, 3, 0xff0000));
+    if (foundColor.r > 0.8 && foundColor.g > 0.8 && foundColor.b > 0.8) return "white";
     if (foundColor.r === 1) {
         if (foundColor.g === 0) {
             return "red";
@@ -816,30 +891,40 @@ function addToPLLCornersId(colorCombo) {
     if (colorCombo === "blueorange" || colorCombo === "orangeblue") PLLCornersId += 3;
 }
 
-async function solvePLLEdges() {
-    for(i = 0; i < 4; i++) {
+async function solvePLLEdges(corners, cross) {
+    for (i = 0; i < 4; i++) {
         buildPLLEdgesId();
-        console.log("Id: " + PLLEdgesId);
-        if(PLLEdgesId === "0123") {
+        if (PLLEdgesId === "0123") {
             console.log("PLL Edges already solved");
+            if (cross) executeAlgorithm("FFRRBBLL");
+            if (corners) solvePLLCorners();
             return;
         }
-        if(PLLEdgesMap[PLLEdgesId] != undefined) {
-            executeAlgorithm(PLLEdgesMap[PLLEdgesId], true);
+        if (PLLEdgesMap[PLLEdgesId] != undefined) {
+            console.log("PLLEdgesId: " + PLLEdgesId);
+            if (cross) {
+                executeAlgorithm(PLLEdgesMap[PLLEdgesId] + "FFRRBBLL", true);
+            } else {
+                executeAlgorithm(PLLEdgesMap[PLLEdgesId], true);
+                if (corners) {
+                    await delay((intervall+40) * PLLEdgesMap[PLLEdgesId].length);
+                    solvePLLCorners();
+                }
+            }
             return;
         }
         up();
         await delay(intervall + 1);
     }
-    //solvePLLCorners();
+    console.log("Not a valid PLL Edges case.")
 }
 
 function buildPLLEdgesId() {
     PLLEdgesId = "";
-    let color1 = getPLLColor(pointFrontYellow, 0, 1, -1); //Green
-    let color2 = getPLLColor(pointRightYellow, -1, 1, 0); //Red
-    let color3 = getPLLColor(pointBackYellow, 0, 1, 1); //Blue
-    let color4 = getPLLColor(pointLeftYellow, 1, 1, 0); //Orange
+    let color1 = getCubieColor(pointFrontYellow, 0, 1, -1); //Green
+    let color2 = getCubieColor(pointRightYellow, -1, 1, 0); //Red
+    let color3 = getCubieColor(pointBackYellow, 0, 1, 1); //Blue
+    let color4 = getCubieColor(pointLeftYellow, 1, 1, 0); //Orange
 
     addColorToPLLEdgesId(color1);
     addColorToPLLEdgesId(color2);
@@ -848,10 +933,10 @@ function buildPLLEdgesId() {
 }
 
 function addColorToPLLEdgesId(color) {
-    if(color === "green") PLLEdgesId += 0;
-    if(color === "red") PLLEdgesId += 1;
-    if(color === "blue") PLLEdgesId += 2;
-    if(color === "orange") PLLEdgesId += 3;
+    if (color === "green") PLLEdgesId += 0;
+    if (color === "red") PLLEdgesId += 1;
+    if (color === "blue") PLLEdgesId += 2;
+    if (color === "orange") PLLEdgesId += 3;
 }
 
 function dotCornerLine() {
