@@ -878,6 +878,7 @@ function bringWhiteCornerInPosition() {
     else if (getCubieColor(pointAbove, 1, 1, -1) === "white") { executeAlgorithm("U", true); }
     else if (getCubieColor(pointAbove, 1, 1, 1) === "white") { executeAlgorithm("", true); }
     else if (getCubieColor(pointAbove, -1, 1, 1) === "white") { executeAlgorithm("u", true); }
+    else {executeAlgorithm("RUr", true); executeAlgorithm("LUl", true);}
 }
 
 function buildF2LCornersId() {
