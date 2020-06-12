@@ -29,6 +29,7 @@ let OLLId = "";
 let pllColor;
 let PLLCornersId = "";
 let PLLEdgesId = "";
+let F2LCornerId = "";
 
 let whiteGroup = new THREE.Object3D();
 let yellowGroup = new THREE.Object3D();
@@ -73,6 +74,24 @@ let CrossW1 = "FFU";
 let CrossW2 = "dFFU";
 let CrossW3 = "DDFFU";
 let CrossW4 = "DFFU";
+
+//F2L Corner Algs
+let F2LCornersMap = {};
+F2LCornersMap["031"] = "RUr";
+F2LCornersMap["310"] = "fuF";
+F2LCornersMap["103"] = "RUUruRUr";
+
+F2LCornersMap["014"] = "UFUf";
+F2LCornersMap["140"] = "UluL";
+F2LCornersMap["401"] = "UluuLUluL";
+
+F2LCornersMap["042"] = "UULUl";
+F2LCornersMap["420"] = "UUbuB";
+F2LCornersMap["204"] = "UULUUluLUl";
+
+F2LCornersMap["023"] = "uBUb";
+F2LCornersMap["230"] = "uruR";
+F2LCornersMap["302"] = "urUURUruR";
 
 //PLL Algorithms
 let Ua = "rUrururURURR";
@@ -728,6 +747,9 @@ function addHTMLButtons() {
     document.getElementById("cornerSwitchLeft").onclick = function () { cornerSwitchLeft() };
     document.getElementById("scramble").onclick = function () { scramble() };
     document.getElementById("solveCross").onclick = function () { solveCross() };
+    document.getElementById("solveF2LCorners").onclick = function () { solveF2LCorners() };
+    document.getElementById("solveF2LEdges").onclick = function () { solveF2LEdges() };
+    document.getElementById("solveF2L").onclick = function () { solveF2L() };
     document.getElementById("solveLL").onclick = function () { solveOLL(true) };
     document.getElementById("solveOLL").onclick = function () { solveOLL(false) };
     document.getElementById("solvePLL").onclick = function () { solvePLLEdges(true, false) };
@@ -740,8 +762,8 @@ function addHTMLButtons() {
 //lowercase = counter clockwise
 async function executeAlgorithm(algorithm, absolute) {
     algorithm = [...algorithm];
-    for (i = 0; i < algorithm.length; i++) {
-        let side = algorithm[i];
+    for (ai = 0; ai < algorithm.length; ai++) {
+        let side = algorithm[ai];
         await delay(intervall + 1);
         if (!absolute) {
             if (side === "U") up(false);
@@ -811,19 +833,105 @@ async function solveCross() {
     solvePLLEdges(false, true);
 }
 
+async function solveF2LCorners() {
+    for (i = 0; i < 4; i++) {
+        console.log("iStart: " + i);
+        bringWhiteCornerInPosition();
+        await delay((intervall + 1) * 5);
+        buildF2LCornersId();
+        console.log(F2LCornerId);
+        if (F2LCornersMap[F2LCornerId] != undefined) {
+            executeAlgorithm(F2LCornersMap[F2LCornerId], true);
+            await delay((F2LCornersMap[F2LCornerId].length + 1) * (intervall + 1));
+        }
+        console.log("iEnd: " + i);
+    }
+}
+
+function bringWhiteCornerInPosition() {
+    //Green Side
+    if (getCubieColor(pointFront, 1, 1, -1) === "white") { executeAlgorithm("U", true); }
+    else if (getCubieColor(pointFront, -1, 1, -1) === "white") { executeAlgorithm("UU", true); }
+    else if (getCubieColor(pointFront, -1, -1, -1) === "white") { executeAlgorithm("LUlU", true); }
+    else if (getCubieColor(pointFront, 1, -1, -1) === "white") { executeAlgorithm("rURU", true); }
+
+    //Red Side
+    else if (getCubieColor(pointRight, 1, 1, 1) === "white") { executeAlgorithm("", true); }
+    else if (getCubieColor(pointRight, 1, 1, -1) === "white") { executeAlgorithm("U", true); }
+    else if (getCubieColor(pointRight, 1, -1, -1) === "white") { executeAlgorithm("rURU", true); }
+    else if (getCubieColor(pointRight, 1, -1, 1) === "white") { executeAlgorithm("RUru", true); }
+
+    //Blue Side
+    else if (getCubieColor(pointBack, -1, 1, 1) === "white") { executeAlgorithm("u", true); }
+    else if (getCubieColor(pointBack, 1, 1, 1) === "white") { executeAlgorithm("", true); }
+    else if (getCubieColor(pointBack, 1, -1, 1) === "white") { executeAlgorithm("RUru", true); }
+    else if (getCubieColor(pointBack, -1, -1, 1) === "white") { executeAlgorithm("luL", true); }
+
+    //Orange Side
+    else if (getCubieColor(pointLeft, -1, 1, -1) === "white") { executeAlgorithm("uu", true); }
+    else if (getCubieColor(pointLeft, -1, 1, 1) === "white") { executeAlgorithm("u", true); }
+    else if (getCubieColor(pointLeft, -1, -1, 1) === "white") { executeAlgorithm("luL", true); }
+    else if (getCubieColor(pointLeft, -1, -1, -1) === "white") { executeAlgorithm("Luul", true); }
+
+    //Yellow Side
+    else if (getCubieColor(pointAbove, -1, 1, -1) === "white") { executeAlgorithm("uu", true); }
+    else if (getCubieColor(pointAbove, 1, 1, -1) === "white") { executeAlgorithm("U", true); }
+    else if (getCubieColor(pointAbove, 1, 1, 1) === "white") { executeAlgorithm("", true); }
+    else if (getCubieColor(pointAbove, -1, 1, 1) === "white") { executeAlgorithm("u", true); }
+}
+
+function buildF2LCornersId() {
+    F2LCornerId = "";
+    let startPoint1 = new THREE.Vector3(2, 1, 1);
+    let startPoint2 = new THREE.Vector3(1, 2, 1);
+    let startPoint3 = new THREE.Vector3(1, 1, 2);
+    let x = 1;
+    let y = 1;
+    let z = 1;
+    let rightColor = getCubieColor(startPoint1, x, y, z);
+    let topColor = getCubieColor(startPoint2, x, y, z);
+    let frontColor = getCubieColor(startPoint3, x, y, z);
+
+    if (rightColor === "white") F2LCornerId += 0;
+    if (rightColor === "blue") F2LCornerId += 1;
+    if (rightColor === "green") F2LCornerId += 2;
+    if (rightColor === "red") F2LCornerId += 3;
+    if (rightColor === "orange") F2LCornerId += 4;
+
+    if (topColor === "white") F2LCornerId += 0;
+    if (topColor === "blue") F2LCornerId += 1;
+    if (topColor === "green") F2LCornerId += 2;
+    if (topColor === "red") F2LCornerId += 3;
+    if (topColor === "orange") F2LCornerId += 4;
+
+    if (frontColor === "white") F2LCornerId += 0;
+    if (frontColor === "blue") F2LCornerId += 1;
+    if (frontColor === "green") F2LCornerId += 2;
+    if (frontColor === "red") F2LCornerId += 3;
+    if (frontColor === "orange") F2LCornerId += 4;
+}
+
+function solveF2LEdges() {
+
+}
+
+function solveF2L() {
+
+}
+
 async function solveOLL(PLL) {
     for (i = 0; i < 4; i++) {
         buildOLLId();
         if (OLLId === "00000000") {
             console.log("OLL Already Solved");
-            if(PLL) solvePLLEdges(true, false);
+            if (PLL) solvePLLEdges(true, false);
             return;
         }
         if (OLLMap[OLLId] != null) {
             console.log("OLLId: " + OLLId);
             executeAlgorithm(OLLMap[OLLId], true);
-            if(PLL) {
-                await delay((intervall+40) *OLLMap[OLLId].length);
+            if (PLL) {
+                await delay((intervall + 40) * OLLMap[OLLId].length);
                 solvePLLEdges(true, false);
             }
             return;
@@ -867,7 +975,7 @@ function getCubieColor(startPoint, targetX, targetY, targetZ) {
     let direction = dir.subVectors(new THREE.Vector3(targetX, targetY, targetZ), startPoint).normalize();
     raycaster.set(startPoint, direction);
     let foundColor = raycaster.intersectObjects(normalArray, true)[0].object.material.color;
-    //scene.add(new THREE.ArrowHelper(raycaster.ray.direction, raycaster.ray.origin, 3, 0xff0000));
+    scene.add(new THREE.ArrowHelper(raycaster.ray.direction, raycaster.ray.origin, 3, 0xff0000));
     if (foundColor.r > 0.8 && foundColor.g > 0.8 && foundColor.b > 0.8) return "white";
     if (foundColor.r === 1) {
         if (foundColor.g === 0) {
@@ -907,7 +1015,7 @@ async function solvePLLEdges(corners, cross) {
             } else {
                 executeAlgorithm(PLLEdgesMap[PLLEdgesId], true);
                 if (corners) {
-                    await delay((intervall+40) * PLLEdgesMap[PLLEdgesId].length);
+                    await delay((intervall + 40) * PLLEdgesMap[PLLEdgesId].length);
                     solvePLLCorners();
                 }
             }
