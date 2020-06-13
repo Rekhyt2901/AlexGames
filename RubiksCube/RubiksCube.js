@@ -29,7 +29,13 @@ let OLLId = "";
 let pllColor;
 let PLLCornersId = "";
 let PLLEdgesId = "";
-let F2LCornerId = "";
+let F2LCornersId = "";
+let F2LEdgesId = "";
+
+let F2LBlueRedEdgeSolved = false;
+let F2LBlueOrangeEdgeSolved = false;
+let F2LGreenRedEdgeSolved = false;
+let F2LGreenOrangeEdgeSolved = false;
 
 let whiteGroup = new THREE.Object3D();
 let yellowGroup = new THREE.Object3D();
@@ -92,6 +98,20 @@ F2LCornersMap["204"] = "UULUUluLUl";
 F2LCornersMap["023"] = "uBUb";
 F2LCornersMap["230"] = "uruR";
 F2LCornersMap["302"] = "urUURUruR";
+
+//F2L Edges Algs
+let F2LEdgesMap = {};
+F2LEdgesMap["31"] = "URurufUF";
+F2LEdgesMap["13"] = "uufUFURur";
+
+F2LEdgesMap["41"] = "ulULUFuf";
+F2LEdgesMap["14"] = "UUFufulUL";
+
+F2LEdgesMap["32"] = "UrURUBub";
+F2LEdgesMap["23"] = "BuburUR";
+
+F2LEdgesMap["42"] = "uLulubUB";
+F2LEdgesMap["24"] = "bUBULul";
 
 //PLL Algorithms
 let Ua = "rUrururURURR";
@@ -835,16 +855,14 @@ async function solveCross() {
 
 async function solveF2LCorners() {
     for (i = 0; i < 4; i++) {
-        console.log("iStart: " + i);
         bringWhiteCornerInPosition();
         await delay((intervall + 1) * 5);
         buildF2LCornersId();
-        console.log(F2LCornerId);
-        if (F2LCornersMap[F2LCornerId] != undefined) {
-            executeAlgorithm(F2LCornersMap[F2LCornerId], true);
-            await delay((F2LCornersMap[F2LCornerId].length + 1) * (intervall + 1));
+        console.log("F2LCornersId: " + F2LCornersId);
+        if (F2LCornersMap[F2LCornersId] != undefined) {
+            executeAlgorithm(F2LCornersMap[F2LCornersId], true);
+            await delay((F2LCornersMap[F2LCornersId].length + 2) * intervall);
         }
-        console.log("iEnd: " + i);
     }
 }
 
@@ -878,11 +896,11 @@ function bringWhiteCornerInPosition() {
     else if (getCubieColor(pointAbove, 1, 1, -1) === "white") { executeAlgorithm("U", true); }
     else if (getCubieColor(pointAbove, 1, 1, 1) === "white") { executeAlgorithm("", true); }
     else if (getCubieColor(pointAbove, -1, 1, 1) === "white") { executeAlgorithm("u", true); }
-    else {executeAlgorithm("RUr", true); executeAlgorithm("LUl", true);}
+    else { console.log("No Whites Available"); executeAlgorithm("RUr", true); executeAlgorithm("LUl", true); }
 }
 
 function buildF2LCornersId() {
-    F2LCornerId = "";
+    F2LCornersId = "";
     let startPoint1 = new THREE.Vector3(2, 1, 1);
     let startPoint2 = new THREE.Vector3(1, 2, 1);
     let startPoint3 = new THREE.Vector3(1, 1, 2);
@@ -893,27 +911,85 @@ function buildF2LCornersId() {
     let topColor = getCubieColor(startPoint2, x, y, z);
     let frontColor = getCubieColor(startPoint3, x, y, z);
 
-    if (rightColor === "white") F2LCornerId += 0;
-    if (rightColor === "blue") F2LCornerId += 1;
-    if (rightColor === "green") F2LCornerId += 2;
-    if (rightColor === "red") F2LCornerId += 3;
-    if (rightColor === "orange") F2LCornerId += 4;
+    if (rightColor === "white") F2LCornersId += 0;
+    if (rightColor === "blue") F2LCornersId += 1;
+    if (rightColor === "green") F2LCornersId += 2;
+    if (rightColor === "red") F2LCornersId += 3;
+    if (rightColor === "orange") F2LCornersId += 4;
 
-    if (topColor === "white") F2LCornerId += 0;
-    if (topColor === "blue") F2LCornerId += 1;
-    if (topColor === "green") F2LCornerId += 2;
-    if (topColor === "red") F2LCornerId += 3;
-    if (topColor === "orange") F2LCornerId += 4;
+    if (topColor === "white") F2LCornersId += 0;
+    if (topColor === "blue") F2LCornersId += 1;
+    if (topColor === "green") F2LCornersId += 2;
+    if (topColor === "red") F2LCornersId += 3;
+    if (topColor === "orange") F2LCornersId += 4;
 
-    if (frontColor === "white") F2LCornerId += 0;
-    if (frontColor === "blue") F2LCornerId += 1;
-    if (frontColor === "green") F2LCornerId += 2;
-    if (frontColor === "red") F2LCornerId += 3;
-    if (frontColor === "orange") F2LCornerId += 4;
+    if (frontColor === "white") F2LCornersId += 0;
+    if (frontColor === "blue") F2LCornersId += 1;
+    if (frontColor === "green") F2LCornersId += 2;
+    if (frontColor === "red") F2LCornersId += 3;
+    if (frontColor === "orange") F2LCornersId += 4;
 }
 
 function solveF2LEdges() {
+    F2LBlueRedEdgeSolved = false;
+    F2LBlueOrangeEdgeSolved = false;
+    F2LGreenRedEdgeSolved = false;
+    F2LGreenOrangeEdgeSolved = false;
+    buildF2LEdgesId();
+}
 
+async function buildF2LEdgesId() {
+    while (true) {
+        for (i = 0; i < 4; i++) {
+            F2lEdgesId = "";
+            let topColor = getCubieColor(pointAboveYellow, 0, 1, 1);
+            let frontColor = getCubieColor(pointBackYellow, 0, 1, 1);
+
+            if (topColor === "blue") { F2LEdgesId += "1"; }
+            else if (topColor === "green") { F2LEdgesId += "2"; }
+            else if (topColor === "red") { F2LEdgesId += "3"; }
+            else if (topColor === "orange") { F2LEdgesId += "4"; }
+            else if (topColor === "yellow") { F2LEdgesId += "0"; }
+
+            if (frontColor === "blue") { F2LEdgesId += "1"; }
+            else if (frontColor === "green") { F2LEdgesId += "2"; }
+            else if (frontColor === "red") { F2LEdgesId += "3"; }
+            else if (frontColor === "orange") { F2LEdgesId += "4"; }
+            else if (frontColor === "yellow") { F2LEdgesId += "0"; }
+
+            console.log("F2LEdgesId: " + F2LEdgesId);
+
+            if (F2LEdgesMap[F2LEdgesId] != undefined) {
+                console.log("Found One!");
+                executeAlgorithm(F2LEdgesMap[F2LEdgesId], true);
+                if (F2LEdgesId === "13" || F2LEdgesId === "31") F2LBlueRedEdgeSolved = true;
+                if (F2LEdgesId === "14" || F2LEdgesId === "41") F2LBlueOrangeEdgeSolved = true;
+                if (F2LEdgesId === "23" || F2LEdgesId === "32") F2LGreenRedEdgeSolved = true;
+                if (F2LEdgesId === "24" || F2LEdgesId === "42") F2LGreenOrangeEdgeSolved = true;
+                await delay(intervall * F2LEdgesMap[F2LEdgesId].length);
+                i = -1;
+            }
+            F2LEdgesId = "";
+            up();
+            await delay(intervall);
+        }
+
+        if (!F2LBlueRedEdgeSolved) {
+            executeAlgorithm("RurufUF", true);
+            await delay(intervall * 7);
+        } else if (!F2LBlueOrangeEdgeSolved) {
+            executeAlgorithm("lULUFuf", true);
+            await delay(intervall * 7);
+        } else if (!F2LGreenRedEdgeSolved) {
+            executeAlgorithm("BUburuR", true);
+            await delay(intervall * 7);
+        } else if (!F2LGreenOrangeEdgeSolved) {
+            executeAlgorithm("bUBULul", true);
+            await delay(intervall * 7);
+        } else {
+            return;
+        }
+    }
 }
 
 function solveF2L() {
@@ -976,11 +1052,13 @@ function getCubieColor(startPoint, targetX, targetY, targetZ) {
     let direction = dir.subVectors(new THREE.Vector3(targetX, targetY, targetZ), startPoint).normalize();
     raycaster.set(startPoint, direction);
     let foundColor = raycaster.intersectObjects(normalArray, true)[0].object.material.color;
-    scene.add(new THREE.ArrowHelper(raycaster.ray.direction, raycaster.ray.origin, 3, 0xff0000));
+    //scene.add(new THREE.ArrowHelper(raycaster.ray.direction, raycaster.ray.origin, 3, 0xff0000));
     if (foundColor.r > 0.8 && foundColor.g > 0.8 && foundColor.b > 0.8) return "white";
     if (foundColor.r === 1) {
         if (foundColor.g === 0) {
             return "red";
+        } else if (foundColor.g === 1) {
+            return "yellow";
         } else {
             return "orange";
         }
