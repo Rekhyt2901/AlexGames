@@ -782,7 +782,7 @@ function addHTMLButtons() {
     document.getElementById("solvePLLEdges").onclick = function () { solvePLLEdges(false, false, false) };
     document.getElementById("solvePLLCorners").onclick = function () { solvePLLCorners() };
     document.getElementById("solveAll").onclick = function () { solveCross(true) };
-    document.getElementById("speedSlider").oninput = function () {setSpeed(this.value, false);};
+    document.getElementById("speedSlider").oninput = function () { setSpeed(this.value, false); };
 }
 
 // uU, dD, fF, bB, rR, lL
@@ -863,14 +863,31 @@ async function solveCross(nextStep) {
     }
 }
 
+let blueRedF2LCorner = false;
+let blueOrangeF2LCorner = false;
+let greenRedF2LCorner = false;
+let greenOrangeF2LCorner = false;
 async function solveF2LCorners(nextStep, nextNextStep) {
     if (noAlgorithmInProgress) {
+        blueRedF2LCorner = false;
+        blueOrangeF2LCorner = false;
+        greenRedF2LCorner = false;
+        greenOrangeF2LCorner = false;
         for (i = 0; i < 4; i++) {
             bringWhiteCornerInPosition();
-            await delay((intervall + 1) * 5);
+            await delay((intervall) * 5);
             buildF2LCornersId();
             console.log("F2LCornersId: " + F2LCornersId);
             if (F2LCornersMap[F2LCornersId] != undefined) {
+                if (F2LCornersId === "031" || F2LCornersId === "310" || F2LCornersId === "103") {
+                    blueRedF2LCorner = true;
+                } else if (F2LCornersId === "014" || F2LCornersId === "140" || F2LCornersId === "401") {
+                    blueOrangeF2LCorner = true;
+                } else if (F2LCornersId === "042" || F2LCornersId === "420" || F2LCornersId === "204") {
+                    greenOrangeF2LCorner = true;
+                } else if (F2LCornersId === "023" || F2LCornersId === "230" || F2LCornersId === "302") {
+                    greenRedF2LCorner = true;
+                }
                 executeAlgorithm(F2LCornersMap[F2LCornersId], true);
                 await delay((F2LCornersMap[F2LCornersId].length + 2) * intervall);
             }
@@ -911,7 +928,12 @@ async function bringWhiteCornerInPosition() {
     else if (getCubieColor(pointAbove, 1, 1, -1) === "white") { executeAlgorithm("U", true); }
     else if (getCubieColor(pointAbove, 1, 1, 1) === "white") { executeAlgorithm("", true); }
     else if (getCubieColor(pointAbove, -1, 1, 1) === "white") { executeAlgorithm("u", true); }
-    else { executeAlgorithm("RUr", true); await delay(intervall * 3); executeAlgorithm("LUl", true); }
+    else {
+        if(!blueRedF2LCorner) {executeAlgorithm("RUru", true);}
+        else if(!blueOrangeF2LCorner) {executeAlgorithm("luL", true);}
+        else if(!greenRedF2LCorner) {executeAlgorithm("rURU", true);}
+        else if(!greenOrangeF2LCorner) {executeAlgorithm("Luul", true);}
+    }
 }
 
 function buildF2LCornersId() {
@@ -1111,7 +1133,7 @@ async function solvePLLEdges(corners, cross, nextStep) {
                 if (cross) {
                     executeAlgorithm("FFRRBBLL");
                     if (nextStep) {
-                        await delay(intervall * 9);
+                        await delay(intervall * 12);
                         solveF2LCorners(true, true);
                     }
                 }
@@ -1123,7 +1145,7 @@ async function solvePLLEdges(corners, cross, nextStep) {
                 if (cross) {
                     executeAlgorithm(PLLEdgesMap[PLLEdgesId] + "FFRRBBLL", true);
                     if (nextStep) {
-                        await delay(intervall * (9 + PLLEdgesMap[PLLEdgesId].length));
+                        await delay(intervall * (12 + PLLEdgesMap[PLLEdgesId].length));
                         solveF2LCorners(true, true);
                     }
 
@@ -1246,28 +1268,28 @@ async function scramble(givenScramble) {
 
 function setSpeed(speedInt, manual) {
     let tmpSpeed;
-    if(speedInt == 1) {
+    if (speedInt == 1) {
         tmpSpeed = 10;
-    } else if(speedInt == 2) {
+    } else if (speedInt == 2) {
         tmpSpeed = 2;
-    } else if(speedInt == 3) {
+    } else if (speedInt == 3) {
         tmpSpeed = 1;
-    } else if(speedInt == 4) {
+    } else if (speedInt == 4) {
         tmpSpeed = 0.8;
-    } else if(speedInt == 5) {
+    } else if (speedInt == 5) {
         tmpSpeed = 0.6;
-    } else if(speedInt == 6) {
+    } else if (speedInt == 6) {
         tmpSpeed = 0.2;
-    } else if(speedInt == 7) {
+    } else if (speedInt == 7) {
         tmpSpeed = 0.1;
     } else {
         tmpSpeed = 1;
     }
 
-    if(manual) tmpSpeed = speedInt;
- 
+    if (manual) tmpSpeed = speedInt;
+
     speed = tmpSpeed;
-    intervall = tmpSpeed*500;
+    intervall = tmpSpeed * 500;
     console.log("speed: " + speed);
 }
 
