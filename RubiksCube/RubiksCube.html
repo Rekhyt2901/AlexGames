@@ -30,6 +30,13 @@
             margin: 5%;
             font-size: 120%;
         }
+
+        .speedSlider {
+            position: relative;
+            top: 5vh;
+            width: 60%;
+            font-size: 1.8rem;
+        }
     </style>
 </head>
 <body style="margin: 0px; overflow-x: hidden; overflow-y: hidden;">
@@ -52,7 +59,7 @@
         <button class="hiddenButton" id="cornerSwitchRight">Corner Switch Right</button>
         <button class="hiddenButton" id="cornerSwitchLeft">Corner Switch Left</button>
 
-        <h2>Automation</h2>
+        <!--<h2>Automation</h2>-->
         <button class="solveButton" id="scramble">Scramble</button>
         <button class="solveButton" id="solveCross">Solve Cross</button>
         <button class="solveButton" id="solveF2LCorners">Solve F2L Corners</button>
@@ -64,5 +71,11 @@
         <button class="solveButton" id="solvePLL">Solve PLL</button>
         <button class="solveButton" id="solveLL">Solve LL</button>
         <button class="solveButton" id="solveAll">Solve Everything</button>
+
+        <div>
+            <input class="speedSlider" type="range" id="speedSlider" name="speedSlider" 
+                   min="1" max="7" value="3" step="1">
+            <label class="speedSlider" for="speedSlider">Speed</label>
+          </div>
     </div>
 </body>

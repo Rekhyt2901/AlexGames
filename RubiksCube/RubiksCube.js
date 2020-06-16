@@ -1,3 +1,5 @@
+let noAlgorithmInProgress = true;
+
 const xAxis = new THREE.Vector3(1, 0, 0); //Red, Orange
 const yAxis = new THREE.Vector3(0, 1, 0); //White, Yellow
 const zAxis = new THREE.Vector3(0, 0, 1); //Blue, Green
@@ -51,6 +53,7 @@ let t = 0;
 
 let lastTimeExecuted = Date.now();
 let intervall = 400;
+let speed = 1;
 
 let horizontalCamAngle;
 let verticalCamAngle;
@@ -192,17 +195,17 @@ let S1 = "lBBRBrBL";
 let S2 = "lFFrfRfL";
 let C1 = "RURRurFRURuf";
 let C2 = "rurFRfUR";
-let W1 = "RUrfRUrurFRurFRf"; //y2
+let W1 = "UURUrfRUrurFRurFRf"; //y2
 let W2 = "RUrURururFRf";
 let E1 = "LFrflRURur";
 let E2 = "RUruLrFRfL";
 let P1 = "ruFURurfR";
 let P2 = "RUburURBr";
-let P3 = "rufUFR"; //y
-let P4 = "FURurf"; //y2
-let I1 = "FURurURurf"; //y2
+let P3 = "UrufUFR"; //y
+let P4 = "UUFURurf"; //y2
+let I1 = "UUFURurURurf"; //y2
 let I2 = "ruRurUfUFB";
-let I3 = "rFRURuRRfRRurURUr"; //y
+let I3 = "UrFRURuRRfRRurURUr"; //y
 let I4 = "lbLurURurURlBL";
 let F1 = "RUrurFRRUruf";
 let F2 = "RUrUrFRfRUUr";
@@ -212,7 +215,7 @@ let K1 = "LfluLFlbUB";
 let K2 = "rFRUrfRFuf";
 let K3 = "lbLruRUlBl";
 let K4 = "LFlRUruLfl";
-let A1 = "RUruRurfuFRUr"; //y
+let A1 = "URUruRurfuFRUr"; //y
 let A2 = "uFURUUruRUUruf"; //y'
 let A3 = "RUrURUUrFRUruf";
 let A4 = "ruRurUURFRUruf";
@@ -234,7 +237,7 @@ let O3 = "BULulbuFRUruf";
 let O4 = "BULulbUFRUruf";
 let O5 = "RUrUrFRfUUrFRf";
 let O6 = "LFrFRFFllbRbrBBL";
-let O7 = "lRFRFrfLrrFRf";
+let O7 = "lRBRBrbLrrFRf";
 let O8 = "lRBRBrbLLRRFRfl";
 
 let OLLMap = {};
@@ -685,11 +688,11 @@ function turnO(shift) {
 }
 
 function animateGroup(t, inverse, group, axis) {
-    if (t >= 1) {
+    if (t >= speed) {
         t = 0;
         return;
     }
-    angleStep = Math.PI / 40;
+    angleStep = Math.PI / (40 * speed);
     if (inverse) angleStep *= -1;
     t += step;
     if (axis === "x") group.rotation.x += angleStep;
@@ -779,6 +782,7 @@ function addHTMLButtons() {
     document.getElementById("solvePLLEdges").onclick = function () { solvePLLEdges(false, false, false) };
     document.getElementById("solvePLLCorners").onclick = function () { solvePLLCorners() };
     document.getElementById("solveAll").onclick = function () { solveCross(true) };
+    document.getElementById("speedSlider").oninput = function () {setSpeed(this.value, false);};
 }
 
 // uU, dD, fF, bB, rR, lL
@@ -822,54 +826,58 @@ async function executeAlgorithm(algorithm, absolute) {
 }
 
 async function solveCross(nextStep) {
-    for (j = 0; j < 4; j++) {
-        //Green Side
-        if (getCubieColor(pointFront, 0, 1, -1) === "white") { executeAlgorithm(CrossG1, true); await delay(intervall) }  //Top
-        else if (getCubieColor(pointFront, -1, 0, -1) === "white") { executeAlgorithm(CrossG2, true); }  //Right
-        else if (getCubieColor(pointFront, 0, -1, -1) === "white") { executeAlgorithm(CrossG3, true); await delay(intervall) }  //Bottom
-        else if (getCubieColor(pointFront, 1, 0, -1) === "white") { executeAlgorithm(CrossG4, true); }  //Left
+    if (noAlgorithmInProgress) {
+        for (j = 0; j < 4; j++) {
+            //Green Side
+            if (getCubieColor(pointFront, 0, 1, -1) === "white") { executeAlgorithm(CrossG1, true); await delay(intervall) }  //Top
+            else if (getCubieColor(pointFront, -1, 0, -1) === "white") { executeAlgorithm(CrossG2, true); }  //Right
+            else if (getCubieColor(pointFront, 0, -1, -1) === "white") { executeAlgorithm(CrossG3, true); await delay(intervall) }  //Bottom
+            else if (getCubieColor(pointFront, 1, 0, -1) === "white") { executeAlgorithm(CrossG4, true); }  //Left
 
-        //Blue Side
-        else if (getCubieColor(pointBack, 0, 1, 1) === "white") { executeAlgorithm(CrossB1, true); await delay(intervall) }  //Top
-        else if (getCubieColor(pointBack, 1, 0, 1) === "white") { executeAlgorithm(CrossB2, true); }  //Right
-        else if (getCubieColor(pointBack, 0, -1, 1) === "white") { executeAlgorithm(CrossB3, true); await delay(intervall) }  //Bottom
-        else if (getCubieColor(pointBack, -1, 0, 1) === "white") { executeAlgorithm(CrossB4, true); }  //Left
+            //Blue Side
+            else if (getCubieColor(pointBack, 0, 1, 1) === "white") { executeAlgorithm(CrossB1, true); await delay(intervall) }  //Top
+            else if (getCubieColor(pointBack, 1, 0, 1) === "white") { executeAlgorithm(CrossB2, true); }  //Right
+            else if (getCubieColor(pointBack, 0, -1, 1) === "white") { executeAlgorithm(CrossB3, true); await delay(intervall) }  //Bottom
+            else if (getCubieColor(pointBack, -1, 0, 1) === "white") { executeAlgorithm(CrossB4, true); }  //Left
 
-        //Red Side
-        else if (getCubieColor(pointRight, 1, 1, 0) === "white") { executeAlgorithm(CrossR1, true); }  //Top
-        else if (getCubieColor(pointRight, 1, 0, -1) === "white") { executeAlgorithm(CrossR2, true); await delay(intervall * 2) }  //Right
-        else if (getCubieColor(pointRight, 1, -1, 0) === "white") { executeAlgorithm(CrossR3, true); }  //Bottom
-        else if (getCubieColor(pointRight, 1, 0, 1) === "white") { executeAlgorithm(CrossR4, true); }  //Left
+            //Red Side
+            else if (getCubieColor(pointRight, 1, 1, 0) === "white") { executeAlgorithm(CrossR1, true); }  //Top
+            else if (getCubieColor(pointRight, 1, 0, -1) === "white") { executeAlgorithm(CrossR2, true); await delay(intervall * 2) }  //Right
+            else if (getCubieColor(pointRight, 1, -1, 0) === "white") { executeAlgorithm(CrossR3, true); }  //Bottom
+            else if (getCubieColor(pointRight, 1, 0, 1) === "white") { executeAlgorithm(CrossR4, true); }  //Left
 
-        //Orange Side
-        else if (getCubieColor(pointLeft, -1, 1, 0) === "white") { executeAlgorithm(CrossO1, true); }  //Top
-        else if (getCubieColor(pointLeft, -1, 0, 1) === "white") { executeAlgorithm(CrossO2, true); }  //Right
-        else if (getCubieColor(pointLeft, -1, -1, 0) === "white") { executeAlgorithm(CrossO3, true); }  //Bottom
-        else if (getCubieColor(pointLeft, -1, 0, -1) === "white") { executeAlgorithm(CrossO4, true); await delay(intervall * 2) }  //Left
+            //Orange Side
+            else if (getCubieColor(pointLeft, -1, 1, 0) === "white") { executeAlgorithm(CrossO1, true); }  //Top
+            else if (getCubieColor(pointLeft, -1, 0, 1) === "white") { executeAlgorithm(CrossO2, true); }  //Right
+            else if (getCubieColor(pointLeft, -1, -1, 0) === "white") { executeAlgorithm(CrossO3, true); }  //Bottom
+            else if (getCubieColor(pointLeft, -1, 0, -1) === "white") { executeAlgorithm(CrossO4, true); await delay(intervall * 2) }  //Left
 
-        //White Side
-        else if (getCubieColor(pointBelow, 0, -1, 1) === "white") { executeAlgorithm(CrossW1, true); }  //Top
-        else if (getCubieColor(pointBelow, 1, -1, 0) === "white") { executeAlgorithm(CrossW2, true); } //Right
-        else if (getCubieColor(pointBelow, 0, -1, -1) === "white") { executeAlgorithm(CrossW3, true); await delay(intervall) } //Bottom
-        else if (getCubieColor(pointBelow, -1, -1, 0) === "white") { executeAlgorithm(CrossW4, true); } //Left
-        await delay(intervall * 5);
+            //White Side
+            else if (getCubieColor(pointBelow, 0, -1, 1) === "white") { executeAlgorithm(CrossW1, true); }  //Top
+            else if (getCubieColor(pointBelow, 1, -1, 0) === "white") { executeAlgorithm(CrossW2, true); } //Right
+            else if (getCubieColor(pointBelow, 0, -1, -1) === "white") { executeAlgorithm(CrossW3, true); await delay(intervall) } //Bottom
+            else if (getCubieColor(pointBelow, -1, -1, 0) === "white") { executeAlgorithm(CrossW4, true); } //Left
+            await delay(intervall * 5);
+        }
+        solvePLLEdges(false, true, nextStep);
     }
-    solvePLLEdges(false, true, nextStep);
 }
 
 async function solveF2LCorners(nextStep, nextNextStep) {
-    for (i = 0; i < 4; i++) {
-        bringWhiteCornerInPosition();
-        await delay((intervall + 1) * 5);
-        buildF2LCornersId();
-        console.log("F2LCornersId: " + F2LCornersId);
-        if (F2LCornersMap[F2LCornersId] != undefined) {
-            executeAlgorithm(F2LCornersMap[F2LCornersId], true);
-            await delay((F2LCornersMap[F2LCornersId].length + 2) * intervall);
+    if (noAlgorithmInProgress) {
+        for (i = 0; i < 4; i++) {
+            bringWhiteCornerInPosition();
+            await delay((intervall + 1) * 5);
+            buildF2LCornersId();
+            console.log("F2LCornersId: " + F2LCornersId);
+            if (F2LCornersMap[F2LCornersId] != undefined) {
+                executeAlgorithm(F2LCornersMap[F2LCornersId], true);
+                await delay((F2LCornersMap[F2LCornersId].length + 2) * intervall);
+            }
         }
-    }
-    if (nextStep) {
-        solveF2LEdges(nextNextStep);
+        if (nextStep) {
+            solveF2LEdges(nextNextStep);
+        }
     }
 }
 
@@ -924,30 +932,32 @@ function buildF2LCornersId() {
     else if (rightColor === "green") { F2LCornersId += 2; }
     else if (rightColor === "red") { F2LCornersId += 3; }
     else if (rightColor === "orange") { F2LCornersId += 4; }
-    else if(rightColor === "yellow") {console.log("F2LCornerId first slot didnt Fire");}
+    else if (rightColor === "yellow") { console.log("F2LCornerId first slot didnt Fire"); }
 
     if (topColor === "white") { F2LCornersId += 0; }
     else if (topColor === "blue") { F2LCornersId += 1; }
     else if (topColor === "green") { F2LCornersId += 2; }
     else if (topColor === "red") { F2LCornersId += 3; }
     else if (topColor === "orange") { F2LCornersId += 4; }
-    else if(rightColor === "yellow") {console.log("F2LCornerId second slot didnt Fire");}
+    else if (rightColor === "yellow") { console.log("F2LCornerId second slot didnt Fire"); }
 
     if (frontColor === "white") { F2LCornersId += 0; }
     else if (frontColor === "blue") { F2LCornersId += 1; }
     else if (frontColor === "green") { F2LCornersId += 2; }
     else if (frontColor === "red") { F2LCornersId += 3; }
     else if (frontColor === "orange") { F2LCornersId += 4; }
-    else if(rightColor === "yellow") {console.log("F2LCornerId third slot didnt Fire");}
-    else {console.log("wtf");}
+    else if (rightColor === "yellow") { console.log("F2LCornerId third slot didnt Fire"); }
+    else { console.log("wtf"); }
 }
 
 function solveF2LEdges(nextNextStep) {
-    F2LBlueRedEdgeSolved = false;
-    F2LBlueOrangeEdgeSolved = false;
-    F2LGreenRedEdgeSolved = false;
-    F2LGreenOrangeEdgeSolved = false;
-    buildF2LEdgesId(nextNextStep);
+    if (noAlgorithmInProgress) {
+        F2LBlueRedEdgeSolved = false;
+        F2LBlueOrangeEdgeSolved = false;
+        F2LGreenRedEdgeSolved = false;
+        F2LGreenOrangeEdgeSolved = false;
+        buildF2LEdgesId(nextNextStep);
+    }
 }
 
 async function buildF2LEdgesId(nextNextStep) {
@@ -999,7 +1009,6 @@ async function buildF2LEdgesId(nextNextStep) {
             await delay(intervall * 7);
         } else {
             if (nextNextStep) {
-                console.log("starting OLL")
                 solveOLL(true);
             }
             return;
@@ -1008,40 +1017,44 @@ async function buildF2LEdgesId(nextNextStep) {
 }
 
 async function solveOLL(PLL) {
-    for (i = 0; i < 4; i++) {
-        buildOLLId();
-        if (OLLId === "00000000") {
-            console.log("OLL Already Solved");
-            if (PLL) solvePLLEdges(true, false, false);
-            return;
-        }
-        if (OLLMap[OLLId] != null) {
-            console.log("OLLId: " + OLLId);
-            executeAlgorithm(OLLMap[OLLId], true);
-            if (PLL) {
-                await delay((intervall + 40) * OLLMap[OLLId].length);
-                solvePLLEdges(true, false, false);
+    if (noAlgorithmInProgress) {
+        for (i = 0; i < 4; i++) {
+            buildOLLId();
+            if (OLLId === "00000000") {
+                console.log("OLL Already Solved");
+                if (PLL) solvePLLEdges(true, false, false);
+                return;
             }
-            return;
+            if (OLLMap[OLLId] != null) {
+                console.log("OLLId: " + OLLId);
+                executeAlgorithm(OLLMap[OLLId], true);
+                if (PLL) {
+                    await delay((intervall + 40) * OLLMap[OLLId].length);
+                    solvePLLEdges(true, false, false);
+                }
+                return;
+            }
+            up();
+            await delay(intervall + 1);
         }
-        up();
-        await delay(intervall + 1);
+        console.log("Not a Valid OLL case.");
     }
-    console.log("Not a Valid OLL case.");
 }
 
 async function solvePLLCorners() {
-    buildPLLCornersId();
-    console.log("PLLCornersId: " + PLLCornersId);
-    if (PLLCornersId === "0123") {
-        console.log("PLL Already Solved");
-        return;
+    if (noAlgorithmInProgress) {
+        buildPLLCornersId();
+        console.log("PLLCornersId: " + PLLCornersId);
+        if (PLLCornersId === "0123") {
+            console.log("PLL Already Solved");
+            return;
+        }
+        if (PLLCornersMap[PLLCornersId] != undefined) {
+            executeAlgorithm(PLLCornersMap[PLLCornersId], true);
+            return;
+        }
+        console.log("Not a Valid PLL Corners case.");
     }
-    if (PLLCornersMap[PLLCornersId] != undefined) {
-        executeAlgorithm(PLLCornersMap[PLLCornersId], true);
-        return;
-    }
-    console.log("Not a Valid PLL Corners case.");
 }
 
 function buildPLLCornersId() {
@@ -1090,42 +1103,44 @@ function addToPLLCornersId(colorCombo) {
 }
 
 async function solvePLLEdges(corners, cross, nextStep) {
-    for (i = 0; i < 4; i++) {
-        buildPLLEdgesId();
-        if (PLLEdgesId === "0123") {
-            console.log("PLL Edges already solved");
-            if (cross) {
-                executeAlgorithm("FFRRBBLL");
-                if (nextStep) {
-                    await delay(intervall * 9);
-                    solveF2LCorners(true, true);
+    if (noAlgorithmInProgress) {
+        for (i = 0; i < 4; i++) {
+            buildPLLEdgesId();
+            if (PLLEdgesId === "0123") {
+                console.log("PLL Edges already solved");
+                if (cross) {
+                    executeAlgorithm("FFRRBBLL");
+                    if (nextStep) {
+                        await delay(intervall * 9);
+                        solveF2LCorners(true, true);
+                    }
                 }
+                if (corners) solvePLLCorners();
+                return;
             }
-            if (corners) solvePLLCorners();
-            return;
-        }
-        if (PLLEdgesMap[PLLEdgesId] != undefined) {
-            console.log("PLLEdgesId: " + PLLEdgesId);
-            if (cross) {
-                executeAlgorithm(PLLEdgesMap[PLLEdgesId] + "FFRRBBLL", true);
-                if (nextStep) {
-                    await delay(intervall * (9 + PLLEdgesMap[PLLEdgesId].length));
-                    solveF2LCorners(true, true);
-                }
+            if (PLLEdgesMap[PLLEdgesId] != undefined) {
+                console.log("PLLEdgesId: " + PLLEdgesId);
+                if (cross) {
+                    executeAlgorithm(PLLEdgesMap[PLLEdgesId] + "FFRRBBLL", true);
+                    if (nextStep) {
+                        await delay(intervall * (9 + PLLEdgesMap[PLLEdgesId].length));
+                        solveF2LCorners(true, true);
+                    }
 
-            } else {
-                executeAlgorithm(PLLEdgesMap[PLLEdgesId], true);
-                if (corners) {
-                    await delay((intervall + 40) * PLLEdgesMap[PLLEdgesId].length);
-                    solvePLLCorners();
+                } else {
+                    executeAlgorithm(PLLEdgesMap[PLLEdgesId], true);
+                    if (corners) {
+                        await delay((intervall + 40) * PLLEdgesMap[PLLEdgesId].length);
+                        solvePLLCorners();
+                    }
                 }
+                return;
             }
-            return;
+            up();
+            await delay(intervall + 1);
         }
-        up();
-        await delay(intervall + 1);
+        console.log("Not a valid PLL Edges case.")
     }
-    console.log("Not a valid PLL Edges case.")
 }
 
 function buildPLLEdgesId() {
@@ -1149,68 +1164,111 @@ function addColorToPLLEdgesId(color) {
 }
 
 function dotCornerLine() {
-    executeAlgorithm("FRUruf", false);
+    if (noAlgorithmInProgress) {
+        executeAlgorithm("FRUruf", false);
+    }
 }
 
 function rightSune() {
-    executeAlgorithm("RUrURuur", false);
+    if (noAlgorithmInProgress) {
+        executeAlgorithm("RUrURuur", false);
+    }
 }
 
 function leftSune() {
-    executeAlgorithm("luLulUUL", false);
+    if (noAlgorithmInProgress) {
+        executeAlgorithm("luLulUUL", false);
+    }
 }
 
 function edgeSwitchRight() {
-    executeAlgorithm("rUrururURURR", false);
+    if (noAlgorithmInProgress) {
+        executeAlgorithm("rUrururURURR", false);
+    }
 }
 
 function edgeSwitchLeft() {
-    executeAlgorithm("LuLULULulull", false);
+    if (noAlgorithmInProgress) {
+        executeAlgorithm("LuLULULulull", false);
+    }
 }
 
 function cornerSwitchRight() {
-    executeAlgorithm("RbRFFrBRFFRR", false);
+    if (noAlgorithmInProgress) {
+        executeAlgorithm("RbRFFrBRFFRR", false);
+    }
 }
 
 function cornerSwitchLeft() {
-    executeAlgorithm("lBlffLblffll", false);
+    if (noAlgorithmInProgress) {
+        executeAlgorithm("lBlffLblffll", false);
+    }
 }
 
 async function scramble(givenScramble) {
-    if (givenScramble != undefined) {
-        executeAlgorithm(givenScramble);
-        return;
-    }
-    let scrambleString = "";
-    let lastTurnedSide = 0;
-    let random;
-    let randomBoolean;
-    for (i = 0; i < 20; i++) {
-        random = Math.random() * 6;
-        random -= random % 1;
-        if (random === lastTurnedSide) {
-            F
-            i++;
-            continue;
+    if (noAlgorithmInProgress) {
+        if (givenScramble != undefined) {
+            executeAlgorithm(givenScramble);
+            return;
         }
-        randomBoolean = Math.random() >= 0.5;
-        await delay(intervall + 1);
-        if (random === 0 && randomBoolean === true) { turnY(true); scrambleString += "u"; }
-        if (random === 1 && randomBoolean === true) { turnW(true); scrambleString += "d"; }
-        if (random === 2 && randomBoolean === true) { turnB(true); scrambleString += "f"; }
-        if (random === 3 && randomBoolean === true) { turnG(true); scrambleString += "b"; }
-        if (random === 4 && randomBoolean === true) { turnR(true); scrambleString += "r"; }
-        if (random === 5 && randomBoolean === true) { turnO(true); scrambleString += "l"; }
+        let scrambleString = "";
+        let lastTurnedSide = 0;
+        let random;
+        let randomBoolean;
+        for (i = 0; i < 20; i++) {
+            random = Math.random() * 6;
+            random -= random % 1;
+            if (random === lastTurnedSide) {
+                F
+                i++;
+                continue;
+            }
+            randomBoolean = Math.random() >= 0.5;
+            await delay(intervall + 1);
+            if (random === 0 && randomBoolean === true) { turnY(true); scrambleString += "u"; }
+            if (random === 1 && randomBoolean === true) { turnW(true); scrambleString += "d"; }
+            if (random === 2 && randomBoolean === true) { turnB(true); scrambleString += "f"; }
+            if (random === 3 && randomBoolean === true) { turnG(true); scrambleString += "b"; }
+            if (random === 4 && randomBoolean === true) { turnR(true); scrambleString += "r"; }
+            if (random === 5 && randomBoolean === true) { turnO(true); scrambleString += "l"; }
 
-        if (random === 0 && randomBoolean === false) { turnY(false); scrambleString += "U"; }
-        if (random === 1 && randomBoolean === false) { turnW(false); scrambleString += "D"; }
-        if (random === 2 && randomBoolean === false) { turnB(false); scrambleString += "F"; }
-        if (random === 3 && randomBoolean === false) { turnG(false); scrambleString += "B"; }
-        if (random === 4 && randomBoolean === false) { turnR(false); scrambleString += "R"; }
-        if (random === 5 && randomBoolean === false) { turnO(false); scrambleString += "L"; }
-        lastTurnedSide = random;
+            if (random === 0 && randomBoolean === false) { turnY(false); scrambleString += "U"; }
+            if (random === 1 && randomBoolean === false) { turnW(false); scrambleString += "D"; }
+            if (random === 2 && randomBoolean === false) { turnB(false); scrambleString += "F"; }
+            if (random === 3 && randomBoolean === false) { turnG(false); scrambleString += "B"; }
+            if (random === 4 && randomBoolean === false) { turnR(false); scrambleString += "R"; }
+            if (random === 5 && randomBoolean === false) { turnO(false); scrambleString += "L"; }
+            lastTurnedSide = random;
+        }
+        console.log("Scramble Algorithm: " + scrambleString);
     }
-    console.log("Scramble Algorithm: " + scrambleString);
+}
+
+function setSpeed(speedInt, manual) {
+    let tmpSpeed;
+    if(speedInt == 1) {
+        tmpSpeed = 10;
+    } else if(speedInt == 2) {
+        tmpSpeed = 2;
+    } else if(speedInt == 3) {
+        tmpSpeed = 1;
+    } else if(speedInt == 4) {
+        tmpSpeed = 0.8;
+    } else if(speedInt == 5) {
+        tmpSpeed = 0.6;
+    } else if(speedInt == 6) {
+        tmpSpeed = 0.2;
+    } else if(speedInt == 7) {
+        tmpSpeed = 0.1;
+    } else {
+        tmpSpeed = 1;
+    }
+
+    if(manual) tmpSpeed = speedInt;
+ 
+    speed = tmpSpeed;
+    intervall = tmpSpeed*500;
+    console.log("speed: " + speed);
 }
 
 function delay(ms) {
