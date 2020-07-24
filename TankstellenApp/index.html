@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr" style="background-color: #e0e0ff; color: #000000;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tankstellen Preise</title>
+    <script defer src="public.js"></script>
+    <script src="TankstellenServer.js"></script>
+    <script src="TankstellenDaten.js"></script>
+    <style>
+        tr {
+            border: 4px solid black;
+        }
+
+        td {
+            font-size: 2rem;
+            border: 2px solid black;
+        }
+
+        p {
+            margin: 0px;
+            font-size: 2rem;
+        }
+
+        input, button {
+            vertical-align: middle;
+        }
+
+        span {
+            font-size: 1.5rem;
+            vertical-align: middle;
+            margin-top: 100%;
+        }
+    </style>
+</head>
+
+<body id="body" style="margin: 0px; overflow-x: hidden;">
+    <p>Enter desired price <input step="0.1" value="1.500" id="input" type="number"> <button id="submit">Load
+            stations</button></p>
+    <p>
+    <form id="form">
+        <span><input type="radio" name="search" id="listsearch"> <label for="listsearch">Zuhause</label> </span>
+        <span><input type="radio" name="search" checked id="geosearch"> <label for="geosearch">Location finder</label></span>
+    </form>
+    </p>
+    <table id="table">
+    </table>
+</body>
