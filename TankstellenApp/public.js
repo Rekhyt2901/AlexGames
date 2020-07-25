@@ -24,7 +24,7 @@ async function main(desiredPrice, useGeo, searchData) {
     if(data.length > 0) {
         console.log("Found station below price");
         clearInterval(interval);
-        //notify user
+        if(timer > 1) notifyUser();
     }
     console.log(data);
 
@@ -77,6 +77,18 @@ async function main(desiredPrice, useGeo, searchData) {
 
 }
 
+function notifyUser() {
+    Push.create("Tankstelle Verfügbar!", {
+        tag: "TankstelleGefunden",
+        requireInteraction: true,
+        vibrate: [200],
+        body: "Schau auf der Website nach wo sie zu funden ist!",
+        onClick: () => {
+            window.focus();
+        }
+    });
+}
+
 async function geoSearch(desiredPrice) {
     let options = {
         body: { price: desiredPrice, type: "geo" }
@@ -85,12 +97,15 @@ async function geoSearch(desiredPrice) {
 }
 
 let interval;
+let timer;
 document.getElementById("submit").onclick = () => {
+    timer = 0;
     repeating();
-    interval = setInterval(repeating , 900000);
+    interval = setInterval(repeating , 90000);
 }
 
 function repeating() {
+    timer++;
     console.log("Repeating");
     inputField = document.getElementById("input");
     if (document.getElementsByName("search")[0].checked) main(inputField.value, false, "");
