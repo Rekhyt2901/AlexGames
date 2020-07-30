@@ -40,7 +40,7 @@ async function main(desiredPrice, searchData) {
             let address = document.createElement("td");
             let distance = document.createElement("td");
 
-            price.textContent = data[item].price;
+            price.textContent = data[item].price + "€";
             brand.textContent = data[item].stationData.brand;
             address.textContent = stationData.place + " " + stationData.street;
             if (stationData.house_number) address.textContent += " " + stationData.house_number;
@@ -50,10 +50,12 @@ async function main(desiredPrice, searchData) {
             tr.appendChild(brand);
             tr.appendChild(address);
             tr.appendChild(distance);
-            document.getElementById("table").appendChild(tr);
-
-            priceArray.push(data[item].price);
-            trArray.push(tr);
+            
+            if (data[item].price) {
+                document.getElementById("table").appendChild(tr);
+                priceArray.push(data[item].price);
+                trArray.push(tr);
+            }
         }
     } else { //wenn keine für den preis vorhanden ist
         let emptytr = document.createElement("tr");
@@ -110,6 +112,7 @@ function repeating() {
     let type;
     if (document.getElementsByName("search")[0].checked) type = "diesel";
     if (document.getElementsByName("search")[1].checked) type = "e5";
+    if (document.getElementsByName("search")[2].checked) type = "e10";
     if ("geolocation" in navigator) {
         console.log("Geolocation available");
         navigator.geolocation.getCurrentPosition(async (position) => {

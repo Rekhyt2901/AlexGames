@@ -19,6 +19,7 @@
         }
 
         td {
+            padding: 0px 5px;
             font-size: 2rem;
             border: 2px solid black;
         }
@@ -42,8 +43,10 @@
 
         /* Hide scrollbar for IE, Edge and Firefox */
         body {
-            -ms-overflow-style: none; /* IE and Edge */
-            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
         }
     </style>
 </head>
@@ -55,13 +58,20 @@
             <label class="desiredPrice" for="input">Desired Price</label>
             <input class="form-control-md" step="0.1" value="1.549" id="input" type="number">
         </div>
-        <div class="form-check form-check-inline btn btn-primary">
-            <input type="radio" name="search" id="diesel" class="form-check-input">
-            <label class="form-check-label" for="diesel">Diesel</label>
+        <div class="form-check form-check-inline">
+            <label class="form-check-label btn btn-primary" for="diesel">
+                <input type="radio" name="search" id="diesel" class="form-check-input ">
+                Diesel</label>
         </div>
-        <div class="form-check form-check-inline btn btn-primary">
-            <input type="radio" name="search" checked id="super" class="form-check-input">
-            <label class="form-check-label" for="super">Super</label>
+        <div class="form-check form-check-inline">
+            <label class="form-check-label btn btn-primary" for="E5">
+                <input type="radio" name="search" checked id="E5" class="form-check-input">
+                E5</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <label class="form-check-label btn btn-primary" for="E10">
+                <input type="radio" name="search" id="E10" class="form-check-input">
+                E10</label>
         </div>
         <button class="btn btn-primary" id="submit">Load stations</button>
     </div>
