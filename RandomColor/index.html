@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" style="margin: 0px; padding: 0px;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Color</title>
+    <style>
+        body {
+            text-align: center;
+            overflow: hidden;
+            height: 100vh;
+            margin: 0px;
+            padding: 0px;
+            font-size: 6rem;
+        }
+
+        button, button:focus {
+            outline: none;
+            padding: 3vh 8vh;
+            font-size: 3rem;
+            border: 2px solid black;
+            border-radius: 1vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="margin: 20vh 0px;">
+        <p id="p" style="margin: 0px"></p>
+        <p id="p2" style="font-size: 3rem; margin: 0px;"></p>
+    </div>
+    <button id="button">Change</button>
+</body>
+
+<script>
+    document.getElementById("button").onclick = changeColor;
+
+    changeColor();
+    function changeColor() {
+        let amountOfColors = 16777216
+
+        let bgNum = Math.floor(Math.random() * amountOfColors);
+        let cNum = amountOfColors - bgNum;
+
+        let bgColor = "#" + bgNum.toString(16);
+        let color = "#" + cNum.toString(16);
+        console.log("Background: " + bgColor);
+        console.log("Text: " + color);
+
+        document.getElementById("p").textContent = bgColor;
+        document.getElementById("p2").textContent = color;
+        document.body.style.color = color;
+        document.body.style.backgroundColor = bgColor;
+
+        let buttonColor;
+        if(cNum > amountOfColors/2) buttonColor = "#000000";
+        if(cNum < amountOfColors/2) buttonColor = "#ffffff";
+
+        document.getElementById("button").style.color = buttonColor;
+        document.getElementById("button").style.backgroundColor = color;
+    }
+</script>
+
+</html>
