@@ -82,7 +82,7 @@ glTFLoader.load("IndexAssets/Shelf.glb", function (gltf) {
 
 function addEventListeners() {
     domEvents.addEventListener(shelf.children[2], "click", function (event) {
-        window.open("RubiksCube/RubiksCube.html", "_blank");
+        window.open("RubiksCube/", "_blank");
     });
 }
 
