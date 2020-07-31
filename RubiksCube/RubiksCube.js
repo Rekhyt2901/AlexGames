@@ -52,8 +52,7 @@ let angleStep = Math.PI / 40;
 let t = 0;
 
 let lastTimeExecuted = Date.now();
-let intervall = 400;
-let speed = 1;
+let speed = 25;
 
 let horizontalCamAngle;
 let verticalCamAngle;
@@ -204,7 +203,7 @@ let P2 = "RUburURBr";
 let P3 = "UrufUFR"; //y
 let P4 = "UUFURurf"; //y2
 let I1 = "UUFURurURurf"; //y2
-let I2 = "ruRurUfUFB";
+let I2 = "ruRurUfUFR";
 let I3 = "UrFRURuRRfRRurURUr"; //y
 let I4 = "lbLurURurURlBL";
 let F1 = "RUrurFRRUruf";
@@ -479,14 +478,14 @@ function render() {
     renderer.render(scene, camera);
 }
 
-function chooseEvent(event, x, y, z) {
+async function chooseEvent(event, x, y, z) {
     shift = event.origDomEvent.shiftKey;
-    if (x === 1 && y === 0 && z === 1) turnW(shift);
-    if (x === 1 && y === 2 && z === 1) turnY(shift);
-    if (x === 1 && y === 1 && z === 2) turnB(shift);
-    if (x === 1 && y === 1 && z === 0) turnG(shift);
-    if (x === 2 && y === 1 && z === 1) turnR(shift);
-    if (x === 0 && y === 1 && z === 1) turnO(shift);
+    if (x === 1 && y === 0 && z === 1) await turnW(shift);
+    if (x === 1 && y === 2 && z === 1) await turnY(shift);
+    if (x === 1 && y === 1 && z === 2) await turnB(shift);
+    if (x === 1 && y === 1 && z === 0) await turnG(shift);
+    if (x === 2 && y === 1 && z === 1) await turnR(shift);
+    if (x === 0 && y === 1 && z === 1) await turnO(shift);
 }
 
 function getIntersecting(rotationPoint, pt2x, pt2y, pt2z) {
@@ -549,158 +548,144 @@ function buildOLLId() {
     getYellowCorner(pointAboveYellow, -1, 1, 1); //Blue-Orange Corner //Blue
 }
 
-function turnY(shift) {
-    if (Date.now() - lastTimeExecuted > intervall) {
-        let x = 1;
-        let y = 2;
-        let z = 1;
-        yellowGroup = new THREE.Object3D();
-        scene.add(yellowGroup);
+async function turnY(shift) {
+    let x = 1;
+    let y = 2;
+    let z = 1;
+    yellowGroup = new THREE.Object3D();
+    scene.add(yellowGroup);
 
-        yellowGroup.attach(cubiesArray[x][y][z]);
-        yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z));
-        yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z));
-        yellowGroup.attach(getIntersecting(rotationPointY, x, y, z + 1));
-        yellowGroup.attach(getIntersecting(rotationPointY, x, y, z - 1));
-        yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z + 1));
-        yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z - 1));
-        yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z + 1));
-        yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z - 1));
+    yellowGroup.attach(cubiesArray[x][y][z]);
+    yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z));
+    yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z));
+    yellowGroup.attach(getIntersecting(rotationPointY, x, y, z + 1));
+    yellowGroup.attach(getIntersecting(rotationPointY, x, y, z - 1));
+    yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z + 1));
+    yellowGroup.attach(getIntersecting(rotationPointY, x + 1, y, z - 1));
+    yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z + 1));
+    yellowGroup.attach(getIntersecting(rotationPointY, x - 1, y, z - 1));
 
-        animateGroup(t, !shift, yellowGroup, "y");
-        lastTimeExecuted = Date.now();
-    }
+    await animateGroup(!shift, yellowGroup, "y");
+    return true;
 }
 
-function turnW(shift) {
-    if (Date.now() - lastTimeExecuted > intervall) {
-        let x = 1;
-        let y = 0;
-        let z = 1;
-        whiteGroup = new THREE.Object3D();
-        scene.add(whiteGroup);
+async function turnW(shift) {
+    let x = 1;
+    let y = 0;
+    let z = 1;
+    whiteGroup = new THREE.Object3D();
+    scene.add(whiteGroup);
 
-        whiteGroup.attach(cubiesArray[x][y][z]);
-        whiteGroup.attach(getIntersecting(rotationPointW, x + 1, y, z));
-        whiteGroup.attach(getIntersecting(rotationPointW, x - 1, y, z));
-        whiteGroup.attach(getIntersecting(rotationPointW, x, y, z + 1));
-        whiteGroup.attach(getIntersecting(rotationPointW, x, y, z - 1));
-        whiteGroup.attach(getIntersecting(rotationPointW, x + 1, y, z + 1));
-        whiteGroup.attach(getIntersecting(rotationPointW, x + 1, y, z - 1));
-        whiteGroup.attach(getIntersecting(rotationPointW, x - 1, y, z + 1));
-        whiteGroup.attach(getIntersecting(rotationPointW, x - 1, y, z - 1));
+    whiteGroup.attach(cubiesArray[x][y][z]);
+    whiteGroup.attach(getIntersecting(rotationPointW, x + 1, y, z));
+    whiteGroup.attach(getIntersecting(rotationPointW, x - 1, y, z));
+    whiteGroup.attach(getIntersecting(rotationPointW, x, y, z + 1));
+    whiteGroup.attach(getIntersecting(rotationPointW, x, y, z - 1));
+    whiteGroup.attach(getIntersecting(rotationPointW, x + 1, y, z + 1));
+    whiteGroup.attach(getIntersecting(rotationPointW, x + 1, y, z - 1));
+    whiteGroup.attach(getIntersecting(rotationPointW, x - 1, y, z + 1));
+    whiteGroup.attach(getIntersecting(rotationPointW, x - 1, y, z - 1));
 
-        animateGroup(t, shift, whiteGroup, "y");
-        lastTimeExecuted = Date.now();
-    }
+    await animateGroup(shift, whiteGroup, "y");
+    return true;
 }
 
-function turnB(shift) {
-    if (Date.now() - lastTimeExecuted > intervall) {
-        let x = 1;
-        let y = 1;
-        let z = 2;
-        blueGroup = new THREE.Object3D();
-        scene.add(blueGroup);
+async function turnB(shift) {
+    let x = 1;
+    let y = 1;
+    let z = 2;
+    blueGroup = new THREE.Object3D();
+    scene.add(blueGroup);
 
-        blueGroup.attach(cubiesArray[x][y][z]);
-        blueGroup.attach(getIntersecting(rotationPointB, x + 1, y, z));
-        blueGroup.attach(getIntersecting(rotationPointB, x - 1, y, z));
-        blueGroup.attach(getIntersecting(rotationPointB, x, y + 1, z));
-        blueGroup.attach(getIntersecting(rotationPointB, x, y - 1, z));
-        blueGroup.attach(getIntersecting(rotationPointB, x + 1, y + 1, z));
-        blueGroup.attach(getIntersecting(rotationPointB, x + 1, y - 1, z));
-        blueGroup.attach(getIntersecting(rotationPointB, x - 1, y + 1, z));
-        blueGroup.attach(getIntersecting(rotationPointB, x - 1, y - 1, z));
+    blueGroup.attach(cubiesArray[x][y][z]);
+    blueGroup.attach(getIntersecting(rotationPointB, x + 1, y, z));
+    blueGroup.attach(getIntersecting(rotationPointB, x - 1, y, z));
+    blueGroup.attach(getIntersecting(rotationPointB, x, y + 1, z));
+    blueGroup.attach(getIntersecting(rotationPointB, x, y - 1, z));
+    blueGroup.attach(getIntersecting(rotationPointB, x + 1, y + 1, z));
+    blueGroup.attach(getIntersecting(rotationPointB, x + 1, y - 1, z));
+    blueGroup.attach(getIntersecting(rotationPointB, x - 1, y + 1, z));
+    blueGroup.attach(getIntersecting(rotationPointB, x - 1, y - 1, z));
 
-        animateGroup(t, !shift, blueGroup, "z");
-        lastTimeExecuted = Date.now();
-    }
+    await animateGroup(!shift, blueGroup, "z");
+    return true;
 }
 
-function turnG(shift) {
-    if (Date.now() - lastTimeExecuted > intervall) {
-        let x = 1;
-        let y = 1;
-        let z = 0;
-        greenGroup = new THREE.Object3D();
-        scene.add(greenGroup);
+async function turnG(shift) {
+    let x = 1;
+    let y = 1;
+    let z = 0;
+    greenGroup = new THREE.Object3D();
+    scene.add(greenGroup);
 
-        greenGroup.attach(cubiesArray[x][y][z]);
-        greenGroup.attach(getIntersecting(rotationPointG, x + 1, y, z));
-        greenGroup.attach(getIntersecting(rotationPointG, x - 1, y, z));
-        greenGroup.attach(getIntersecting(rotationPointG, x, y + 1, z));
-        greenGroup.attach(getIntersecting(rotationPointG, x, y - 1, z));
-        greenGroup.attach(getIntersecting(rotationPointG, x + 1, y + 1, z));
-        greenGroup.attach(getIntersecting(rotationPointG, x + 1, y - 1, z));
-        greenGroup.attach(getIntersecting(rotationPointG, x - 1, y + 1, z));
-        greenGroup.attach(getIntersecting(rotationPointG, x - 1, y - 1, z));
+    greenGroup.attach(cubiesArray[x][y][z]);
+    greenGroup.attach(getIntersecting(rotationPointG, x + 1, y, z));
+    greenGroup.attach(getIntersecting(rotationPointG, x - 1, y, z));
+    greenGroup.attach(getIntersecting(rotationPointG, x, y + 1, z));
+    greenGroup.attach(getIntersecting(rotationPointG, x, y - 1, z));
+    greenGroup.attach(getIntersecting(rotationPointG, x + 1, y + 1, z));
+    greenGroup.attach(getIntersecting(rotationPointG, x + 1, y - 1, z));
+    greenGroup.attach(getIntersecting(rotationPointG, x - 1, y + 1, z));
+    greenGroup.attach(getIntersecting(rotationPointG, x - 1, y - 1, z));
 
-        animateGroup(t, shift, greenGroup, "z");
-        lastTimeExecuted = Date.now();
-    }
+    await animateGroup(shift, greenGroup, "z");
+    return true;
 }
 
-function turnR(shift) {
-    if (Date.now() - lastTimeExecuted > intervall) {
-        let x = 2;
-        let y = 1;
-        let z = 1;
-        redGroup = new THREE.Object3D();
-        scene.add(redGroup);
+async function turnR(shift) {
+    let x = 2;
+    let y = 1;
+    let z = 1;
+    redGroup = new THREE.Object3D();
+    scene.add(redGroup);
 
-        redGroup.attach(cubiesArray[x][y][z]);
-        redGroup.attach(getIntersecting(rotationPointR, x, y, z + 1));
-        redGroup.attach(getIntersecting(rotationPointR, x, y, z - 1));
-        redGroup.attach(getIntersecting(rotationPointR, x, y + 1, z));
-        redGroup.attach(getIntersecting(rotationPointR, x, y - 1, z));
-        redGroup.attach(getIntersecting(rotationPointR, x, y + 1, z + 1));
-        redGroup.attach(getIntersecting(rotationPointR, x, y - 1, z + 1));
-        redGroup.attach(getIntersecting(rotationPointR, x, y + 1, z - 1));
-        redGroup.attach(getIntersecting(rotationPointR, x, y - 1, z - 1));
+    redGroup.attach(cubiesArray[x][y][z]);
+    redGroup.attach(getIntersecting(rotationPointR, x, y, z + 1));
+    redGroup.attach(getIntersecting(rotationPointR, x, y, z - 1));
+    redGroup.attach(getIntersecting(rotationPointR, x, y + 1, z));
+    redGroup.attach(getIntersecting(rotationPointR, x, y - 1, z));
+    redGroup.attach(getIntersecting(rotationPointR, x, y + 1, z + 1));
+    redGroup.attach(getIntersecting(rotationPointR, x, y - 1, z + 1));
+    redGroup.attach(getIntersecting(rotationPointR, x, y + 1, z - 1));
+    redGroup.attach(getIntersecting(rotationPointR, x, y - 1, z - 1));
 
-        animateGroup(t, !shift, redGroup, "x");
-        lastTimeExecuted = Date.now();
-    }
+    await animateGroup(!shift, redGroup, "x");
+    return true;
 }
 
-function turnO(shift) {
-    if (Date.now() - lastTimeExecuted > intervall) {
-        let x = 0;
-        let y = 1;
-        let z = 1;
-        orangeGroup = new THREE.Object3D();
-        scene.add(orangeGroup);
+async function turnO(shift) {
+    let x = 0;
+    let y = 1;
+    let z = 1;
+    orangeGroup = new THREE.Object3D();
+    scene.add(orangeGroup);
 
-        orangeGroup.attach(cubiesArray[x][y][z]);
-        orangeGroup.attach(getIntersecting(rotationPointO, x, y, z + 1));
-        orangeGroup.attach(getIntersecting(rotationPointO, x, y, z - 1));
-        orangeGroup.attach(getIntersecting(rotationPointO, x, y + 1, z));
-        orangeGroup.attach(getIntersecting(rotationPointO, x, y - 1, z));
-        orangeGroup.attach(getIntersecting(rotationPointO, x, y + 1, z + 1));
-        orangeGroup.attach(getIntersecting(rotationPointO, x, y - 1, z + 1));
-        orangeGroup.attach(getIntersecting(rotationPointO, x, y + 1, z - 1));
-        orangeGroup.attach(getIntersecting(rotationPointO, x, y - 1, z - 1));
+    orangeGroup.attach(cubiesArray[x][y][z]);
+    orangeGroup.attach(getIntersecting(rotationPointO, x, y, z + 1));
+    orangeGroup.attach(getIntersecting(rotationPointO, x, y, z - 1));
+    orangeGroup.attach(getIntersecting(rotationPointO, x, y + 1, z));
+    orangeGroup.attach(getIntersecting(rotationPointO, x, y - 1, z));
+    orangeGroup.attach(getIntersecting(rotationPointO, x, y + 1, z + 1));
+    orangeGroup.attach(getIntersecting(rotationPointO, x, y - 1, z + 1));
+    orangeGroup.attach(getIntersecting(rotationPointO, x, y + 1, z - 1));
+    orangeGroup.attach(getIntersecting(rotationPointO, x, y - 1, z - 1));
 
-        animateGroup(t, shift, orangeGroup, "x");
-        lastTimeExecuted = Date.now();
-    }
+    await animateGroup(shift, orangeGroup, "x");
+    return true;
 }
 
-function animateGroup(t, inverse, group, axis) {
-    if (t >= speed) {
-        t = 0;
-        return;
+async function animateGroup(inverse, group, axis) {
+    for (l = 0; l < speed; l++) {
+        angleStep = (Math.PI / 2) / speed;
+        if (inverse) angleStep *= -1;
+        if (axis === "x") group.rotation.x += angleStep;
+        if (axis === "y") group.rotation.y += angleStep;
+        if (axis === "z") group.rotation.z += angleStep;
+        if (speed === 1) await delay(10); //whyever I need this?
+        await delay(10);
     }
-    angleStep = Math.PI / (40 * speed);
-    if (inverse) angleStep *= -1;
-    t += step;
-    if (axis === "x") group.rotation.x += angleStep;
-    if (axis === "y") group.rotation.y += angleStep;
-    if (axis === "z") group.rotation.z += angleStep;
-    requestAnimationFrame(() => animateGroup(t, inverse, group, axis));
+    return true;
 }
-
 
 //Vertical < 45 = Yellow;
 //Vertical > 135 = White;
@@ -710,46 +695,52 @@ function animateGroup(t, inverse, group, axis) {
 //Horz zwischen 45 und 135 = Rot
 //Horz zwischen 135 und 180 && -180 und -135 = Grün
 //Horz zwischen -45 und -135 = Orange 
-function up(inverse) {
+async function up(inverse) {
     updateCameraAngles();
-    turnY(inverse);
+    await turnY(inverse);
+    return true;
 }
 
-function down(inverse) {
+async function down(inverse) {
     updateCameraAngles();
-    turnW(inverse);
+    await turnW(inverse);
+    return true;
 }
 
-function front(inverse) {
+async function front(inverse) {
     updateCameraAngles();
-    if (-45 <= horizontalCamAngle && horizontalCamAngle < 45) turnB(inverse);
-    if (45 <= horizontalCamAngle && horizontalCamAngle < 135) turnR(inverse);
-    if (135 <= horizontalCamAngle && horizontalCamAngle < 180 || -180 <= horizontalCamAngle && horizontalCamAngle < -135) turnG(inverse)
-    if (-135 <= horizontalCamAngle && horizontalCamAngle < -45) turnO(inverse);
+    if (-45 <= horizontalCamAngle && horizontalCamAngle < 45) await turnB(inverse);
+    if (45 <= horizontalCamAngle && horizontalCamAngle < 135) await turnR(inverse);
+    if (135 <= horizontalCamAngle && horizontalCamAngle < 180 || -180 <= horizontalCamAngle && horizontalCamAngle < -135) await turnG(inverse)
+    if (-135 <= horizontalCamAngle && horizontalCamAngle < -45) await turnO(inverse);
+    return true;
 }
 
-function back(inverse) {
+async function back(inverse) {
     updateCameraAngles();
-    if (-45 <= horizontalCamAngle && horizontalCamAngle < 45) turnG(inverse);
-    if (45 <= horizontalCamAngle && horizontalCamAngle < 135) turnO(inverse);
-    if (135 <= horizontalCamAngle && horizontalCamAngle < 180 || -180 <= horizontalCamAngle && horizontalCamAngle < -135) turnB(inverse)
-    if (-135 <= horizontalCamAngle && horizontalCamAngle < -45) turnR(inverse);
+    if (-45 <= horizontalCamAngle && horizontalCamAngle < 45) await turnG(inverse);
+    if (45 <= horizontalCamAngle && horizontalCamAngle < 135) await turnO(inverse);
+    if (135 <= horizontalCamAngle && horizontalCamAngle < 180 || -180 <= horizontalCamAngle && horizontalCamAngle < -135) await turnB(inverse)
+    if (-135 <= horizontalCamAngle && horizontalCamAngle < -45) await turnR(inverse);
+    return true;
 }
 
-function right(inverse) {
+async function right(inverse) {
     updateCameraAngles();
-    if (-45 <= horizontalCamAngle && horizontalCamAngle < 45) turnR(inverse);
-    if (45 <= horizontalCamAngle && horizontalCamAngle < 135) turnG(inverse);
-    if (135 <= horizontalCamAngle && horizontalCamAngle < 180 || -180 <= horizontalCamAngle && horizontalCamAngle < -135) turnO(inverse)
-    if (-135 <= horizontalCamAngle && horizontalCamAngle < -45) turnB(inverse);
+    if (-45 <= horizontalCamAngle && horizontalCamAngle < 45) await turnR(inverse);
+    if (45 <= horizontalCamAngle && horizontalCamAngle < 135) await turnG(inverse);
+    if (135 <= horizontalCamAngle && horizontalCamAngle < 180 || -180 <= horizontalCamAngle && horizontalCamAngle < -135) await turnO(inverse)
+    if (-135 <= horizontalCamAngle && horizontalCamAngle < -45) await turnB(inverse);
+    return true;
 }
 
-function left(inverse) {
+async function left(inverse) {
     updateCameraAngles();
-    if (-45 <= horizontalCamAngle && horizontalCamAngle < 45) turnO(inverse);
-    if (45 <= horizontalCamAngle && horizontalCamAngle < 135) turnB(inverse);
-    if (135 <= horizontalCamAngle && horizontalCamAngle < 180 || -180 <= horizontalCamAngle && horizontalCamAngle < -135) turnR(inverse)
-    if (-135 <= horizontalCamAngle && horizontalCamAngle < -45) turnG(inverse);
+    if (-45 <= horizontalCamAngle && horizontalCamAngle < 45) await turnO(inverse);
+    if (45 <= horizontalCamAngle && horizontalCamAngle < 135) await turnB(inverse);
+    if (135 <= horizontalCamAngle && horizontalCamAngle < 180 || -180 <= horizontalCamAngle && horizontalCamAngle < -135) await turnR(inverse)
+    if (-135 <= horizontalCamAngle && horizontalCamAngle < -45) await turnG(inverse);
+    return true;
 }
 
 function updateCameraAngles() {
@@ -792,72 +783,71 @@ async function executeAlgorithm(algorithm, absolute) {
     algorithm = [...algorithm];
     for (ai = 0; ai < algorithm.length; ai++) {
         let side = algorithm[ai];
-        await delay(intervall + 1);
         if (!absolute) {
-            if (side === "U") up(false);
-            if (side === "D") down(false);
-            if (side === "F") front(false);
-            if (side === "B") back(false);
-            if (side === "R") right(false);
-            if (side === "L") left(false);
+            if (side === "U") await up(false);
+            if (side === "D") await down(false);
+            if (side === "F") await front(false);
+            if (side === "B") await back(false);
+            if (side === "R") await right(false);
+            if (side === "L") await left(false);
 
-            if (side === "u") up(true);
-            if (side === "d") down(true);
-            if (side === "f") front(true);
-            if (side === "b") back(true);
-            if (side === "r") right(true);
-            if (side === "l") left(true);
+            if (side === "u") await up(true);
+            if (side === "d") await down(true);
+            if (side === "f") await front(true);
+            if (side === "b") await back(true);
+            if (side === "r") await right(true);
+            if (side === "l") await left(true);
         } else {
-            if (side === "U") turnY(false);
-            if (side === "D") turnW(false);
-            if (side === "F") turnB(false);
-            if (side === "B") turnG(false);
-            if (side === "R") turnR(false);
-            if (side === "L") turnO(false);
+            if (side === "U") await turnY(false);
+            if (side === "D") await turnW(false);
+            if (side === "F") await turnB(false);
+            if (side === "B") await turnG(false);
+            if (side === "R") await turnR(false);
+            if (side === "L") await turnO(false);
 
-            if (side === "u") turnY(true);
-            if (side === "d") turnW(true);
-            if (side === "f") turnB(true);
-            if (side === "b") turnG(true);
-            if (side === "r") turnR(true);
-            if (side === "l") turnO(true);
+            if (side === "u") await turnY(true);
+            if (side === "d") await turnW(true);
+            if (side === "f") await turnB(true);
+            if (side === "b") await turnG(true);
+            if (side === "r") await turnR(true);
+            if (side === "l") await turnO(true);
         }
     }
+    return true;
 }
 
 async function solveCross(nextStep) {
     if (noAlgorithmInProgress) {
         for (j = 0; j < 4; j++) {
             //Green Side
-            if (getCubieColor(pointFront, 0, 1, -1) === "white") { executeAlgorithm(CrossG1, true); await delay(intervall) }  //Top
-            else if (getCubieColor(pointFront, -1, 0, -1) === "white") { executeAlgorithm(CrossG2, true); }  //Right
-            else if (getCubieColor(pointFront, 0, -1, -1) === "white") { executeAlgorithm(CrossG3, true); await delay(intervall) }  //Bottom
-            else if (getCubieColor(pointFront, 1, 0, -1) === "white") { executeAlgorithm(CrossG4, true); }  //Left
+            if (getCubieColor(pointFront, 0, 1, -1) === "white") { await executeAlgorithm(CrossG1, true); }  //Top
+            else if (getCubieColor(pointFront, -1, 0, -1) === "white") { await executeAlgorithm(CrossG2, true); }  //Right
+            else if (getCubieColor(pointFront, 0, -1, -1) === "white") { await executeAlgorithm(CrossG3, true); }  //Bottom
+            else if (getCubieColor(pointFront, 1, 0, -1) === "white") { await executeAlgorithm(CrossG4, true); }  //Left
 
             //Blue Side
-            else if (getCubieColor(pointBack, 0, 1, 1) === "white") { executeAlgorithm(CrossB1, true); await delay(intervall) }  //Top
-            else if (getCubieColor(pointBack, 1, 0, 1) === "white") { executeAlgorithm(CrossB2, true); }  //Right
-            else if (getCubieColor(pointBack, 0, -1, 1) === "white") { executeAlgorithm(CrossB3, true); await delay(intervall) }  //Bottom
-            else if (getCubieColor(pointBack, -1, 0, 1) === "white") { executeAlgorithm(CrossB4, true); }  //Left
+            else if (getCubieColor(pointBack, 0, 1, 1) === "white") { await executeAlgorithm(CrossB1, true); }  //Top
+            else if (getCubieColor(pointBack, 1, 0, 1) === "white") { await executeAlgorithm(CrossB2, true); }  //Right
+            else if (getCubieColor(pointBack, 0, -1, 1) === "white") { await executeAlgorithm(CrossB3, true); }  //Bottom
+            else if (getCubieColor(pointBack, -1, 0, 1) === "white") { await executeAlgorithm(CrossB4, true); }  //Left
 
             //Red Side
-            else if (getCubieColor(pointRight, 1, 1, 0) === "white") { executeAlgorithm(CrossR1, true); }  //Top
-            else if (getCubieColor(pointRight, 1, 0, -1) === "white") { executeAlgorithm(CrossR2, true); await delay(intervall * 2) }  //Right
-            else if (getCubieColor(pointRight, 1, -1, 0) === "white") { executeAlgorithm(CrossR3, true); }  //Bottom
-            else if (getCubieColor(pointRight, 1, 0, 1) === "white") { executeAlgorithm(CrossR4, true); }  //Left
+            else if (getCubieColor(pointRight, 1, 1, 0) === "white") { await executeAlgorithm(CrossR1, true); }  //Top
+            else if (getCubieColor(pointRight, 1, 0, -1) === "white") { await executeAlgorithm(CrossR2, true); }  //Right
+            else if (getCubieColor(pointRight, 1, -1, 0) === "white") { await executeAlgorithm(CrossR3, true); }  //Bottom
+            else if (getCubieColor(pointRight, 1, 0, 1) === "white") { await executeAlgorithm(CrossR4, true); }  //Left
 
             //Orange Side
-            else if (getCubieColor(pointLeft, -1, 1, 0) === "white") { executeAlgorithm(CrossO1, true); }  //Top
-            else if (getCubieColor(pointLeft, -1, 0, 1) === "white") { executeAlgorithm(CrossO2, true); }  //Right
-            else if (getCubieColor(pointLeft, -1, -1, 0) === "white") { executeAlgorithm(CrossO3, true); }  //Bottom
-            else if (getCubieColor(pointLeft, -1, 0, -1) === "white") { executeAlgorithm(CrossO4, true); await delay(intervall * 2) }  //Left
+            else if (getCubieColor(pointLeft, -1, 1, 0) === "white") { await executeAlgorithm(CrossO1, true); }  //Top
+            else if (getCubieColor(pointLeft, -1, 0, 1) === "white") { await executeAlgorithm(CrossO2, true); }  //Right
+            else if (getCubieColor(pointLeft, -1, -1, 0) === "white") { await executeAlgorithm(CrossO3, true); }  //Bottom
+            else if (getCubieColor(pointLeft, -1, 0, -1) === "white") { await executeAlgorithm(CrossO4, true); }  //Left
 
             //White Side
-            else if (getCubieColor(pointBelow, 0, -1, 1) === "white") { executeAlgorithm(CrossW1, true); }  //Top
-            else if (getCubieColor(pointBelow, 1, -1, 0) === "white") { executeAlgorithm(CrossW2, true); } //Right
-            else if (getCubieColor(pointBelow, 0, -1, -1) === "white") { executeAlgorithm(CrossW3, true); await delay(intervall) } //Bottom
-            else if (getCubieColor(pointBelow, -1, -1, 0) === "white") { executeAlgorithm(CrossW4, true); } //Left
-            await delay(intervall * 5);
+            else if (getCubieColor(pointBelow, 0, -1, 1) === "white") { await executeAlgorithm(CrossW1, true); }  //Top
+            else if (getCubieColor(pointBelow, 1, -1, 0) === "white") { await executeAlgorithm(CrossW2, true); } //Right
+            else if (getCubieColor(pointBelow, 0, -1, -1) === "white") { await executeAlgorithm(CrossW3, true); } //Bottom
+            else if (getCubieColor(pointBelow, -1, -1, 0) === "white") { await executeAlgorithm(CrossW4, true); } //Left
         }
         solvePLLEdges(false, true, nextStep);
     }
@@ -874,9 +864,8 @@ async function solveF2LCorners(nextStep, nextNextStep) {
         greenRedF2LCorner = false;
         greenOrangeF2LCorner = false;
         for (i = 0; i < 4; i++) {
-            bringWhiteCornerInPosition();
-            await delay((intervall) * 5);
-            buildF2LCornersId();
+            await bringWhiteCornerInPosition();
+            await buildF2LCornersId();
             console.log("F2LCornersId: " + F2LCornersId);
             if (F2LCornersMap[F2LCornersId] != undefined) {
                 if (F2LCornersId === "031" || F2LCornersId === "310" || F2LCornersId === "103") {
@@ -888,8 +877,7 @@ async function solveF2LCorners(nextStep, nextNextStep) {
                 } else if (F2LCornersId === "023" || F2LCornersId === "230" || F2LCornersId === "302") {
                     greenRedF2LCorner = true;
                 }
-                executeAlgorithm(F2LCornersMap[F2LCornersId], true);
-                await delay((F2LCornersMap[F2LCornersId].length + 2) * intervall);
+                await executeAlgorithm(F2LCornersMap[F2LCornersId], true);
             }
         }
         if (nextStep) {
@@ -900,40 +888,41 @@ async function solveF2LCorners(nextStep, nextNextStep) {
 
 async function bringWhiteCornerInPosition() {
     //Green Side
-    if (getCubieColor(pointFront, 1, 1, -1) === "white") { executeAlgorithm("U", true); }
-    else if (getCubieColor(pointFront, -1, 1, -1) === "white") { executeAlgorithm("UU", true); }
-    else if (getCubieColor(pointFront, -1, -1, -1) === "white") { executeAlgorithm("LUlU", true); }
-    else if (getCubieColor(pointFront, 1, -1, -1) === "white") { executeAlgorithm("rURU", true); }
+    if (getCubieColor(pointFront, 1, 1, -1) === "white") { await executeAlgorithm("U", true); }
+    else if (getCubieColor(pointFront, -1, 1, -1) === "white") { await executeAlgorithm("UU", true); }
+    else if (getCubieColor(pointFront, -1, -1, -1) === "white") { await executeAlgorithm("LUlU", true); }
+    else if (getCubieColor(pointFront, 1, -1, -1) === "white") { await executeAlgorithm("rURU", true); }
 
     //Red Side
-    else if (getCubieColor(pointRight, 1, 1, 1) === "white") { executeAlgorithm("", true); }
-    else if (getCubieColor(pointRight, 1, 1, -1) === "white") { executeAlgorithm("U", true); }
-    else if (getCubieColor(pointRight, 1, -1, -1) === "white") { executeAlgorithm("rURU", true); }
-    else if (getCubieColor(pointRight, 1, -1, 1) === "white") { executeAlgorithm("RUru", true); }
+    else if (getCubieColor(pointRight, 1, 1, 1) === "white") { await executeAlgorithm("", true); }
+    else if (getCubieColor(pointRight, 1, 1, -1) === "white") { await executeAlgorithm("U", true); }
+    else if (getCubieColor(pointRight, 1, -1, -1) === "white") { await executeAlgorithm("rURU", true); }
+    else if (getCubieColor(pointRight, 1, -1, 1) === "white") { await executeAlgorithm("RUru", true); }
 
     //Blue Side
-    else if (getCubieColor(pointBack, -1, 1, 1) === "white") { executeAlgorithm("u", true); }
-    else if (getCubieColor(pointBack, 1, 1, 1) === "white") { executeAlgorithm("", true); }
-    else if (getCubieColor(pointBack, 1, -1, 1) === "white") { executeAlgorithm("RUru", true); }
-    else if (getCubieColor(pointBack, -1, -1, 1) === "white") { executeAlgorithm("luL", true); }
+    else if (getCubieColor(pointBack, -1, 1, 1) === "white") { await executeAlgorithm("u", true); }
+    else if (getCubieColor(pointBack, 1, 1, 1) === "white") { await executeAlgorithm("", true); }
+    else if (getCubieColor(pointBack, 1, -1, 1) === "white") { await executeAlgorithm("RUru", true); }
+    else if (getCubieColor(pointBack, -1, -1, 1) === "white") { await executeAlgorithm("luL", true); }
 
     //Orange Side
-    else if (getCubieColor(pointLeft, -1, 1, -1) === "white") { executeAlgorithm("uu", true); }
-    else if (getCubieColor(pointLeft, -1, 1, 1) === "white") { executeAlgorithm("u", true); }
-    else if (getCubieColor(pointLeft, -1, -1, 1) === "white") { executeAlgorithm("luL", true); }
-    else if (getCubieColor(pointLeft, -1, -1, -1) === "white") { executeAlgorithm("Luul", true); }
+    else if (getCubieColor(pointLeft, -1, 1, -1) === "white") { await executeAlgorithm("uu", true); }
+    else if (getCubieColor(pointLeft, -1, 1, 1) === "white") { await executeAlgorithm("u", true); }
+    else if (getCubieColor(pointLeft, -1, -1, 1) === "white") { await executeAlgorithm("luL", true); }
+    else if (getCubieColor(pointLeft, -1, -1, -1) === "white") { await executeAlgorithm("Luul", true); }
 
     //Yellow Side
-    else if (getCubieColor(pointAbove, -1, 1, -1) === "white") { executeAlgorithm("uu", true); }
-    else if (getCubieColor(pointAbove, 1, 1, -1) === "white") { executeAlgorithm("U", true); }
-    else if (getCubieColor(pointAbove, 1, 1, 1) === "white") { executeAlgorithm("", true); }
-    else if (getCubieColor(pointAbove, -1, 1, 1) === "white") { executeAlgorithm("u", true); }
+    else if (getCubieColor(pointAbove, -1, 1, -1) === "white") { await executeAlgorithm("uu", true); }
+    else if (getCubieColor(pointAbove, 1, 1, -1) === "white") { await executeAlgorithm("U", true); }
+    else if (getCubieColor(pointAbove, 1, 1, 1) === "white") { await executeAlgorithm("", true); }
+    else if (getCubieColor(pointAbove, -1, 1, 1) === "white") { await executeAlgorithm("u", true); }
     else {
-        if(!blueRedF2LCorner) {executeAlgorithm("RUru", true);}
-        else if(!blueOrangeF2LCorner) {executeAlgorithm("luL", true);}
-        else if(!greenRedF2LCorner) {executeAlgorithm("rURU", true);}
-        else if(!greenOrangeF2LCorner) {executeAlgorithm("Luul", true);}
+        if (!blueRedF2LCorner) { await executeAlgorithm("RUru", true); }
+        else if (!blueOrangeF2LCorner) { await executeAlgorithm("luL", true); }
+        else if (!greenRedF2LCorner) { await executeAlgorithm("rURU", true); }
+        else if (!greenOrangeF2LCorner) { await executeAlgorithm("Luul", true); }
     }
+    return true;
 }
 
 function buildF2LCornersId() {
@@ -970,6 +959,7 @@ function buildF2LCornersId() {
     else if (frontColor === "orange") { F2LCornersId += 4; }
     else if (rightColor === "yellow") { console.log("F2LCornerId third slot didnt Fire"); }
     else { console.log("wtf"); }
+    return true;
 }
 
 function solveF2LEdges(nextNextStep) {
@@ -1004,36 +994,30 @@ async function buildF2LEdgesId(nextNextStep) {
 
             if (F2LEdgesMap[F2LEdgesId] != undefined) {
                 console.log("F2LEdgesId: " + F2LEdgesId);
-                executeAlgorithm(F2LEdgesMap[F2LEdgesId], true);
+                await executeAlgorithm(F2LEdgesMap[F2LEdgesId], true);
                 if (F2LEdgesId === "13" || F2LEdgesId === "31") F2LBlueRedEdgeSolved = true;
                 if (F2LEdgesId === "14" || F2LEdgesId === "41") F2LBlueOrangeEdgeSolved = true;
                 if (F2LEdgesId === "23" || F2LEdgesId === "32") F2LGreenRedEdgeSolved = true;
                 if (F2LEdgesId === "24" || F2LEdgesId === "42") F2LGreenOrangeEdgeSolved = true;
-                await delay(intervall * F2LEdgesMap[F2LEdgesId].length);
                 i = -1;
             }
             F2LEdgesId = "";
-            up();
-            await delay(intervall);
+            await up();
         }
 
         if (!F2LBlueRedEdgeSolved) {
-            executeAlgorithm("RurufUF", true);
-            await delay(intervall * 7);
+            await executeAlgorithm("RurufUF", true);
         } else if (!F2LBlueOrangeEdgeSolved) {
-            executeAlgorithm("lULUFuf", true);
-            await delay(intervall * 7);
+            await executeAlgorithm("lULUFuf", true);
         } else if (!F2LGreenRedEdgeSolved) {
-            executeAlgorithm("BUburuR", true);
-            await delay(intervall * 7);
+            await executeAlgorithm("BUburuR", true);
         } else if (!F2LGreenOrangeEdgeSolved) {
-            executeAlgorithm("bUBULul", true);
-            await delay(intervall * 7);
+            await executeAlgorithm("bUBULul", true);
         } else {
             if (nextNextStep) {
                 solveOLL(true);
             }
-            return;
+            return true;
         }
     }
 }
@@ -1047,17 +1031,15 @@ async function solveOLL(PLL) {
                 if (PLL) solvePLLEdges(true, false, false);
                 return;
             }
+            console.log("OLLId: " + OLLId);
             if (OLLMap[OLLId] != null) {
-                console.log("OLLId: " + OLLId);
-                executeAlgorithm(OLLMap[OLLId], true);
+                await executeAlgorithm(OLLMap[OLLId], true);
                 if (PLL) {
-                    await delay((intervall + 40) * OLLMap[OLLId].length);
                     solvePLLEdges(true, false, false);
                 }
                 return;
             }
-            up();
-            await delay(intervall + 1);
+            await up();
         }
         console.log("Not a Valid OLL case.");
     }
@@ -1072,7 +1054,7 @@ async function solvePLLCorners() {
             return;
         }
         if (PLLCornersMap[PLLCornersId] != undefined) {
-            executeAlgorithm(PLLCornersMap[PLLCornersId], true);
+            await executeAlgorithm(PLLCornersMap[PLLCornersId], true);
             return;
         }
         console.log("Not a Valid PLL Corners case.");
@@ -1131,9 +1113,8 @@ async function solvePLLEdges(corners, cross, nextStep) {
             if (PLLEdgesId === "0123") {
                 console.log("PLL Edges already solved");
                 if (cross) {
-                    executeAlgorithm("FFRRBBLL");
+                    await executeAlgorithm("FFRRBBLL");
                     if (nextStep) {
-                        await delay(intervall * 12);
                         solveF2LCorners(true, true);
                     }
                 }
@@ -1143,23 +1124,20 @@ async function solvePLLEdges(corners, cross, nextStep) {
             if (PLLEdgesMap[PLLEdgesId] != undefined) {
                 console.log("PLLEdgesId: " + PLLEdgesId);
                 if (cross) {
-                    executeAlgorithm(PLLEdgesMap[PLLEdgesId] + "FFRRBBLL", true);
+                    await executeAlgorithm(PLLEdgesMap[PLLEdgesId] + "FFRRBBLL", true);
                     if (nextStep) {
-                        await delay(intervall * (12 + PLLEdgesMap[PLLEdgesId].length));
                         solveF2LCorners(true, true);
                     }
 
                 } else {
-                    executeAlgorithm(PLLEdgesMap[PLLEdgesId], true);
+                    await executeAlgorithm(PLLEdgesMap[PLLEdgesId], true);
                     if (corners) {
-                        await delay((intervall + 40) * PLLEdgesMap[PLLEdgesId].length);
                         solvePLLCorners();
                     }
                 }
                 return;
             }
-            up();
-            await delay(intervall + 1);
+            await up();
         }
         console.log("Not a valid PLL Edges case.")
     }
@@ -1185,52 +1163,52 @@ function addColorToPLLEdgesId(color) {
     if (color === "orange") PLLEdgesId += 3;
 }
 
-function dotCornerLine() {
+async function dotCornerLine() {
     if (noAlgorithmInProgress) {
-        executeAlgorithm("FRUruf", false);
+        await executeAlgorithm("FRUruf", false);
     }
 }
 
-function rightSune() {
+async function rightSune() {
     if (noAlgorithmInProgress) {
-        executeAlgorithm("RUrURuur", false);
+        await executeAlgorithm("RUrURuur", false);
     }
 }
 
-function leftSune() {
+async function leftSune() {
     if (noAlgorithmInProgress) {
-        executeAlgorithm("luLulUUL", false);
+        await executeAlgorithm("luLulUUL", false);
     }
 }
 
-function edgeSwitchRight() {
+async function edgeSwitchRight() {
     if (noAlgorithmInProgress) {
-        executeAlgorithm("rUrururURURR", false);
+        await executeAlgorithm("rUrururURURR", false);
     }
 }
 
-function edgeSwitchLeft() {
+async function edgeSwitchLeft() {
     if (noAlgorithmInProgress) {
-        executeAlgorithm("LuLULULulull", false);
+        await executeAlgorithm("LuLULULulull", false);
     }
 }
 
-function cornerSwitchRight() {
+async function cornerSwitchRight() {
     if (noAlgorithmInProgress) {
-        executeAlgorithm("RbRFFrBRFFRR", false);
+        await executeAlgorithm("RbRFFrBRFFRR", false);
     }
 }
 
-function cornerSwitchLeft() {
+async function cornerSwitchLeft() {
     if (noAlgorithmInProgress) {
-        executeAlgorithm("lBlffLblffll", false);
+        await executeAlgorithm("lBlffLblffll", false);
     }
 }
 
 async function scramble(givenScramble) {
     if (noAlgorithmInProgress) {
         if (givenScramble != undefined) {
-            executeAlgorithm(givenScramble);
+            await executeAlgorithm(givenScramble);
             return;
         }
         let scrambleString = "";
@@ -1246,20 +1224,19 @@ async function scramble(givenScramble) {
                 continue;
             }
             randomBoolean = Math.random() >= 0.5;
-            await delay(intervall + 1);
-            if (random === 0 && randomBoolean === true) { turnY(true); scrambleString += "u"; }
-            if (random === 1 && randomBoolean === true) { turnW(true); scrambleString += "d"; }
-            if (random === 2 && randomBoolean === true) { turnB(true); scrambleString += "f"; }
-            if (random === 3 && randomBoolean === true) { turnG(true); scrambleString += "b"; }
-            if (random === 4 && randomBoolean === true) { turnR(true); scrambleString += "r"; }
-            if (random === 5 && randomBoolean === true) { turnO(true); scrambleString += "l"; }
+            if (random === 0 && randomBoolean === true) { await turnY(true); scrambleString += "u"; }
+            if (random === 1 && randomBoolean === true) { await turnW(true); scrambleString += "d"; }
+            if (random === 2 && randomBoolean === true) { await turnB(true); scrambleString += "f"; }
+            if (random === 3 && randomBoolean === true) { await turnG(true); scrambleString += "b"; }
+            if (random === 4 && randomBoolean === true) { await turnR(true); scrambleString += "r"; }
+            if (random === 5 && randomBoolean === true) { await turnO(true); scrambleString += "l"; }
 
-            if (random === 0 && randomBoolean === false) { turnY(false); scrambleString += "U"; }
-            if (random === 1 && randomBoolean === false) { turnW(false); scrambleString += "D"; }
-            if (random === 2 && randomBoolean === false) { turnB(false); scrambleString += "F"; }
-            if (random === 3 && randomBoolean === false) { turnG(false); scrambleString += "B"; }
-            if (random === 4 && randomBoolean === false) { turnR(false); scrambleString += "R"; }
-            if (random === 5 && randomBoolean === false) { turnO(false); scrambleString += "L"; }
+            if (random === 0 && randomBoolean === false) { await turnY(false); scrambleString += "U"; }
+            if (random === 1 && randomBoolean === false) { await turnW(false); scrambleString += "D"; }
+            if (random === 2 && randomBoolean === false) { await turnB(false); scrambleString += "F"; }
+            if (random === 3 && randomBoolean === false) { await turnG(false); scrambleString += "B"; }
+            if (random === 4 && randomBoolean === false) { await turnR(false); scrambleString += "R"; }
+            if (random === 5 && randomBoolean === false) { await turnO(false); scrambleString += "L"; }
             lastTurnedSide = random;
         }
         console.log("Scramble Algorithm: " + scrambleString);
@@ -1269,27 +1246,24 @@ async function scramble(givenScramble) {
 function setSpeed(speedInt, manual) {
     let tmpSpeed;
     if (speedInt == 1) {
-        tmpSpeed = 10;
+        tmpSpeed = 200;
     } else if (speedInt == 2) {
-        tmpSpeed = 2;
+        tmpSpeed = 100;
     } else if (speedInt == 3) {
-        tmpSpeed = 1;
+        tmpSpeed = 50;
     } else if (speedInt == 4) {
-        tmpSpeed = 0.8;
+        tmpSpeed = 30;
     } else if (speedInt == 5) {
-        tmpSpeed = 0.6;
+        tmpSpeed = 20;
     } else if (speedInt == 6) {
-        tmpSpeed = 0.2;
+        tmpSpeed = 10;
     } else if (speedInt == 7) {
-        tmpSpeed = 0.1;
-    } else {
         tmpSpeed = 1;
+    } else {
+        tmpSpeed = 30;
     }
-
     if (manual) tmpSpeed = speedInt;
-
     speed = tmpSpeed;
-    intervall = tmpSpeed * 500;
     console.log("speed: " + speed);
 }
 
