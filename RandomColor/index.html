@@ -38,9 +38,9 @@
 
     changeColor();
     function changeColor() {
-        let amountOfColors = 16777216 + 1;
+        let amountOfColors = 16777216;
 
-        let bgNum = Math.floor(Math.random() * amountOfColors);
+        let bgNum = Math.floor(Math.random() * (amountOfColors + 1));
         let cNum = amountOfColors - bgNum;
 
         let bgColor = "#" + bgNum.toString(16);
