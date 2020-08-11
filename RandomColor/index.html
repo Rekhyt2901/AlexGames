@@ -43,8 +43,12 @@
         let bgNum = Math.floor(Math.random() * (amountOfColors + 1));
         let cNum = amountOfColors - bgNum;
 
-        let bgColor = "#" + bgNum.toString(16);
-        let color = "#" + cNum.toString(16);
+        let bgColor = "" + bgNum.toString(16);
+        let color = "" + cNum.toString(16);
+        while(bgColor.length < 6) bgColor = "0" + bgColor;
+        while(color.length < 6) color = "0" + color;
+        bgColor = "#" + bgColor;
+        color = "#" + color;
         console.log("Background: " + bgColor);
         console.log("Text: " + color);
 
