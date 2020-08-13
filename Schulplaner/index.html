@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schulplaner</title>
+    <link rel="stylesheet" href="../libs/bootstrap/css/bootstrap.css">
+    <script defer src="../libs/popper.js"></script>
+    <script defer src="../libs/bootstrap/js/bootstrap.js"></script>
+    <style>
+        body,
+        html {
+            margin: 0px;
+            padding: 0px;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: aquamarine;
+        }
+
+        .headerRow {
+            width: 100%;
+        }
+
+        .unselectedHeaderTd, .selectedHeaderTd {
+            font-size: 3rem;
+            text-align: center;
+            width: 50vw;
+            background-color: black;
+            color: white;
+        }
+        .selectedHeaderTd {
+            color: magenta;
+            border: 2px solid magenta;
+        }
+
+        h1 {
+            text-align: center;
+            text-decoration: underline;
+        }
+
+        .SPtable {
+            width: 100%;
+            margin: 0px;
+            padding: 0px;
+            border-collapse: collapse;
+            border: 5px solid black;
+        }
+
+        .SProw1,
+        .SProw2 {
+            width: 100%;
+        }
+
+        .SProw1 .SPtd {
+            font-size: 2rem;
+            text-align: center;
+            border: 5px solid black;
+        }
+
+        .SProw2 .SPtd {
+            font-size: 1.5rem;
+            text-align: center;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <table>
+        <tr class="headerRow">
+            <td id="headerTd1" class="selectedHeaderTd">Stundenplan</td>
+            <td id="headerTd2" class="unselectedHeaderTd">Kursliste</td>
+        </tr>
+    </table>
+    <div id="Stundenplan" style="display: none;">
+        <div id="faecher" style="display: block;">
+            <h1>Woche A</h1>
+            <table id="SPtableA" class="SPtable">
+                <tr class="SProw1">
+                    <td class="SPtd">Stunden</td>
+                    <td class="SPtd">Montag</td>
+                    <td class="SPtd">Dienstag</td>
+                    <td class="SPtd">Mittwoch</td>
+                    <td class="SPtd">Donnerstag</td>
+                    <td class="SPtd">Freitag</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">1./2.</td>
+                    <td class="SPtd">Deutsch</td>
+                    <td class="SPtd">Mathe</td>
+                    <td class="SPtd">Chemie</td>
+                    <td class="SPtd">Geschichte</td>
+                    <td class="SPtd">Englisch</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">3./4.</td>
+                    <td class="SPtd">Chemie</td>
+                    <td class="SPtd">Englisch</td>
+                    <td class="SPtd">Physik</td>
+                    <td class="SPtd">Philo</td>
+                    <td class="SPtd">Mathe</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">5./6.</td>
+                    <td class="SPtd">Info</td>
+                    <td class="SPtd">Kunst</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">Info</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">7./8.</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">Mathe</td>
+                    <td class="SPtd">Physik</td>
+                    <td class="SPtd">Geschichte</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">9./10.</td>
+                    <td class="SPtd">Sport</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                </tr>
+            </table>
+            <h1>Woche B</h1>
+            <table id="SPtableB" class="SPtable">
+                <tr class="SProw1">
+                    <td class="SPtd">Stunden</td>
+                    <td class="SPtd">Montag</td>
+                    <td class="SPtd">Dienstag</td>
+                    <td class="SPtd">Mittwoch</td>
+                    <td class="SPtd">Donnerstag</td>
+                    <td class="SPtd">Freitag</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">1./2.</td>
+                    <td class="SPtd">Deutsch</td>
+                    <td class="SPtd">Mathe</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">Geschichte</td>
+                    <td class="SPtd">Englisch</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">3./4.</td>
+                    <td class="SPtd">Chemie</td>
+                    <td class="SPtd">Englisch</td>
+                    <td class="SPtd">Physik</td>
+                    <td class="SPtd">Philo</td>
+                    <td class="SPtd">Mathe</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">5./6.</td>
+                    <td class="SPtd">Philo</td>
+                    <td class="SPtd">Kunst</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">Info</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">7./8.</td>
+                    <td class="SPtd">Kunst</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">Englisch</td>
+                    <td class="SPtd">Deutsch</td>
+                    <td class="SPtd">/</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">9./10.</td>
+                    <td class="SPtd">Sport</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                </tr>
+            </table>
+        </div>
+        <div id="raeume" style="display: none;">
+            <h1>Woche A</h1>
+            <table id="SPtableA" class="SPtable">
+                <tr class="SProw1">
+                    <td class="SPtd">Stunden</td>
+                    <td class="SPtd">Montag</td>
+                    <td class="SPtd">Dienstag</td>
+                    <td class="SPtd">Mittwoch</td>
+                    <td class="SPtd">Donnerstag</td>
+                    <td class="SPtd">Freitag</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">8:10 - 9:40</td>
+                    <td class="SPtd">P2</td>
+                    <td class="SPtd">N212</td>
+                    <td class="SPtd">Ch1</td>
+                    <td class="SPtd">N311</td>
+                    <td class="SPtd">N319</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">9:55 - 11:25</td>
+                    <td class="SPtd">Ch2</td>
+                    <td class="SPtd">N319</td>
+                    <td class="SPtd">Ph1</td>
+                    <td class="SPtd">P1</td>
+                    <td class="SPtd">N212</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">11:45 - 13:15</td>
+                    <td class="SPtd">If1</td>
+                    <td class="SPtd">W136</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">If1</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">13:40 - 15:10</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">N212</td>
+                    <td class="SPtd">Ph1</td>
+                    <td class="SPtd">N311</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">15:10 - 16:40</td>
+                    <td class="SPtd">Hal3</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                </tr>
+            </table>
+            <h1>Woche B</h1>
+            <table id="SPtableB" class="SPtable">
+                <tr class="SProw1">
+                    <td class="SPtd">Stunden</td>
+                    <td class="SPtd">Montag</td>
+                    <td class="SPtd">Dienstag</td>
+                    <td class="SPtd">Mittwoch</td>
+                    <td class="SPtd">Donnerstag</td>
+                    <td class="SPtd">Freitag</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">8:10 - 9:40</td>
+                    <td class="SPtd">P2</td>
+                    <td class="SPtd">N212</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">N311</td>
+                    <td class="SPtd">N319</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">9:55 - 11:25</td>
+                    <td class="SPtd">Ch2</td>
+                    <td class="SPtd">N319</td>
+                    <td class="SPtd">Ph1</td>
+                    <td class="SPtd">P1</td>
+                    <td class="SPtd">N212</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">11:45 - 13:15</td>
+                    <td class="SPtd">P8</td>
+                    <td class="SPtd">W136</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">If1</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">13:40 - 15:10</td>
+                    <td class="SPtd">W136</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">N311</td>
+                    <td class="SPtd">P2</td>
+                    <td class="SPtd">/</td>
+                </tr>
+                <tr class="SProw2">
+                    <td class="SPtd">15:10 - 16:40</td>
+                    <td class="SPtd">Hal3</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                    <td class="SPtd">/</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="Kursliste" style="display: block;">
+        <table class="SPtable">
+            <tr class="SProw1">
+                <td class="SPtd">Fach</td>
+                <td class="SPtd">Kurs</td>
+                <td class="SPtd">Belegung</td>
+                <td class="SPtd">Lehrer</td>
+            </tr>
+            <tr class="SProw2">
+                <td class="SPtd">Deutsch</td>
+                <td class="SPtd">GK1</td>
+                <td class="SPtd">Schriftlich</td>
+                <td class="SPtd">Colditz</td>
+            </tr>
+            <tr class="SProw2">
+                <td class="SPtd">Englisch</td>
+                <td class="SPtd">GK1</td>
+                <td class="SPtd">Leistung</td>
+                <td class="SPtd">Richard</td>
+            </tr>
+            <tr class="SProw2">
+                <td class="SPtd">Kunst</td>
+                <td class="SPtd">GK2</td>
+                <td class="SPtd">Mündlich</td>
+                <td class="SPtd">Flügel</td>
+            </tr>
+            <tr class="SProw2">
+                <td class="SPtd">Geschichte</td>
+                <td class="SPtd">GK1</td>
+                <td class="SPtd">Schriftlich</td>
+                <td class="SPtd">Weber</td>
+            </tr>
+            <tr class="SProw2">
+                <td class="SPtd">Philo</td>
+                <td class="SPtd">GK2</td>
+                <td class="SPtd">Mündlich</td>
+                <td class="SPtd">Weber</td>
+            </tr>
+            <tr class="SProw2">
+                <td class="SPtd">Mathe</td>
+                <td class="SPtd">LK2</td>
+                <td class="SPtd">Leistung</td>
+                <td class="SPtd">Aßmann</td>
+            </tr>
+            <tr class="SProw2">
+                <td class="SPtd">Physik</td>
+                <td class="SPtd">GK1</td>
+                <td class="SPtd">Mündlich</td>
+                <td class="SPtd">Studentkowski</td>
+            </tr>
+            <tr class="SProw2">
+                <td class="SPtd">Informatik</td>
+                <td class="SPtd">GK1</td>
+                <td class="SPtd">Schriftlich</td>
+                <td class="SPtd">Porrman</td>
+            </tr>
+            <tr class="SProw2">
+                <td class="SPtd">Chemie</td>
+                <td class="SPtd">GK3</td>
+                <td class="SPtd">Mündlich</td>
+                <td class="SPtd">Porrman</td>
+            </tr>
+            <tr class="SProw2">
+                <td class="SPtd">Sport</td>
+                <td class="SPtd">GK1</td>
+                <td class="SPtd">Mündlich</td>
+                <td class="SPtd">Klanert</td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+<script>
+    let SPtdArray = document.getElementsByClassName("SPtd");
+    SPtdArray = Array.from(SPtdArray);
+
+    document.getElementById("raeume").onclick = switchAandB;
+    document.getElementById("faecher").onclick = switchAandB;
+
+    function switchAandB() {
+        document.getElementById("raeume").style.display = document.getElementById("raeume").style.display === "block" ? "none" : "block";
+        document.getElementById("faecher").style.display = document.getElementById("faecher").style.display === "block" ? "none" : "block";
+    }
+
+    document.getElementById("headerTd2").onclick = function() {
+        document.getElementById("headerTd2").setAttribute("class", "selectedHeaderTd");
+        document.getElementById("headerTd1").setAttribute("class", "unselectedHeaderTd");
+        document.getElementById("Stundenplan").style.display = "none";
+        document.getElementById("Kursliste").style.display = "block";
+    }
+
+    document.getElementById("headerTd1").onclick = function() {
+        document.getElementById("headerTd1").setAttribute("class", "selectedHeaderTd");
+        document.getElementById("headerTd2").setAttribute("class", "unselectedHeaderTd");
+        document.getElementById("Stundenplan").style.display = "block";
+        document.getElementById("Kursliste").style.display = "none";
+    }
+</script>
+
+</html>
