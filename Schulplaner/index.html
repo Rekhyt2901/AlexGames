@@ -13,8 +13,6 @@
         html {
             margin: 0px;
             padding: 0px;
-            width: 100vw;
-            height: 100vh;
             overflow: hidden;
             background-color: aquamarine;
         }
@@ -23,13 +21,15 @@
             width: 100%;
         }
 
-        .unselectedHeaderTd, .selectedHeaderTd {
+        .unselectedHeaderTd,
+        .selectedHeaderTd {
             font-size: 3rem;
             text-align: center;
             width: 50vw;
             background-color: black;
             color: white;
         }
+
         .selectedHeaderTd {
             color: magenta;
             border: 2px solid magenta;
@@ -38,6 +38,7 @@
         h1 {
             text-align: center;
             text-decoration: underline;
+            margin-bottom: 5px;
         }
 
         .SPtable {
@@ -63,6 +64,13 @@
             font-size: 1.5rem;
             text-align: center;
             border: 2px solid black;
+        }
+
+        @media screen and (max-width: 600px) {
+            body {
+                overflow: visible;
+                height: 100vh;
+            }
         }
     </style>
 </head>
@@ -286,6 +294,7 @@
     </div>
 
     <div id="Kursliste" style="display: none;">
+        <h1 style="font-size: 3rem;">Kursliste</h1>
         <table class="SPtable">
             <tr class="SProw1">
                 <td class="SPtd">Fach</td>
@@ -369,14 +378,14 @@
         document.getElementById("faecher").style.display = document.getElementById("faecher").style.display === "block" ? "none" : "block";
     }
 
-    document.getElementById("headerTd2").onclick = function() {
+    document.getElementById("headerTd2").onclick = function () {
         document.getElementById("headerTd2").setAttribute("class", "selectedHeaderTd");
         document.getElementById("headerTd1").setAttribute("class", "unselectedHeaderTd");
         document.getElementById("Stundenplan").style.display = "none";
         document.getElementById("Kursliste").style.display = "block";
     }
 
-    document.getElementById("headerTd1").onclick = function() {
+    document.getElementById("headerTd1").onclick = function () {
         document.getElementById("headerTd1").setAttribute("class", "selectedHeaderTd");
         document.getElementById("headerTd2").setAttribute("class", "unselectedHeaderTd");
         document.getElementById("Stundenplan").style.display = "block";
