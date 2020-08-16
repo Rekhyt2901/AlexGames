@@ -437,10 +437,10 @@
             return 1 + Math.ceil((firstThursday - tdt) / 604800000);
         }
         let week = ISO8601_week_no(new Date());
+        if(new Date().getDay() === 0 || new Date().getDay() === 6) week++;
 
-        let a = true;
+        let a = true; //odd week = a
         if (week % 2 === 0) a = false;
-        if (week % 2 === 1 && (day === 0 || day === 6)) a = false;
 
         if (a) for (item of document.getElementsByClassName("b")) item.style.display = "none";
         if (!a) for (item of document.getElementsByClassName("a")) item.style.display = "none";
