@@ -68,13 +68,18 @@
             text-align: center;
             border: 2px solid black;
         }
+
+        #KurslisteTable {
+            table-layout: fixed;
+            word-wrap: break-word;
+        }
     </style>
 </head>
 
 <body>
     <div class="headerRow">
-            <span id="headerTd1" class="selectedHeaderTd">Stundenplan</span>
-            <span id="headerTd2" class="unselectedHeaderTd">Kursliste</span>
+        <span id="headerTd1" class="selectedHeaderTd">Stundenplan</span>
+        <span id="headerTd2" class="unselectedHeaderTd">Kursliste</span>
     </div>
     <div id="Stundenplan" style="display: block;">
         <div id="faecher" style="display: block;">
@@ -297,7 +302,7 @@
 
     <div id="Kursliste" style="display: none;">
         <h1 style="font-size: 3rem;">Kursliste</h1>
-        <table class="SPtable">
+        <table id="KurslisteTable" class="SPtable">
             <tr class="SProw1">
                 <td class="SPtd">Fach</td>
                 <td class="SPtd">Kurs</td>
@@ -344,7 +349,7 @@
                 <td class="SPtd">Physik</td>
                 <td class="SPtd">GK1</td>
                 <td class="SPtd">Mündlich</td>
-                <td class="SPtd">Studentkowski</td>
+                <td class="SPtd">Studi</td>
             </tr>
             <tr class="SProw2">
                 <td class="SPtd">Informatik</td>
@@ -401,8 +406,10 @@
     };
 
     if (window.mobileCheck()) {
-        console.log("mobile detected!");
+        for (item of document.querySelectorAll("#KurslisteTable tr td")) item.style.fontSize = "1.2rem";
         
+        console.log("mobile detected!");
+
         let cols = [];
         cols[1] = document.getElementsByClassName("col1"); //time
         cols[2] = document.getElementsByClassName("col2"); //mon
@@ -438,7 +445,7 @@
         if (a) for (item of document.getElementsByClassName("b")) item.style.display = "none";
         if (!a) for (item of document.getElementsByClassName("a")) item.style.display = "none";
 
-        for(item of document.getElementsByTagName("span")) item.style.fontSize = "2rem";
+        for (item of document.getElementsByTagName("span")) item.style.fontSize = "2rem";
 
     }
 </script>
