@@ -11,12 +11,16 @@
     <script src="../libs/GLTFLoader.js"></script>
     <script src="../libs/threexdomevents.js"></script>
     <script src="../libs/LoadingManager.js"></script>
+    <link rel="stylesheet" href="/libs/bootstrap/css/bootstrap.css">
     <style>
         #sidebar {
-            width: 20%;
+            width: 15%;
             height: 100%;
+            left: 85%;
             position: fixed;
-            left: 80%;
+            margin: 0px;
+            padding: 0px;
+            background-color: #55ee88;
         }
 
         .hiddenButton {
@@ -24,21 +28,31 @@
         }
 
         .solveButton {
-            position: relative;
-            width: 90%;
-            height: 4%;
-            margin: 5%;
-            font-size: 120%;
+            width: 100%;
+            display: block;
+            margin: auto;
+            background-color: #66ff99;
+        }
+
+        #speedSliderDiv {
+            background-color: #66ff99;
+        }
+
+        #speedSliderDiv:hover {
+            color: #fff;
+            background-color: #34383c;
+            border-color: #1d2124;
         }
 
         .speedSlider {
             position: relative;
             top: 5vh;
-            width: 60%;
+            width: 100%;
             font-size: 1.8rem;
         }
     </style>
 </head>
+
 <body style="margin: 0px; overflow-x: hidden; overflow-y: hidden;">
     <div id="sidebar">
         <button class="hiddenButton" id="turnUp">Turn U</button>
@@ -60,22 +74,30 @@
         <button class="hiddenButton" id="cornerSwitchLeft">Corner Switch Left</button>
 
         <!--<h2>Automation</h2>-->
-        <button class="solveButton" id="scramble">Scramble</button>
-        <button class="solveButton" id="solveCross">Solve Cross</button>
-        <button class="solveButton" id="solveF2LCorners">Solve F2L Corners</button>
-        <button class="solveButton" id="solveF2LEdges">Solve F2L Edges</button>
-        <button class="solveButton" id="solveF2L">Solve F2L</button>
-        <button class="solveButton" id="solveOLL">Solve OLL</button>
-        <button class="solveButton" id="solvePLLEdges">Solve PLL Edges</button>
-        <button class="solveButton" id="solvePLLCorners">Solve PLL Corners</button>
-        <button class="solveButton" id="solvePLL">Solve PLL</button>
-        <button class="solveButton" id="solveLL">Solve LL</button>
-        <button class="solveButton" id="solveAll">Solve Everything</button>
+        <div id="buttonGroup" class="btn-group-vertical">
+            <button class="solveButton btn btn-lg btn-light btn-primary btn-outline-dark"
+                id="scramble">Scramble</button>
+            <button class="solveButton btn btn-lg btn-light btn-primary btn-outline-dark" id="solveCross">Solve
+                Cross</button>
+            <button class="hiddenButton" id="solveF2LCorners">Solve F2L Corners</button>
+            <button class="hiddenButton" id="solveF2LEdges">Solve F2L Edges</button>
+            <button class="solveButton btn btn-lg btn-light btn-primary btn-outline-dark" id="solveF2L">Solve
+                F2L</button>
+            <button class="solveButton btn btn-lg btn-light btn-primary btn-outline-dark" id="solveOLL">Solve
+                OLL</button>
+            <button class="hiddenButton" id="solvePLLEdges">Solve PLL Edges</button>
+            <button class="hiddenButton" id="solvePLLCorners">Solve PLL Corners</button>
+            <button class="solveButton btn btn-lg btn-light btn-primary btn-outline-dark" id="solvePLL">Solve
+                PLL</button>
+            <button class="hiddenButton" id="solveLL">Solve LL</button>
+            <button class="solveButton btn btn-lg btn-light btn-primary btn-outline-dark" id="solveAll">Solve
+                All</button>
+            <div style="text-align: center;" class="btn btn-outline-dark" id="speedSliderDiv">
+                <label style="position: relative; top: 0px" class="speedSlider" for="speedSlider">Speed</label>
+                <input style="position: relative; top: 0px" class="speedSlider custom-range" type="range"
+                    id="speedSlider" name="speedSlider" min="1" max="7" value="4" step="1">
+            </div>
+        </div>
 
-        <div>
-            <input class="speedSlider" type="range" id="speedSlider" name="speedSlider" 
-                   min="1" max="7" value="4" step="1">
-            <label class="speedSlider" for="speedSlider">Speed</label>
-          </div>
     </div>
 </body>

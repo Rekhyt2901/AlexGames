@@ -191,7 +191,7 @@ let OCLL7 = "RUrURUUr";
 let T1 = "RUrurFRf";
 let T2 = "FRUruf";
 let S1 = "lBBRBrBL";
-let S2 = "lFFrfRfL";
+let S2 = "LFFrfRfl";
 let C1 = "RURRurFRURuf";
 let C2 = "rurFRfUR";
 let W1 = "UURUrfRUrurFRurFRf"; //y2
@@ -212,14 +212,14 @@ let F3 = "RUURRFRfRUUr";
 let F4 = "FRuruRUrf";
 let K1 = "LfluLFlbUB";
 let K2 = "rFRUrfRFuf";
-let K3 = "lbLruRUlBl";
+let K3 = "lbLruRUlBL";
 let K4 = "LFlRUruLfl";
 let A1 = "URUruRurfuFRUr"; //y
 let A2 = "uFURUUruRUUruf"; //y'
 let A3 = "RUrURUUrFRUruf";
 let A4 = "ruRurUURFRUruf";
 let L1 = "fluLUluLUF";
-let L2 = "fluLUluLUF";
+let L2 = "FRUruRUruf";
 let L3 = "LfLLBLLFLLbL";
 let L4 = "lBLLfLLbLLFl";
 let L5 = "lbRbrBRbrBBL";
@@ -328,18 +328,18 @@ const light = new THREE.AmbientLight(0xffffff, 2);
 scene.add(light);
 
 //Camera
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth * 0.8 / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth * 0.85 / window.innerHeight, 0.1, 1000);
 window.addEventListener("resize", onWindowResize, false);
 camera.position.set(0, 1.5, 5);
 function onWindowResize() {
-    camera.aspect = window.innerWidth * 0.8 / window.innerHeight;
+    camera.aspect = window.innerWidth * 0.85 / window.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth * 0.8, window.innerHeight);
+    renderer.setSize(window.innerWidth * 0.85, window.innerHeight);
 }
 
 //Renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth * 0.8, window.innerHeight);
+renderer.setSize(window.innerWidth * 0.85, window.innerHeight);
 renderer.setClearColor(0xddffdd, 1);
 document.body.appendChild(renderer.domElement);
 
