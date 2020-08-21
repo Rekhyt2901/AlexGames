@@ -442,17 +442,20 @@
         if (new Date().getDay() === 0 || new Date().getDay() === 6) week++;
 
         let a = true; //odd week = a
-        let friday = false;
         if (week % 2 === 0) a = false;
-        if (new Date().getDay() === 5) friday = true;
+        let friday = false;
+        if (day == 5) friday = true;
 
-        if(day === 5 && a) {
-            for (item of document.getElementsByClassName("friA")) item.style.display = "table-cell"; //friday
-            for (item of document.getElementsByClassName("monB")) item.style.display = "table-cell"; //monday
-        }
-        if(day === 5 && a) {
-            for (item of document.getElementsByClassName("friB")) item.style.display = "table-cell"; //friday
-            for (item of document.getElementsByClassName("monA")) item.style.display = "table-cell"; //monday
+        if (friday) {
+            if (a) {
+                for (item of document.getElementsByClassName("friA")) item.style.display = "table-cell"; //friday
+                for (item of document.getElementsByClassName("monB")) item.style.display = "table-cell"; //monday
+            }
+            if (!a) {
+                for (item of document.getElementsByClassName("friB")) item.style.display = "table-cell"; //friday
+                for (item of document.getElementsByClassName("monA")) item.style.display = "table-cell"; //monday
+            }
+            for (item of cols[1]) item.style.display = "table-cell";
         }
 
         if (a && !friday) for (item of document.getElementsByClassName("b")) item.style.display = "none";
