@@ -373,8 +373,10 @@
             </tr>
         </table>
     </div>
-    <div id="Vertretungsplan">
+    <div id="Vertretungsplan" style="display: none;">
+        <h1 id="heuteVertH1">Heute</h1>
         <table id="vertretungHeute"></table>
+        <h1 id="morgenVertH1">Morgen</h1>
         <table id="vertretungMorgen"></table>
     </div>
 </body>
@@ -424,71 +426,15 @@
         return check;
     };
 
-    if (window.mobileCheck()) {
-        for (item of document.querySelectorAll("#KurslisteTable tr td")) item.style.fontSize = "1.2rem";
-
-        console.log("mobile detected!");
-
-        let cols = [];
-        cols[1] = document.getElementsByClassName("col1"); //time
-        cols[2] = document.getElementsByClassName("col2"); //mon
-        cols[3] = document.getElementsByClassName("col3"); //tue
-        cols[4] = document.getElementsByClassName("col4"); //wed
-        cols[5] = document.getElementsByClassName("col5"); //thu
-        cols[6] = document.getElementsByClassName("col6"); //fri
-
-        for (i = 1; i < cols.length; i++) for (item of cols[i]) item.style.display = "none";
-        let day = new Date().getDay();
-        if (day === 0) day = 1;
-        if (day === 6) day = 1;
-        if (day != 5) {
-            for (item of cols[day + 1]) item.style.display = "table-cell";
-            for (item of cols[day + 2]) item.style.display = "table-cell";
-        }
-
-        function ISO8601_week_no(dt) {
-            var tdt = new Date(dt.valueOf());
-            var dayn = (dt.getDay() + 6) % 7;
-            tdt.setDate(tdt.getDate() - dayn + 3);
-            var firstThursday = tdt.valueOf();
-            tdt.setMonth(0, 1);
-            if (tdt.getDay() !== 4) {
-                tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
-            }
-            return 1 + Math.ceil((firstThursday - tdt) / 604800000);
-        }
-        let week = ISO8601_week_no(new Date());
-        if (new Date().getDay() === 0 || new Date().getDay() === 6) week++;
-
-        let a = true; //odd week = a
-        if (week % 2 === 0) a = false;
-        let friday = false;
-        if (day == 5) friday = true;
-
-        if (friday) {
-            if (a) {
-                for (item of document.getElementsByClassName("friA")) item.style.display = "table-cell"; //friday
-                for (item of document.getElementsByClassName("monB")) item.style.display = "table-cell"; //monday
-            }
-            if (!a) {
-                for (item of document.getElementsByClassName("friB")) item.style.display = "table-cell"; //friday
-                for (item of document.getElementsByClassName("monA")) item.style.display = "table-cell"; //monday
-            }
-            for (item of cols[1]) item.style.display = "table-cell";
-        }
-
-        if (a && !friday) for (item of document.getElementsByClassName("b")) item.style.display = "none";
-        if (!a && !friday) for (item of document.getElementsByClassName("a")) item.style.display = "none";
-
-        for (item of document.getElementsByTagName("span")) item.style.fontSize = "2rem";
-
-    }
-
     async function loadVertretung() {
         const options = { method: "POST" };
         let vertData = await fetch("https://dsb-server.herokuapp.com/", options);
         vertData = await vertData.json();
         console.log(vertData);
+
+        if(vertData.heute.length === 0) document.getElementById("heuteVertH1").style.display = "none";
+        if(vertData.morgen.length === 0) document.getElementById("morgenVertH1").style.display = "none";
+
 
         let vertretungHeute = document.getElementById("vertretungHeute");
         vertretungHeute.setAttribute("class", "SPtable");
@@ -548,8 +494,72 @@
 
             vertretungMorgen.appendChild(vertRow);
         }
+        if(window.mobileCheck) {
+            for (item of document.querySelectorAll("#Vertretungsplan table tr td")) item.style.fontSize = "1rem";
+        }
     }
     loadVertretung();
+
+    if (window.mobileCheck()) {
+        for (item of document.querySelectorAll("#KurslisteTable tr td")) item.style.fontSize = "1.2rem";
+
+        console.log("mobile detected!");
+
+        let cols = [];
+        cols[1] = document.getElementsByClassName("col1"); //time
+        cols[2] = document.getElementsByClassName("col2"); //mon
+        cols[3] = document.getElementsByClassName("col3"); //tue
+        cols[4] = document.getElementsByClassName("col4"); //wed
+        cols[5] = document.getElementsByClassName("col5"); //thu
+        cols[6] = document.getElementsByClassName("col6"); //fri
+
+        for (i = 1; i < cols.length; i++) for (item of cols[i]) item.style.display = "none";
+        let day = new Date().getDay();
+        if (day === 0) day = 1;
+        if (day === 6) day = 1;
+        if (day != 5) {
+            for (item of cols[day + 1]) item.style.display = "table-cell";
+            for (item of cols[day + 2]) item.style.display = "table-cell";
+        }
+
+        function ISO8601_week_no(dt) {
+            var tdt = new Date(dt.valueOf());
+            var dayn = (dt.getDay() + 6) % 7;
+            tdt.setDate(tdt.getDate() - dayn + 3);
+            var firstThursday = tdt.valueOf();
+            tdt.setMonth(0, 1);
+            if (tdt.getDay() !== 4) {
+                tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
+            }
+            return 1 + Math.ceil((firstThursday - tdt) / 604800000);
+        }
+        let week = ISO8601_week_no(new Date());
+        if (new Date().getDay() === 0 || new Date().getDay() === 6) week++;
+
+        let a = true; //odd week = a
+        if (week % 2 === 0) a = false;
+        let friday = false;
+        if (day == 5) friday = true;
+
+        if (friday) {
+            if (a) {
+                for (item of document.getElementsByClassName("friA")) item.style.display = "table-cell"; //friday
+                for (item of document.getElementsByClassName("monB")) item.style.display = "table-cell"; //monday
+            }
+            if (!a) {
+                for (item of document.getElementsByClassName("friB")) item.style.display = "table-cell"; //friday
+                for (item of document.getElementsByClassName("monA")) item.style.display = "table-cell"; //monday
+            }
+            for (item of cols[1]) item.style.display = "table-cell";
+        }
+
+        if (a && !friday) for (item of document.getElementsByClassName("b")) item.style.display = "none";
+        if (!a && !friday) for (item of document.getElementsByClassName("a")) item.style.display = "none";
+
+        for (item of document.getElementsByTagName("span")) item.style.fontSize = "2rem";
+
+        for (item of document.querySelectorAll(".headerRow span")) item.style.fontSize = "1.35rem";
+    }
 </script>
 
 </html>
