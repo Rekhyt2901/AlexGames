@@ -28,7 +28,7 @@
             display: table-cell;
             font-size: 2.5rem;
             text-align: center;
-            width: 50vw;
+            width: 33vw;
             background-color: black;
             color: white;
         }
@@ -80,6 +80,8 @@
     <div class="headerRow">
         <span id="headerTd1" class="selectedHeaderTd">Stundenplan</span>
         <span id="headerTd2" class="unselectedHeaderTd">Kursliste</span>
+        <span id="headerTd3" class="unselectedHeaderTd" style="width: 34vw;">Vertretung</span>
+
     </div>
     <div id="Stundenplan" style="display: block;">
         <div id="faecher" style="display: block;">
@@ -353,7 +355,7 @@
             </tr>
             <tr class="SProw2">
                 <td class="SPtd">Informatik</td>
-                <td class="SPtd">GK2</td>
+                <td class="SPtd">GK1</td>
                 <td class="SPtd">Schriftlich</td>
                 <td class="SPtd">Vormann</td>
             </tr>
@@ -361,7 +363,7 @@
                 <td class="SPtd">Chemie</td>
                 <td class="SPtd">GK3</td>
                 <td class="SPtd">Mündlich</td>
-                <td class="SPtd">Porrman</td>
+                <td class="SPtd">Vormann</td>
             </tr>
             <tr class="SProw2">
                 <td class="SPtd">Sport</td>
@@ -370,6 +372,10 @@
                 <td class="SPtd">Klanert</td>
             </tr>
         </table>
+    </div>
+    <div id="Vertretungsplan">
+        <table id="vertretungHeute"></table>
+        <table id="vertretungMorgen"></table>
     </div>
 </body>
 
@@ -385,18 +391,31 @@
         document.getElementById("faecher").style.display = document.getElementById("faecher").style.display === "block" ? "none" : "block";
     }
 
-    document.getElementById("headerTd2").onclick = function () {
-        document.getElementById("headerTd2").setAttribute("class", "selectedHeaderTd");
-        document.getElementById("headerTd1").setAttribute("class", "unselectedHeaderTd");
-        document.getElementById("Stundenplan").style.display = "none";
-        document.getElementById("Kursliste").style.display = "block";
-    }
-
     document.getElementById("headerTd1").onclick = function () {
         document.getElementById("headerTd1").setAttribute("class", "selectedHeaderTd");
         document.getElementById("headerTd2").setAttribute("class", "unselectedHeaderTd");
+        document.getElementById("headerTd3").setAttribute("class", "unselectedHeaderTd");
         document.getElementById("Stundenplan").style.display = "block";
         document.getElementById("Kursliste").style.display = "none";
+        document.getElementById("Vertretungsplan").style.display = "none";
+    }
+
+    document.getElementById("headerTd2").onclick = function () {
+        document.getElementById("headerTd2").setAttribute("class", "selectedHeaderTd");
+        document.getElementById("headerTd1").setAttribute("class", "unselectedHeaderTd");
+        document.getElementById("headerTd3").setAttribute("class", "unselectedHeaderTd");
+        document.getElementById("Stundenplan").style.display = "none";
+        document.getElementById("Kursliste").style.display = "block";
+        document.getElementById("Vertretungsplan").style.display = "none";
+    }
+
+    document.getElementById("headerTd3").onclick = function () {
+        document.getElementById("headerTd3").setAttribute("class", "selectedHeaderTd");
+        document.getElementById("headerTd1").setAttribute("class", "unselectedHeaderTd");
+        document.getElementById("headerTd2").setAttribute("class", "unselectedHeaderTd");
+        document.getElementById("Stundenplan").style.display = "none";
+        document.getElementById("Kursliste").style.display = "none";
+        document.getElementById("Vertretungsplan").style.display = "block";
     }
 
     window.mobileCheck = function () {
@@ -464,6 +483,73 @@
         for (item of document.getElementsByTagName("span")) item.style.fontSize = "2rem";
 
     }
+
+    async function loadVertretung() {
+        const options = { method: "POST" };
+        let vertData = await fetch("https://dsb-server.herokuapp.com/", options);
+        vertData = await vertData.json();
+        console.log(vertData);
+
+        let vertretungHeute = document.getElementById("vertretungHeute");
+        vertretungHeute.setAttribute("class", "SPtable");
+        let vertretungMorgen = document.getElementById("vertretungMorgen");
+        vertretungMorgen.setAttribute("class", "SPtable");
+
+        for (let i = 0; i < vertData.heute.length; i++) {
+            let vertRow = document.createElement("tr");
+            vertRow.setAttribute("class", "SProw1");
+
+            let vertKurs = document.createElement("td");
+            vertKurs.textContent = vertData.heute[i].Kurs;
+            vertKurs.setAttribute("class", "SPtd");
+            vertRow.appendChild(vertKurs);
+
+            let vertStunde = document.createElement("td");
+            vertStunde.textContent = vertData.heute[i].Stunde;
+            vertStunde.setAttribute("class", "SPtd");
+            vertRow.appendChild(vertStunde);
+
+            let vertArt = document.createElement("td");
+            vertArt.textContent = vertData.heute[i].Art;
+            vertArt.setAttribute("class", "SPtd");
+            vertRow.appendChild(vertArt);
+
+            let vertRaum = document.createElement("td");
+            vertRaum.textContent = vertData.heute[i].Raum;
+            vertRaum.setAttribute("class", "SPtd");
+            vertRow.appendChild(vertRaum);
+
+            vertretungHeute.appendChild(vertRow);
+        }
+
+        for (let i = 0; i < vertData.morgen.length; i++) {
+            let vertRow = document.createElement("tr");
+            vertRow.setAttribute("class", "SProw1");
+
+            let vertKurs = document.createElement("td");
+            vertKurs.textContent = vertData.morgen[i].Kurs;
+            vertKurs.setAttribute("class", "SPtd");
+            vertRow.appendChild(vertKurs);
+
+            let vertStunde = document.createElement("td");
+            vertStunde.textContent = vertData.morgen[i].Stunde;
+            vertStunde.setAttribute("class", "SPtd");
+            vertRow.appendChild(vertStunde);
+
+            let vertArt = document.createElement("td");
+            vertArt.textContent = vertData.morgen[i].Art;
+            vertArt.setAttribute("class", "SPtd");
+            vertRow.appendChild(vertArt);
+
+            let vertRaum = document.createElement("td");
+            vertRaum.textContent = vertData.morgen[i].Raum;
+            vertRaum.setAttribute("class", "SPtd");
+            vertRow.appendChild(vertRaum);
+
+            vertretungMorgen.appendChild(vertRow);
+        }
+    }
+    loadVertretung();
 </script>
 
 </html>
