@@ -319,7 +319,7 @@
             </tr>
             <tr class="SProw2">
                 <td class="SPtd">Englisch</td>
-                <td class="SPtd">GK1</td>
+                <td class="SPtd">LK1</td>
                 <td class="SPtd">Leistung</td>
                 <td class="SPtd">Rickert</td>
             </tr>
@@ -374,9 +374,11 @@
         </table>
     </div>
     <div id="Vertretungsplan" style="display: none;">
-        <h1 id="heuteVertH1">Heute</h1>
+        <h1 id="vertLoading">Loading...</h1>
+        <h1 id="vertNoData" style="display: none;">Keine Vertretung :(</h1>
+        <h1 id="heuteVertH1" style="display: none;">Heute</h1>
         <table id="vertretungHeute"></table>
-        <h1 id="morgenVertH1">Morgen</h1>
+        <h1 id="morgenVertH1" style="display: none;">Morgen</h1>
         <table id="vertretungMorgen"></table>
     </div>
 </body>
@@ -432,10 +434,11 @@
         vertData = await vertData.json();
         console.log(vertData);
 
-        if(vertData.heute.length === 0) document.getElementById("heuteVertH1").style.display = "none";
-        if(vertData.morgen.length === 0) document.getElementById("morgenVertH1").style.display = "none";
+        if(vertData.heute.length != 0) document.getElementById("heuteVertH1").style.display = "block";
+        if(vertData.morgen.length != 0) document.getElementById("morgenVertH1").style.display = "block";
+        if(vertData.morgen.length === 0 && vertData.heute.length === 0) document.getElementById("vertNoData").style.display = "block";
 
-
+        document.getElementById("vertLoading").style.display = "none";
         let vertretungHeute = document.getElementById("vertretungHeute");
         vertretungHeute.setAttribute("class", "SPtable");
         let vertretungMorgen = document.getElementById("vertretungMorgen");
