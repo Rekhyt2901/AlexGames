@@ -508,7 +508,7 @@
 
             vertretungMorgen.appendChild(vertRow);
         }
-        if (window.mobileCheck) {
+        if (window.mobileCheck()) {
             for (item of document.querySelectorAll("#Vertretungsplan table tr td")) item.style.fontSize = "1rem";
         }
     }
