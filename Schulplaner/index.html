@@ -73,6 +73,7 @@
             table-layout: fixed;
             word-wrap: break-word;
         }
+
         #Vertretungsplan table tr td {
             font-size: 2rem;
         }
@@ -433,14 +434,20 @@
 
     async function loadVertretung() {
         let filterKurse = ['D  G1', 'E5 L1', 'Ku G2', 'GEb G1', 'PL G2', 'M  L2', 'Ph G1', 'IF G2', 'CH G3', 'Sp G1'];
-        const options = { method: "POST", body: JSON.stringify(filterKurse)};
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(filterKurse)
+        };
         let vertData = await fetch("https://dsb-server.herokuapp.com/", options);
         vertData = await vertData.json();
         console.log(vertData);
 
-        if(vertData.heute.length != 0) document.getElementById("heuteVertH1").style.display = "block";
-        if(vertData.morgen.length != 0) document.getElementById("morgenVertH1").style.display = "block";
-        if(vertData.morgen.length === 0 && vertData.heute.length === 0) document.getElementById("vertNoData").style.display = "block";
+        if (vertData.heute.length != 0) document.getElementById("heuteVertH1").style.display = "block";
+        if (vertData.morgen.length != 0) document.getElementById("morgenVertH1").style.display = "block";
+        if (vertData.morgen.length === 0 && vertData.heute.length === 0) document.getElementById("vertNoData").style.display = "block";
 
         document.getElementById("vertLoading").style.display = "none";
         let vertretungHeute = document.getElementById("vertretungHeute");
@@ -501,7 +508,7 @@
 
             vertretungMorgen.appendChild(vertRow);
         }
-        if(window.mobileCheck) {
+        if (window.mobileCheck) {
             for (item of document.querySelectorAll("#Vertretungsplan table tr td")) item.style.fontSize = "1rem";
         }
     }
