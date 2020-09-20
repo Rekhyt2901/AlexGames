@@ -73,6 +73,9 @@
             table-layout: fixed;
             word-wrap: break-word;
         }
+        #Vertretungsplan table tr td {
+            font-size: 2rem;
+        }
     </style>
 </head>
 
@@ -429,7 +432,8 @@
     };
 
     async function loadVertretung() {
-        const options = { method: "POST" };
+        let filterKurse = ['D  G1', 'E5 L1', 'Ku G2', 'GEb G1', 'PL G2', 'M  L2', 'Ph G1', 'IF G2', 'CH G3', 'Sp G1'];
+        const options = { method: "POST", body: JSON.stringify(filterKurse)};
         let vertData = await fetch("https://dsb-server.herokuapp.com/", options);
         vertData = await vertData.json();
         console.log(vertData);
