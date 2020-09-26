@@ -34,11 +34,14 @@
 </head>
 
 <body id="body">
-    <h1 style="text-decoration: underline;">Code Generator!</h1>
-    <p style="font-size: 20px;">Klicke in jedem Block das Fach an das du hast und drücke am Ende auf Generieren!</p>
-    <div id="tables">
+    <div>
+        <h1 style="text-decoration: underline;">Code Generator!</h1>
+        <p style="font-size: 20px;">Klicke in jedem Block das Fach an das du hast und drücke am Ende auf Generieren!</p>
+        <div id="tables">
+        </div>
+        <div id="link"></div>
+        <button id="button">Generieren</button>
     </div>
-    <button id="button">Generieren</button>
     <script>
         let code = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
         let selectedColor = "#ff0088";
@@ -231,12 +234,28 @@
 
         document.getElementById("button").onclick = () => {
             let codeString = "";
-            for(i = 0; i < code.length; i++) {
+            for (i = 0; i < code.length; i++) {
                 codeString += code[i];
             }
             let url = "https://alexkleyn.de/Q1/?" + codeString;
 
-            alert("Dein Zugriffslink ist:\n \n" + url + "\n \nVergiss nicht ihn zu speichern!");
+            let linkP1 = document.createElement("p");
+            linkP1.textContent = "Dein Link ist:";
+            let linkP2 = document.createElement("a");
+            linkP2.setAttribute("href", url);
+            linkP2.textContent = url;
+            let linkP3 = document.createElement("p");
+            linkP3.textContent = "Vergiss nicht ihn zu speichern!";
+
+            document.getElementById("link").appendChild(linkP1);
+            document.getElementById("link").appendChild(linkP2);
+            document.getElementById("link").appendChild(linkP3);
+
+            document.getElementById("link").style.width = "250px";
+            document.getElementById("link").style.fontSize = "15px";
+            document.getElementById("link").style.border = "1px solid black";
+
+            document.getElementById("link").style.fontWeight = "bold";
         }
     </script>
 </body>
