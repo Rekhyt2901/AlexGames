@@ -525,14 +525,14 @@
     }
     if (bloecke[12][urlParam[12]].kurz === "Sp G1" ||
         bloecke[12][urlParam[12]].kurz === "Sp G4") {
-        for (item of document.getElementsByClassName("Bsport14")) item.textContent = bloecke[12][urlParam[12]].raum;
+        for (item of document.getElementsByClassName("Bsport14r")) item.textContent = bloecke[12][urlParam[12]].raum;
     }
     if (bloecke[12][urlParam[12]].kurz === "Sp G2") {
-        for (item of document.getElementsByClassName("Bsport2")) item.textContent = bloecke[12][urlParam[12]].raum;
+        for (item of document.getElementsByClassName("Bsport2r")) item.textContent = bloecke[12][urlParam[12]].raum;
     }
     if (bloecke[12][urlParam[12]].kurz === "Sp G3" ||
         bloecke[12][urlParam[12]].kurz === "Sp G5") {
-        for (item of document.getElementsByClassName("Bsport35")) item.textContent = bloecke[12][urlParam[12]].raum;
+        for (item of document.getElementsByClassName("Bsport35r")) item.textContent = bloecke[12][urlParam[12]].raum;
     }
 
 
@@ -590,7 +590,7 @@
             filterKurse[i] = bloecke[i][urlParam[i]].kurz;
         }
         //console.log(filterKurse);
-        //let meineFilterKurse = ['D  G1', 'E5 L1', 'Ku G2', 'GeEG1', 'PL G2', 'M  L2', 'Ph G1', 'IF G2', 'CH G3', 'Sp G1'];
+        //let meineFilterKurse = ['D  G1', 'E5 L1', 'Ku G2', 'GeEhG1', 'PL G2', 'M  L2', 'Ph G1', 'IF G2', 'CH G3', 'Sp G1'];
         const options = {
             method: "POST",
             headers: {
