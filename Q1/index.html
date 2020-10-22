@@ -598,7 +598,7 @@
             },
             body: JSON.stringify(filterKurse)
         };
-        let vertData = await fetch("https://dsb-server.herokuapp.com/", options);
+        let vertData = await fetch("https://dsb-server2.herokuapp.com/", options); //alte url: https://dsb-server.herokuapp.com/
         vertData = await vertData.json();
         console.table(vertData.heute);
         console.table(vertData.morgen);
