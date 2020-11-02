@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game of Life</title>
+</head>
+
+<body id="body">
+    <canvas id="canvas"></canvas>
+    <div>
+        <button id="start">Start</button>
+        <button id="clear">Clear</button>
+    </div>
+    <script>
+        let canvas = document.getElementById("canvas");
+        let gameStarted = false;
+        let fps = 30;
+
+        let width = 50;
+        let height = 50;
+        let cellSize = 10;
+        let cells = [];
+
+        setup();
+        let interval = setInterval(draw, 1000 / fps);
+
+        function setup() {
+            document.getElementById("start").onclick = startButton;
+            function startButton() {
+                gameStarted = Boolean(!gameStarted);
+                document.getElementById("start").textContent = gameStarted ? "Stop" : "Start";
+                document.getElementById("body").style.backgroundColor = gameStarted ? "#ff0000" : "#ffffff";
+            }
+
+            document.getElementById("clear").onclick = () => {
+                for (let i = 0; i < cells.length; i++) {
+                    for (let j = 0; j < cells[i].length; j++) {
+                        cells[i][j].isAlive = false;
+                    }
+                }
+                if (gameStarted) startButton();
+            }
+
+            for (let i = 0; i < width; i++) {
+                cells[i] = [];
+                for (let j = 0; j < height; j++) {
+                    cells[i][j] = {
+                        x: i,
+                        y: j,
+                        isAlive: false,
+                        aliveNeighbours: 0
+                    }
+                }
+            }
+
+            canvas.setAttribute("width", width * cellSize);
+            canvas.setAttribute("height", height * cellSize);
+            canvas.addEventListener('mousedown', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                let x = e.clientX - rect.left;
+                x -= x % cellSize;
+                x /= cellSize;
+                let y = e.clientY - rect.top;
+                y -= y % cellSize;
+                y /= cellSize;
+                cells[x][y].isAlive = cells[x][y].isAlive ? false : true;
+            });
+        }
+
+        function draw() {
+            if (gameStarted) {
+                setAliveNeighbours();
+                setCellsLive();
+            }
+            drawCells();
+        }
+
+        function setAliveNeighbours() {
+            for (let i = 0; i < cells.length; i++) {
+                for (let j = 0; j < cells[i].length; j++) {
+                    let aliveNeighbours = 0;
+                    if (i - 1 >= 0) {
+                        if (j - 1 >= 0 && cells[i - 1][j - 1].isAlive) aliveNeighbours++;
+                        if (cells[i - 1][j].isAlive) aliveNeighbours++;
+                        if (j + 1 < cells[i].length && cells[i - 1][j + 1].isAlive) aliveNeighbours++;
+                    }
+
+                    if (j - 1 >= 0 && cells[i][j - 1].isAlive) aliveNeighbours++;
+                    if (j + 1 < cells[i].length && cells[i][j + 1].isAlive) aliveNeighbours++;
+
+                    if (i + 1 < cells.length) {
+                        if (j - 1 >= 0 && cells[i + 1][j - 1].isAlive) aliveNeighbours++;
+                        if (cells[i + 1][j].isAlive) aliveNeighbours++;
+                        if (j + 1 < cells[i].length && cells[i + 1][j + 1].isAlive) aliveNeighbours++;
+                    }
+                    cells[i][j].aliveNeighbours = aliveNeighbours;
+                }
+            }
+        }
+        function setCellsLive() {
+            for (let i = 0; i < cells.length; i++) {
+                for (let j = 0; j < cells[i].length; j++) {
+                    if (cells[i][j].isAlive) {
+                        cells[i][j].isAlive = Boolean(cells[i][j].aliveNeighbours === 2 || cells[i][j].aliveNeighbours === 3);
+                    } else {
+                        cells[i][j].isAlive = Boolean(cells[i][j].aliveNeighbours === 3);
+                    }
+                }
+            }
+        }
+        function drawCells() {
+            let ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, cellSize * width, cellSize * height);
+            for (let i = 0; i < cells.length; i++) {
+                for (let j = 0; j < cells[i].length; j++) {
+                    ctx.fillStyle = cells[i][j].isAlive ? "#ffffff" : "#000000";
+                    ctx.fillRect(i * cellSize, j * cellSize, cellSize, cellSize);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
