@@ -467,14 +467,13 @@
             newFach("/", "/", "/", "/"),
             newFach("D  G4", "Deutsch", "P1", "Dietrich"), //Dtr
             newFach("CH G1", "Chemie", "Ch2", "Schoß"), //Shß
-            newFach("IF G1", "Info", "If1", "Porrman"), //Por
-            newFach("IF G2", "Info", "If2", "Vormann"), //Vor
+            newFach("IF G1", "Info", "If1", "Porrmann"), //Por
             newFach("S  G1", "Spanisch", "P7", "Kirchhoff"), //Khf
             newFach("S0 G1", "Spanisch", "P8/P6", "Linnebank")  //Lin
         ],
         [ //19.
             newFach("/", "/", "/", "/"),
-            newFach("CH G3", "Chemie", "Ch2/Ch1", "Porrman"), //Por
+            newFach("CH G3", "Chemie", "Ch2/Ch1", "Porrmann"), //Por
             newFach("L6 G1", "Latein", "N410", "Klanert"), //Knt
             newFach("S0 G2", "Spanisch", "P7", "Luqe"), //Luq
             newFach("EW G1", "EW", "K194", "Flügel"), //Flü
@@ -505,11 +504,11 @@
             item.textContent = bloecke[i][urlParam[i]].fach;
         }
     }
-    if (bloecke[12][urlParam[12]].kurz === "Sp G1" ||
-        bloecke[12][urlParam[12]].kurz === "Sp G4") {
+    if (bloecke[12][urlParam[12]].kurz === "Sp G4") {
         for (item of document.getElementsByClassName("Bsport14")) item.textContent = bloecke[12][urlParam[12]].fach;
     }
-    if (bloecke[12][urlParam[12]].kurz === "Sp G2") {
+    if (bloecke[12][urlParam[12]].kurz === "Sp G1" ||
+        bloecke[12][urlParam[12]].kurz === "Sp G2") {
         for (item of document.getElementsByClassName("Bsport2")) item.textContent = bloecke[12][urlParam[12]].fach;
     }
     if (bloecke[12][urlParam[12]].kurz === "Sp G3" ||
@@ -523,11 +522,11 @@
             item.textContent = bloecke[i][urlParam[i]].raum;
         }
     }
-    if (bloecke[12][urlParam[12]].kurz === "Sp G1" ||
-        bloecke[12][urlParam[12]].kurz === "Sp G4") {
+    if (bloecke[12][urlParam[12]].kurz === "Sp G4") {
         for (item of document.getElementsByClassName("Bsport14r")) item.textContent = bloecke[12][urlParam[12]].raum;
     }
-    if (bloecke[12][urlParam[12]].kurz === "Sp G2") {
+    if (bloecke[12][urlParam[12]].kurz === "Sp G1" ||
+        bloecke[12][urlParam[12]].kurz === "Sp G2") {
         for (item of document.getElementsByClassName("Bsport2r")) item.textContent = bloecke[12][urlParam[12]].raum;
     }
     if (bloecke[12][urlParam[12]].kurz === "Sp G3" ||
@@ -590,7 +589,7 @@
             filterKurse[i] = bloecke[i][urlParam[i]].kurz;
         }
         //console.log(filterKurse);
-        //let meineFilterKurse = ['D  G1', 'E5 L1', 'Ku G2', 'GeEhG1', 'PL G2', 'M  L2', 'Ph G1', 'IF G2', 'CH G3', 'Sp G1'];
+        //let meineFilterKurse = ['D  G1', 'E5 L1', 'Ku G2', 'GeEhG1', 'PL G2', 'M  L2', 'Ph G1', 'IF G1', 'CH G3', 'Sp G1'];
         const options = {
             method: "POST",
             headers: {
