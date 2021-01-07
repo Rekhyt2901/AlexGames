@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" style="margin: 0px; padding: 0px">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyperspace</title>
+</head>
+
+<body style="margin: 0;padding: 0px; width: 100vw;height: 100vh; overflow-x: hidden; overflow-y: hidden;">
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const canvasLeft = canvas.offsetLeft + canvas.clientLeft;
+        const canvasTop = canvas.offsetTop + canvas.clientTop;
+        const context = canvas.getContext("2d");
+        const canvasWidth = document.body.clientWidth;
+        const canvasHeight = document.body.clientHeight;
+        canvas.setAttribute("width", canvasWidth);
+        canvas.setAttribute("height", canvasHeight);
+
+        canvas.addEventListener("click", (event) => {
+            let mouseX = event.pageX - canvasLeft;
+            let mouseY = event.pageY - canvasTop;
+            console.log(canvasWidth / 2 - 40, canvasWidth / 2 + 40);
+            console.log(canvasHeight / 2 - 15, canvasHeight / 2 + 15)
+            console.log(mouseX, mouseY);
+            if (mouseX >= canvasWidth / 2 - 40 && mouseX <= canvasWidth / 2 + 40) {
+                if (mouseY >= canvasHeight / 2 - 15 && mouseY <= canvasHeight / 2 + 15) {
+                    lastTime = 0;
+                    drawSkeleton(1000, true);
+                }
+            }
+        }, false);
+
+        function hyperCircle({ frameCount, centerX, centerY, startX, startY }) {
+            let angle;
+
+            let diffX = centerX - startX;
+            if (diffX < 0) diffX *= -1;
+            let diffY = centerY - startY;
+            if (diffY < 0) diffY *= -1;
+
+            if (startX > centerX && startY < centerY) {
+                angle = Math.atan2(diffX, diffY);
+            } else if (startX > centerX && startY > centerY) {
+                angle = Math.PI / 2 + Math.atan2(diffY, diffX);
+            } else if (startX < centerX && startY > centerY) {
+                angle = Math.PI + Math.atan2(diffX, diffY);
+            } else {
+                angle = 3 * Math.PI / 2 + Math.atan(diffY / diffX);
+            }
+
+            let distanceFromCenter = Math.sqrt(Math.pow(centerX - startX, 2) + Math.pow(centerY - startY, 2));
+
+            //let exponent = frameCount < 180 ? 1 : frameCount / 80;
+            //let length = Math.pow(distanceFromCenter * frameCount / 3000, exponent);
+            //if(frameCount < 20) length /= frameCount;
+            //if(length > canvasWidth/8) length = canvasWidth/8;
+            let length = distanceFromCenter/10000 * Math.pow(frameCount, 2);
+            let thickness = distanceFromCenter / 500 * frameCount / 120;
+            if(thickness > 3) thickness = 3;
+            let x1 = startX;
+            let y1 = startY;
+            let x2, y2;
+
+            let xDist = distanceFromCenter * Math.sin(angle);
+            let yDist = distanceFromCenter * Math.cos(angle);
+
+            if (angle <= 90) {
+                x1 = centerX + xDist;
+                y1 = centerY - yDist;
+                x2 = x1 + Math.sin(angle) * length;
+                y2 = y1 - Math.cos(angle) * length;
+            } else if (angle <= 180) {
+                x1 = centerX + xDist;
+                y1 = centerY + yDist;
+                x2 = x1 + Math.sin(angle) * length;
+                y2 = y1 + Math.cos(angle) * length;
+            } else if (angle <= 270) {
+                x1 = centerX - xDist;
+                y1 = centerY + yDist;
+                x2 = x1 - Math.sin(angle) * length;
+                y2 = y1 + Math.cos(angle) * length;
+            } else {
+                x1 = centerX - xDist;
+                y1 = centerY - yDist;
+                x2 = x1 - Math.sin(angle) * length;
+                y2 = y1 - Math.cos(angle) * length;
+            }
+
+            let lightness = length / 5;
+            lightness += 50;
+            let color = `hsl(210,100%, ${lightness}%)`;
+
+            context.beginPath();
+            context.moveTo(x1, y1);
+            context.lineWidth = thickness;
+            context.strokeStyle = color;
+            context.lineTo(x2, y2);
+            context.stroke();
+        }
+
+        let stars = [];
+        function setup() {
+            for (let i = 0; i < canvasWidth * canvasHeight / 400; i++) {
+                //for (let i = 0; i < 1; i++) {
+                stars.push({ x: Math.floor(Math.random() * canvasWidth), y: Math.floor(Math.random() * canvasHeight) });
+            }
+        }
+
+        let lastTime = 0;
+        let animationId;
+        let frameCount = 0;
+        let startAnimation = false;
+        function drawSkeleton(timeStamp, startAnimationParam) {
+            if (timeStamp - lastTime > 1000 / 60) {
+                context.fillStyle = "#000";
+                context.fillRect(0, 0, canvasWidth, canvasHeight);
+                drawPicture();
+                frameCount++;
+                lastTime = timeStamp;
+            }
+            if (startAnimationParam) startAnimation = true;
+            if (startAnimation) animationId = requestAnimationFrame(drawSkeleton);
+        }
+        setup();
+        drawSkeleton(1000, false);
+
+        function drawPicture() {
+            for (star of stars) {
+                context.fillStyle = "white";
+                context.fillRect(star.x, star.y, 1, 1);
+
+                let options = {
+                    frameCount: frameCount,
+                    centerX: canvasWidth / 2,
+                    centerY: canvasHeight / 2,
+                    startX: star.x,
+                    startY: star.y,
+                };
+                hyperCircle(options);
+            }
+
+            //Button
+            if (!startAnimation || frameCount < 5) {
+                context.globalAlpha = 0.8;
+                context.fillStyle = frameCount >= 1 ? "darkorange" : "yellow";
+                context.fillRect(canvasWidth / 2 - 40, canvasHeight / 2 - 15, 80, 30);
+
+                context.globalAlpha = 1;
+                context.fillStyle = "black";
+                context.fillRect(canvasWidth / 2 - 35, canvasHeight / 2 - 10, 70, 20);
+                context.globalAlpha = 0.8;
+
+                context.fillStyle = frameCount >= 1 ? "darkorange" : "yellow";
+                context.textAlign = "center";
+                context.textBaseline = "middle"
+                context.font = "18px Arial";
+                context.fillText("Start", canvasWidth / 2, canvasHeight / 2 + 2);
+                context.globalAlpha = 1;
+            }
+        }
+    </script>
+</body>
+
+</html>
