@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" style="margin: 0px; padding: 0px">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3d Spaß!</title>
+</head>
+
+<body style="margin: 0;padding: 0px; width: 100vw;height: 100vh; overflow-x: hidden; overflow-y: hidden;">
+    <canvas id="canvas" style="background-color: black; position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+    <canvas id="canvas1" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+    <canvas id="canvas2" style="position: absolute; left: 0; top: 0; z-index: 2;"></canvas>
+    <script type="module">
+
+        //----------------Canvas-Setup-------------------------//
+        const canvas = document.getElementById("canvas");
+        const context = canvas.getContext("2d");
+        let canvasWidth = document.body.clientWidth;
+        let canvasHeight = document.body.clientHeight;
+        canvas.setAttribute("width", canvasWidth);
+        canvas.setAttribute("height", canvasHeight);
+
+        const canvas1 = document.getElementById("canvas1");
+        const context1 = canvas1.getContext("2d");
+        canvas1.setAttribute("width", canvasWidth);
+        canvas1.setAttribute("height", canvasHeight);
+
+        const canvas2 = document.getElementById("canvas2");
+        const context2 = canvas2.getContext("2d");
+        canvas2.setAttribute("width", canvasWidth);
+        canvas2.setAttribute("height", canvasHeight);
+        //-----------------------------------------------------//
+
+        window.onresize = () => {
+            canvasWidth = document.body.clientWidth;
+            canvasHeight = document.body.clientHeight;
+            canvas.setAttribute("width", canvasWidth);
+            canvas.setAttribute("height", canvasHeight);
+
+            canvas1.setAttribute("width", canvasWidth);
+            canvas1.setAttribute("height", canvasHeight);
+
+            canvas2.setAttribute("width", canvasWidth);
+            canvas2.setAttribute("height", canvasHeight);
+        }
+
+        import matrixjs from "./matrix.js";
+        import util from "./util.js";
+
+        import lines from "./drawings/lines.js";
+        import cube from "./drawings/cube.js";
+        import dasA from "./drawings/dasA.js";
+        import donut from "./drawings/donut.js";
+        import blender from "./drawings/blender.js";
+
+        // let text = util.loadFile("./objects/Wood_Table.obj");
+        // let text = util.loadFile("./objects/laptop.obj");
+        let text = util.loadFile("./objects/Handgun.obj");
+        let obj = util.parseObj(text);
+
+        function drawPicture() {
+            let nonclear = {
+                matrixjs: matrixjs,
+                context: context1,
+                frameCount: frameCount,
+                canvasWidth: canvasWidth,
+                canvasHeight: canvasHeight
+            };
+            let clear = {
+                matrixjs: matrixjs,
+                context: context2,
+                frameCount: frameCount,
+                canvasWidth: canvasWidth,
+                canvasHeight: canvasHeight
+            };
+
+            // lines(nonclear);
+            cube(nonclear);
+            dasA(clear);
+            // donut(nonclear);
+            //blender(clear, obj);
+        }
+
+
+        //-----------------Animation-Loop-------------------------//        
+        let fps = 30;
+        let lastTime = 0;
+        let animationId;
+        let frameCount = 0;
+        let startAnimation = false;
+        function drawSkeleton(timeStamp, startAnimationParam) {
+            if (timeStamp - lastTime > 1000 / fps) {
+                //context1.clearRect(0, 0, canvasWidth, canvasHeight);
+                context2.clearRect(0, 0, canvasWidth, canvasHeight);
+
+                drawPicture();
+                frameCount++;
+                if (frameCount > 100000) frameCount = 0;
+                lastTime = timeStamp;
+            }
+            if (startAnimationParam) startAnimation = true;
+            if (startAnimation) animationId = requestAnimationFrame(drawSkeleton);
+        }
+        drawSkeleton(1000, true);
+        //-----------------------------------------------------------//
+
+    </script>
+</body>
+
+</html>
