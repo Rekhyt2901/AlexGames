@@ -32,7 +32,7 @@ export default ({ matrixjs, context, frameCount, canvasWidth, canvasHeight }) =>
     myMatrix = multiplyMatrixWithMatrix(newYRotationMatrix(Math.PI / 180 * frameCount * 1.5), myMatrix);
 
     myMatrix = multiplyMatrixWithMatrix(newTranslationMatrix(2, 0, 0), myMatrix);
-    myMatrix = multiplyMatrixWithMatrix(newZRotationMatrix(Math.PI / 180 * frameCount), myMatrix);
+    myMatrix = multiplyMatrixWithMatrix(newZRotationMatrix(Math.PI / 180 * frameCount / 1.5), myMatrix);
 
     myMatrix = multiplyMatrixWithMatrix(newTranslationMatrix(0, 0, 3.5), myMatrix);
 
