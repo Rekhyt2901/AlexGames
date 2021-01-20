@@ -72,7 +72,7 @@ function setup() {
 
 function draw() {
     change = true;
-    background(10);
+    background("rgba(0, 255, 0, 0)");
     let offsetX = 0;
     for (i = 0; i < sortArray.length; i++) {
         if (change) {

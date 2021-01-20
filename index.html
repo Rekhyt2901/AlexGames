@@ -1,15 +1,70 @@
 <!DOCTYPE html>
-<html lang="de" dir="ltr" style="background-color: #111111; color: #000000;">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlexGames</title>
-    <link rel="stylesheet" href="index.css">
-    <script defer src="index.js"></script>
-    
-    
-  </head>
+<html lang="de" dir="ltr"
+  style="background-color: #111111; color: #000000; width: 100vw; height: 100vh; overflow-x: hidden;">
 
-  <body style="margin: 0px;">
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlexGames</title>
+  <link rel="stylesheet" href="index.css">
+  <style>
+    .linkButton {
+      flex: 1;
+      height: 7vh;
+      background-color: rgba(0, 0, 0, 0);
+      font-size: 1rem;
+      text-shadow: 1px 1px 3px white;
+      font-weight: 700;
+    }
+    .linkButton:hover {
+      background-color: rgba(1000, 1000, 1000, 0.15);
+    }
+    #iframe {
+      flex: 1;
+      border: 10px solid rgba(0, 0, 0, 0);
+    }
+  </style>
+</head>
+
+<body style="margin: 0px; display: flex; flex-direction: column; height: 100%; width: 100%; background-image: linear-gradient(90deg,violet, darkviolet);">
+  <nav id="nav" style="display: flex; flex-wrap: nowrap; margin: 10px 8px 5px 8px;"></nav>
+  <iframe id="iframe" src="geoanimations" frameborder="0"></iframe>
+
+
+  <script>
+
+    let fileArray = [
+      "7SegmentClock",
+      "GameOfLife",
+      "geoanimations",
+      "hyperspace",
+      "Labyrinth",
+      "Labyrinth2",
+      "Memory",
+      "MineSweeper",
+      "RandomColor",
+      "RubiksCube",
+      "Snake",
+      "SortingAlgs",
+      "TankstellenApp",
+      "Whack-A-Mole"
+    ];
+    for (item of fileArray) {
+      let nav = document.getElementById("nav");
+      let newButton = document.createElement("button");
+      newButton.textContent = item;
+      newButton.setAttribute("class", "linkButton");
+      newButton.setAttribute("link", item);
+      newButton.setAttribute("onclick", "changeFrame(this.getAttribute('link'))");
+      nav.appendChild(newButton);
+    }
+
+    function changeFrame(link) {
+      console.log(link);
+      let iframe = document.getElementById("iframe");
+      iframe.src = "./" + link;
+    }
+  </script>
+</body>
+
 </html>
