@@ -32,7 +32,7 @@ let highlighted2;
 
 function setup() {
     createCanvas(canvasWidth, canvasHeight);
-    background(10)
+    background(10);
     for (i = 0; i < numberOfElements; i++) {
         //sortArray[i] = int(random(100)) + 1;
         sortArray[i] = i + 1;
@@ -72,7 +72,7 @@ function setup() {
 
 function draw() {
     change = true;
-    background("rgba(0, 255, 0, 0)");
+    background("rgba(0, 0, 0, 1)");
     let offsetX = 0;
     for (i = 0; i < sortArray.length; i++) {
         if (change) {
